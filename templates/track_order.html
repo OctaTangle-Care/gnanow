@@ -1,0 +1,64 @@
+
+<style>
+.tracker {
+    display: flex;
+    justify-content: space-between;
+    margin: 40px 0;
+    position: relative;
+}
+.tracker::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #ddd;
+    z-index: 1;
+}
+.tracker-step {
+    text-align: center;
+    z-index: 2;
+    width: 20%;
+}
+.tracker-step .circle {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin: 0 auto;
+    line-height: 40px;
+    font-weight: bold;
+    color: white;
+}
+.tracker-step.active .circle {
+    background-color: #28a745;
+}
+.tracker-step.done .circle {
+    background-color: #28a745;
+}
+.tracker-step .label {
+    margin-top: 10px;
+}
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">ORDER TRACKING: {{ order.order_id }}</h2>
+    <div class="bg-success text-white p-3 mb-4">
+        <div class="d-flex justify-content-between">
+            <span>Shipped Via: OctaCare Express</span>
+            <span>Status: {{ order.status }}</span>
+            <span>Expected Date: {{ order.created_at|date:"j-M-Y" }}</span>
+        </div>
+    </div>
+
+    <div class="tracker">
+        {% for step in steps %}
+        <div class="tracker-step {% if forloop.counter0 < current_step %}done{% elif forloop.counter0 == current_step %}active{% endif %}">
+            <div class="circle">{{ forloop.counter }}</div>
+            <div class="label">{{ step }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+

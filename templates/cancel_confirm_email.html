@@ -1,0 +1,12 @@
+{% if messages %}
+  {% for message in messages %}
+    <p style="color:red">{{ message }}</p>
+  {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <label for="email">Enter Email to Cancel Order:</label>
+    <input type="email" name="email" required>
+    <button type="submit">Send OTP</button>
+</form>

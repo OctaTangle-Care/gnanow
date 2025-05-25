@@ -1,0 +1,335 @@
+{% comment %} {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+           
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-container {
+            background: linear-gradient(to bottom right, #5f9ea0, #1e90ff);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #fff;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+        
+        .label {
+            color: #ffd700; /* Gold color for labels */
+            font-weight: bold;
+        }
+
+        .edit-button {
+            color: black;
+            background-color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #fff;
+            border-radius: 5px;
+            margin-top: 20px;
+            align-self: center;
+            cursor:pointer;
+        }
+
+       
+
+        input[readonly] {
+            cursor: not-allowed;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-container">
+            <img src="{% static 'images/profileimg.png' %}" alt="Profile Picture" class="profile-image">
+            <h2>Edit Profile</h2>
+            
+            <!-- Display messages -->
+           
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <p><span class="label">Full Name:</span> <input type="text" name="user_name" value="{{ user.username }}" required></p>
+                <p><span class="label">Email:</span> <input type="email" name="user_mail" value="{{ user.user_mail }}" readonly></p>
+                <p><span class="label">DOB:</span> <input type="date" name="user_dob" value="{{ user.user_dob|date:'Y-m-d' }}" required></p>
+                 <p>
+                        
+                        <select id="gender" required name="user_gender" >
+                            <option value="{{user.user_gender}}" disabled selected>Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                      
+                    <p>
+                <p><span class="label">Contact:</span> <input type="text" name="user_phonenumber" value="{{ user.user_phonenumber }}" readonly></p>
+
+                <button type="submit" class="edit-button">Save</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html> {% endcomment %}
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Edit Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a; /* Dark track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFDE59; /* Vibrant Yellow thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffd000; /* Brighter yellow on hover */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text */
+            overflow-x: hidden; /* Prevent horizontal scroll on body */
+            min-height: 100vh;
+            display: flex; /* For centering the container */
+            align-items: center; /* For centering the container */
+            justify-content: center; /* For centering the container */
+            padding: 1.5rem; /* p-6 */
+        }
+
+        .font-bebas {
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        /* Primary Yellow Color */
+        .bg-primary-yellow { background-color: #FFDE59; }
+        .text-primary-yellow { color: #FFDE59; }
+        .border-primary-yellow { border-color: #FFDE59; }
+
+        /* Ken Burns Effect for Background */
+        .dynamic-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind all content */
+            overflow: hidden;
+        }
+        .ken-burns-bg {
+            background-image: url('https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80'); /* Abstract fashion/urban background */
+            background-size: 120%;
+            background-position: 50% 50%;
+            animation: kenburns 30s ease-in-out infinite alternate;
+            width: 100%;
+            height: 100%;
+        }
+
+        @keyframes kenburns {
+            0% {
+                background-size: 120%;
+                background-position: 30% 70%;
+            }
+            100% {
+                background-size: 100%;
+                background-position: 70% 30%;
+            }
+        }
+        
+        /* Profile Container Styling */
+        .profile-form-container {
+            background-color: rgba(10, 10, 10, 0.85); /* Dark semi-transparent background */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #222222;
+        }
+
+        /* Form Input Styling */
+        .form-input {
+            background-color: #1f1f1f; /* Dark input background */
+            border: 1px solid #333333;
+            color: #ffffff; /* White text in input */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #FFDE59; /* Yellow border on focus */
+            box-shadow: 0 0 0 2px rgba(255, 222, 89, 0.3); /* Yellow glow on focus */
+            outline: none;
+        }
+        .form-input[readonly] {
+            background-color: #2a2a2a; /* Slightly different for readonly */
+            color: #888888; /* Dimmer text for readonly */
+            cursor: not-allowed;
+        }
+        .form-label {
+            color: #FFDE59; /* Yellow label text */
+            font-weight: 600; /* Bold labels */
+        }
+        .form-select {
+            background-color: #1f1f1f;
+            border: 1px solid #333333;
+            color: #ffffff;
+            /* Custom arrow for select */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23FFDE59' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.5em 1.5em;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .form-select:focus {
+            border-color: #FFDE59;
+            box-shadow: 0 0 0 2px rgba(255, 222, 89, 0.3);
+            outline: none;
+        }
+
+        /* CTA Button Styles (reused from landing page) */
+        .cta-button {
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.5rem; 
+            font-weight: 600;
+            padding: 0.75rem 2rem; /* py-3 px-8 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .cta-button-yellow {
+            background-color: #FFDE59;
+            color: #000000;
+            border: 2px solid #FFDE59;
+        }
+        .cta-button-yellow:hover {
+            background-color: #ffd000;
+            box-shadow: 0 0 20px rgba(255, 222, 89, 0.5);
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+    <div class="dynamic-bg-container">
+        <div class="ken-burns-bg"></div>
+    </div>
+
+    <div class="container mx-auto w-full max-w-lg">
+        <div class="profile-form-container p-6 sm:p-8 rounded-xl shadow-2xl">
+            <div class="flex justify-center mb-6">
+                <img src="{% static 'images/logo.jpg' %}" 
+                     alt="Profile Picture" 
+                     class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-primary-yellow shadow-lg">
+            </div>
+
+            <h2 class="font-bebas text-4xl sm:text-5xl text-center text-primary-yellow mb-6 tracking-wide">Edit Profile</h2>
+            
+            {% if messages %}
+                <div class="mb-4">
+                    {% for message in messages %}
+                        <div class="p-3 rounded-md text-sm
+                            {% if message.tags == 'success' %} bg-green-500 text-white 
+                            {% elif message.tags == 'error' %} bg-red-500 text-white 
+                            {% else %} bg-blue-500 text-white {% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="user_name" class="form-label block mb-1 text-sm">Full Name</label>
+                    <input type="text" id="user_name" name="user_name" value="{{ user.username }}" required
+                           class="form-input w-full py-2.5 px-4 rounded-md">
+                </div>
+                
+                <div>
+                    <label for="user_mail" class="form-label block mb-1 text-sm">Email</label>
+                    <input type="email" id="user_mail" name="user_mail" value="{{ user.user_mail }}" readonly
+                           class="form-input w-full py-2.5 px-4 rounded-md">
+                </div>
+
+                <div>
+                    <label for="user_dob" class="form-label block mb-1 text-sm">Date of Birth</label>
+                    <input type="date" id="user_dob" name="user_dob" value="{{ user.user_dob|date:'Y-m-d' }}" required
+                           class="form-input w-full py-2.5 px-4 rounded-md">
+                </div>
+                
+                <div>
+                    <label for="gender" class="form-label block mb-1 text-sm">Gender</label>
+                    <select id="gender" required name="user_gender" class="form-select form-input w-full py-2.5 px-4 rounded-md">
+                        <option value="" disabled {% if not user.user_gender %}selected{% endif %}>Select Gender</option>
+                        <option value="male" {% if user.user_gender == "male" %}selected{% endif %}>Male</option>
+                        <option value="female" {% if user.user_gender == "female" %}selected{% endif %}>Female</option>
+                        <option value="other" {% if user.user_gender == "other" %}selected{% endif %}>Other</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="user_phonenumber" class="form-label block mb-1 text-sm">Contact</label>
+                    <input type="text" id="user_phonenumber" name="user_phonenumber" value="{{ user.user_phonenumber }}" readonly
+                           class="form-input w-full py-2.5 px-4 rounded-md">
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="cta-button cta-button-yellow w-full">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

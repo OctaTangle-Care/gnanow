@@ -1,0 +1,489 @@
+{% comment %} <h2>Select Payment Method</h2>
+<form method="POST" action="{% url 'process_payment' %}">
+    {% csrf_token %}
+    <input type="hidden" name="order_id" value="{{ order_id }}">
+
+    <label><input type="radio" name="payment_method" value="COD" required> Cash on Delivery</label><br>
+    <label><input type="radio" name="payment_method" value="Razorpay" required> Pay with Razorpay</label><br><br>
+
+    <button type="submit">Proceed to Payment</button>
+</form> {% endcomment %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Payment Method - GNANOW</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F0F0F0; } /* Light track */
+        ::-webkit-scrollbar-thumb { background: #F39C12; border-radius: 10px; } /* Accent Amber */
+        ::-webkit-scrollbar-thumb:hover { background: #E67E22; } /* Darker Amber on hover */
+
+        /* Gnanow Official Brand Colors */
+        :root {
+            --color-primary-blue: #2C3E50; /* Deep Midnight Blue */
+            --color-primary-blue-dark: #1A2C3D; /* Even darker blue for hover */
+            --color-accent-amber: #F39C12; /* Muted Amber/Gold */
+            --color-accent-amber-dark: #E67E22; /* Slightly more orange/darker amber for hover */
+            --color-light-background: #FDFDFD; /* Almost white, very subtle warmth */
+            --color-card-background: #FFFFFF; /* Pure white for crispness */
+            --color-neutral-text: #34495E; /* Dark Slate Gray for main text */
+            --color-light-border: #EAECEE; /* Very light gray for borders */
+            --color-footer-background: #222222; /* Dark charcoal for a solid footer */
+            --color-footer-text: #BDC3C7; /* Light gray for readability on dark footer */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-light-background);
+            color: var(--color-neutral-text);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .font-bebas { font-family: 'Bebas Neue', cursive; }
+
+        /* Color Utility Classes */
+        .bg-primary-blue { background-color: var(--color-primary-blue); }
+        .text-primary-blue { color: var(--color-primary-blue); }
+        .border-primary-blue { border-color: var(--color-primary-blue); }
+        .hover\:bg-primary-blue-dark:hover { background-color: var(--color-primary-blue-dark); }
+        .hover\:text-primary-blue-dark:hover { color: var(--color-primary-blue-dark); }
+
+        .bg-accent-amber { background-color: var(--color-accent-amber); }
+        .text-accent-amber { color: var(--color-accent-amber); }
+        .border-accent-amber { border-color: var(--color-accent-amber); }
+        .hover\:bg-accent-amber-dark:hover { background-color: var(--color-accent-amber-dark); }
+        .hover\:text-accent-amber-dark:hover { color: var(--color-accent-amber-dark); }
+
+        /* Header & Nav Styling */
+        .main-header {
+            background-color: var(--color-card-background);
+            border-bottom: 1px solid var(--color-light-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .nav-link {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            font-size: 1rem;
+            color: #4B5563;
+            transition: color 0.3s ease-in-out;
+            position: relative;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: var(--color-accent-amber);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--color-accent-amber);
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link-active::after {
+            width: calc(100% - 2.5rem);
+        }
+        .nav-link-active {
+            color: var(--color-accent-amber);
+            font-weight: 600;
+        }
+        .header-icon {
+            color: #6B7280;
+            transition: color 0.3s ease-in-out;
+            font-size: 1.25rem;
+        }
+        .header-icon:hover {
+            color: var(--color-accent-amber);
+        }
+
+        /* CTA Button Styles */
+        .cta-button {
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.025em;
+            padding: 0.875rem 1.75rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .cta-button-primary {
+            background-color: var(--color-primary-blue);
+            color: white;
+            border: 2px solid var(--color-primary-blue);
+        }
+        .cta-button-primary:hover {
+            background-color: var(--color-primary-blue-dark);
+            border-color: var(--color-primary-blue-dark);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(30, 58, 138, 0.2);
+            transform: translateY(-2px);
+        }
+        .cta-button-outline {
+            background-color: transparent;
+            color: var(--color-primary-blue);
+            border: 2px solid var(--color-primary-blue);
+        }
+        .cta-button-outline:hover {
+            background-color: var(--color-primary-blue);
+            color: white;
+            border-color: var(--color-primary-blue);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(30, 58, 138, 0.2);
+            transform: translateY(-2px);
+        }
+        .cta-button-red-outline {
+            background-color: transparent;
+            color: #EF4444;
+            border: 2px solid #EF4444;
+        }
+        .cta-button-red-outline:hover {
+            background-color: #DC2626;
+            color: white;
+            border-color: #DC2626;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(220, 38, 38, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Payment Page Specific Styles */
+        .payment-container {
+            background-color: var(--color-card-background);
+            padding: 2rem; /* p-8 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* shadow-xl */
+            max-width: 900px; /* Wider container */
+            width: 100%;
+            margin: 2rem auto;
+            border: 1px solid var(--color-light-border);
+            display: grid;
+            grid-template-columns: 1fr; /* Stack on small screens */
+            gap: 2rem; /* gap-8 */
+            align-items: center;
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            .payment-container {
+                grid-template-columns: 1fr 1fr; /* Two columns on medium screens and up */
+                padding: 3rem; /* p-12 */
+            }
+        }
+
+        .payment-options-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally */
+            text-align: center;
+        }
+
+        .payment-options-section h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.25rem; /* text-4xl */
+            color: var(--color-primary-blue);
+            margin-bottom: 2rem; /* mb-8 */
+            letter-spacing: 0.05em;
+        }
+
+        .payment-method-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 300px; /* Limit button width */
+            padding: 1rem 1.5rem; /* py-4 px-6 */
+            margin-bottom: 1rem; /* mb-4 */
+            background-color: var(--color-primary-blue);
+            color: white;
+            border: 2px solid var(--color-primary-blue);
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .payment-method-button i {
+            margin-right: 0.75rem; /* mr-3 */
+            font-size: 1.25em; /* Larger icon */
+        }
+
+        .payment-method-button:hover {
+            background-color: var(--color-primary-blue-dark);
+            border-color: var(--color-primary-blue-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .payment-method-button.active {
+            background-color: var(--color-accent-amber);
+            border-color: var(--color-accent-amber);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.3);
+            color: white; /* Ensure text remains white on active */
+        }
+
+        .payment-illustration {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .payment-illustration img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: var(--color-footer-background);
+            border-top: 1px solid #333333;
+            color: var(--color-footer-text);
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        @media (min-width: 768px) {
+            .footer {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+        }
+        .footer-link {
+            color: #9CA3AF;
+            transition: color 0.3s ease-in-out;
+            font-size: 0.875rem;
+        }
+        .footer-link:hover {
+            color: var(--color-accent-amber);
+        }
+        .footer-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-header .container {
+                flex-wrap: wrap;
+            }
+            .main-header nav {
+                display: none;
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .main-header .header-icons-group {
+                order: 2;
+            }
+            .main-header .flex.items-center {
+                order: 1;
+                flex-grow: 1;
+            }
+            #mobileMenuButton {
+                display: block;
+            }
+            #mobileMenu.hidden {
+                display: none;
+            }
+            #mobileMenu.show {
+                display: block;
+            }
+        }
+        @media (min-width: 768px) {
+            .main-header nav {
+                display: flex;
+            }
+            #mobileMenuButton {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header sticky top-0 z-50 py-3 animate__animated animate__fadeInDown">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between">
+        <div class="flex items-center">
+            <a href="{% url 'dashboard' %}" class="flex items-center space-x-2 mr-6">
+                <svg class="h-10 w-10 text-primary-blue" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="font-bebas text-3xl text-primary-blue tracking-wider">GNANOW</span>
+            </a>
+        </div>
+
+        <nav class="hidden md:flex space-x-8 items-center order-3 md:order-2 w-full md:w-auto mt-2 md:mt-0">
+            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'product_list' %}" class="nav-link">Products</a>
+            <a href="#" class="nav-link">Categories</a>
+            <a href="{% url 'my_orders' %}" class="nav-link">My Orders</a>
+            <a href="{% url 'my_addresses' %}" class="nav-link">My Addresses</a>
+            <a href="#" class="nav-link">Feedback</a>
+        </nav>
+
+        <div class="header-icons-group flex items-center space-x-5 order-2 md:order-3">
+            <a href="{% url 'view_cart' %}" class="header-icon" title="Cart"><i class="fas fa-shopping-cart fa-fw"></i></a>
+            <a href="{% url 'profile' %}" class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></a>
+            <a href="{% url 'wishlist' %}" class="header-icon" title="Wishlist"><i class="fas fa-heart fa-fw"></i></a>
+            <button id="mobileMenuButton" class="md:hidden header-icon">
+                <i class="fas fa-bars fa-fw"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white/95 py-2 animate__animated animate__fadeIn border-t border-light-border">
+        <a href="{% url 'dashboard' %}" class="block nav-link px-4">Dashboard</a>
+        <a href="{% url 'product_list' %}" class="block nav-link px-4">Products</a>
+        <a href="#" class="block nav-link px-4">Categories</a>
+        <a href="{% url 'my_orders' %}" class="block nav-link">My Orders</a>
+        <a href="{% url 'my_addresses' %}" class="block nav-link">My Addresses</a>
+        <a href="#" class="block nav-link px-4">Feedback</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex-grow">
+    <div class="payment-container animate__animated animate__fadeInUp">
+        <div class="payment-options-section">
+            <h2>Choose Your Payment Method</h2>
+            <form method="POST" action="{% url 'process_payment' %}" id="paymentForm">
+                {% csrf_token %}
+                <input type="hidden" name="order_id" value="{{ order_id }}">
+                <input type="hidden" name="payment_method" id="selectedPaymentMethod" required>
+
+                <button type="button" class="payment-method-button" data-method="Razorpay">
+                    <i class="fas fa-credit-card"></i> Online Payments
+                </button>
+
+                <button type="button" class="payment-method-button" data-method="COD">
+                    <i class="fas fa-hand-holding-usd"></i> Cash On Delivery
+                </button>
+
+                {% comment %} <button type="button" class="payment-method-button" data-method="CashOnCollect">
+                    <i class="fas fa-truck-loading"></i> Cash On Collect
+                </button> {% endcomment %}
+
+                <button type="submit" class="cta-button cta-button-primary mt-8">
+                    <i class="fas fa-arrow-right mr-2"></i> Proceed to Payment
+                </button>
+            </form>
+        </div>
+
+        <div class="payment-illustration">
+            <img src="{% static 'images/typeofpay.gif' %}" alt="Payment Illustration">
+        </div>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-12 md:py-16 animate__animated animate__fadeInUp animate__delay-0.5s">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+            <div>
+                <h3 class="footer-title font-bebas text-2xl text-accent-amber">GNANOW</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Unleash Your Style. Future of Fashion.</p>
+            </div>
+            <div>
+                <h3 class="footer-title">Shop</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'product_list' %}" class="footer-link">All Products</a></li>
+                    <li><a href="#" class="footer-link">New Arrivals</a></li>
+                    <li><a href="#" class="footer-link">Collections</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">My Account</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'profile' %}" class="footer-link">Profile</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
+                    <li><a href="{% url 'my_addresses' %}" class="footer-link">My Addresses</a></li>
+                    <li><a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                    <li><a href="#" class="footer-link">FAQs</a></li>
+                    <li><a href="#" class="footer-link">Shipping</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                <h3 class="footer-title">Connect</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-8 text-center text-sm">
+            <p class="text-gray-500">&copy; {% now "Y" %} GNANOW. All rights reserved. Future of Fashion.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('show'); // For animation
+            });
+        }
+
+        // Payment Method Selection Logic
+        const paymentButtons = document.querySelectorAll('.payment-method-button');
+        const selectedPaymentMethodInput = document.getElementById('selectedPaymentMethod');
+        const paymentForm = document.getElementById('paymentForm');
+
+        paymentButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove 'active' class from all buttons
+                paymentButtons.forEach(btn => btn.classList.remove('active'));
+
+                // Add 'active' class to the clicked button
+                button.classList.add('active');
+
+                // Set the value of the hidden input
+                selectedPaymentMethodInput.value = button.dataset.method;
+            });
+        });
+
+        // Optional: Pre-select the first payment method if none is selected initially
+        if (paymentButtons.length > 0 && !selectedPaymentMethodInput.value) {
+            paymentButtons[0].click(); // Simulate a click on the first button
+        }
+
+        // Prevent form submission if no method is selected (though 'required' on hidden input helps)
+        paymentForm.addEventListener('submit', (event) => {
+            if (!selectedPaymentMethodInput.value) {
+                event.preventDefault();
+                alert('Please select a payment method before proceeding.');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

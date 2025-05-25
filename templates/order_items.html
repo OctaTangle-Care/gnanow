@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Items</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        .card {
+            background: #fff;
+            display: inline-block;
+            text-align: left;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 400px;
+            width: 90%;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 6px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            margin: 10px 0 5px;
+        }
+
+        .card p {
+            margin: 4px 0;
+            font-size: 15px;
+        }
+
+        .price {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 16px;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+{% comment %} 
+    <h2>Order Items for Order ID: {{ order.id }}</h2>
+
+    {% for item in order_items %}
+        <div class="card">
+            {% if item.image_url %}
+                <img src="{{ item.image_url }}" alt="{{ item.product.name }}">
+            {% else %}
+                <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No Image">
+            {% endif %}
+
+            <h3>{{ item.product.name }}</h3>
+            {% if item.variant %}
+                <p><strong>Color:</strong> {{ item.variant.color|title }}</p>
+                <p><strong>Size:</strong> {{ item.variant.size }}</p>
+            {% endif %}
+            <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+            <p class="price">Price: ₹{{ item.price }}</p>
+            <p class="price">Total: ₹{{ item.total_price }}</p>
+        </div>
+    {% endfor %} {% endcomment %}
+     {% comment %} <h2>Order Items for Order ID: {{ order.order_id }}</h2>
+{% for item in items %}
+  <div class="card">
+    {% if images[item.variant.id] %}
+      <img src="{{ images[item.variant.id].image.url }}" alt="Product Image" width="150">
+    {% endif %}
+    <p><strong>{{ item.product.name }}</strong></p>
+    <p>Quantity: {{ item.quantity }}</p>
+    <p>Price: ₹{{ item.price }}</p>
+    <p>Total: ₹{{ item.price|floatformat:2|add:item.quantity|floatformat:2 }}</p>
+  </div>
+{% endfor %}
+
+<a href="{% url 'my_orders' %}" class="btn btn-primary">Back to My Orders</a> {% endcomment %}
+
+
+<h2>Order Items for Order ID: {{ order.order_id }}</h2>
+{% for item in items %}
+  <div class="card" style="padding: 20px; margin: 20px; border: 1px solid #ddd; border-radius: 10px;">
+    {% if item.image %}
+      <img src="{{ item.image.image.url }}" alt="Product Image" width="150">
+    {% endif %}
+    <p><strong>{{ item.product.name }}</strong></p>
+    <p>Quantity: {{ item.quantity }}</p>
+    <p style="color: red;"><strong>Price: ₹{{ item.price }}</strong></p>
+    <p style="color: red;"><strong>Total: ₹{{ order.total_amount }}</strong></p>
+  </div>
+{% endfor %}
+
+{% comment %} <a href="{% url 'my_orders' %}" class="btn btn-primary">Back to My Orders</a> {% endcomment %}
+<br>
+    <a class="back-btn" href="{% url 'my_orders' %}">Back to My Orders</a>
+
+</body>
+</html>

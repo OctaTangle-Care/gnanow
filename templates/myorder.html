@@ -1,0 +1,1031 @@
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Orders</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+/* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #F0F0F0; } /* Light track */
+    ::-webkit-scrollbar-thumb { background: #F39C12; border-radius: 10px; } /* Accent Amber */
+    ::-webkit-scrollbar-thumb:hover { background: #E67E22; } /* Darker Amber on hover */
+
+    /* Gnanow Official Brand Colors */
+    :root {
+        --color-primary-blue: #2C3E50; /* Deep Midnight Blue */
+        --color-primary-blue-dark: #1A2C3D; /* Even darker blue for hover */
+        --color-accent-amber: #F39C12; /* Muted Amber/Gold */
+        --color-accent-amber-dark: #E67E22; /* Slightly more orange/darker amber for hover */
+        --color-light-background: #FDFDFD; /* Almost white, very subtle warmth */
+        --color-card-background: #FFFFFF; /* Pure white for crispness */
+        --color-neutral-text: #34495E; /* Dark Slate Gray for main text */
+        --color-light-border: #EAECEE; /* Very light gray for borders */
+        --color-footer-background: #222222; /* Dark charcoal for a solid footer */
+        --color-footer-text: #BDC3C7; /* Light gray for readability on dark footer */
+
+        /* Status colors */
+        --color-status-pending: #F39C12; /* Amber */
+        --color-status-processing: #3498DB; /* Blue */
+        --color-status-shipped: #2ECC71; /* Green */
+        --color-status-delivered: #27AE60; /* Darker Green */
+        --color-status-cancelled: #E74C3C; /* Red */
+        --color-status-refunded: #9B59B6; /* Purple */
+
+        /* Payment status colors */
+        --color-payment-pending: #F39C12; /* Amber */
+        --color-payment-completed: #27AE60; /* Green */
+        --color-payment-failed: #E74C3C; /* Red */
+        --color-payment-refunded: #9B59B6; /* Purple */
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--color-light-background);
+        color: var(--color-neutral-text);
+        overflow-x: hidden;
+    }
+
+    .font-bebas { font-family: 'Bebas Neue', cursive; }
+
+    /* Color Utility Classes */
+    .bg-primary-blue { background-color: var(--color-primary-blue); }
+    .text-primary-blue { color: var(--color-primary-blue); }
+    .border-primary-blue { border-color: var(--color-primary-blue); }
+    .hover\:bg-primary-blue-dark:hover { background-color: var(--color-primary-blue-dark); }
+    .hover\:text-primary-blue-dark:hover { color: var(--color-primary-blue-dark); }
+
+    .bg-accent-amber { background-color: var(--color-accent-amber); }
+    .text-accent-amber { color: var(--color-accent-amber); }
+    .border-accent-amber { border-color: var(--color-accent-amber); }
+    .hover\:bg-accent-amber-dark:hover { background-color: var(--color-accent-amber-dark); }
+    .hover\:text-accent-amber-dark:hover { color: var(--color-accent-amber-dark); }
+
+    /* Header & Nav Styling */
+    .main-header {
+        background-color: var(--color-card-background); /* Pure white header */
+        border-bottom: 1px solid var(--color-light-border);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* More pronounced shadow */
+    }
+    .nav-link {
+        @apply px-5 py-3 text-base text-gray-600 hover:text-accent-amber transition-colors duration-300 relative font-medium; /* Text color adjusted for light background */
+    }
+    .nav-link::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 0; height: 2px;
+        background-color: var(--color-accent-amber); transition: width 0.3s ease-in-out;
+    }
+    .nav-link:hover::after, .nav-link-active::after { width: calc(100% - 2.5rem); } /* Adjusted width for new padding */
+    .nav-link-active { @apply text-accent-amber font-semibold; } /* Active link in accent amber */
+    .header-icon { @apply text-gray-500 hover:text-accent-amber transition-colors duration-300 text-xl; } /* Icons in subtle gray, amber on hover */
+
+    /* CTA Button Styles */
+    .cta-button {
+        @apply inline-block transition-all duration-300 ease-in-out rounded-lg font-semibold text-base tracking-wide; /* Rounded-lg for softer look */
+        padding: 0.875rem 1.75rem; /* py-3.5 px-7 */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Soft shadow */
+    }
+    .cta-button-primary { /* Main action button */
+        @apply bg-primary-blue text-white border-2 border-primary-blue;
+    }
+    .cta-button-primary:hover {
+        @apply bg-primary-blue-dark border-primary-blue-dark shadow-lg shadow-blue-800/20 transform scale-105;
+    }
+    .cta-button-outline { /* Secondary action button (e.g., Edit) */
+        @apply bg-transparent text-primary-blue border-2 border-primary-blue;
+    }
+    .cta-button-outline:hover {
+        @apply bg-primary-blue text-white border-primary-blue shadow-lg shadow-blue-800/20 transform scale-105; /* Blue hover for outline buttons */
+    }
+    .cta-button-red-outline { /* Destructive action button (e.g., Remove) */
+        @apply bg-transparent text-red-500 border-2 border-red-500 hover:bg-red-600 hover:text-white hover:border-red-600;
+    }
+
+    /* Filter Form Styling */
+    .filter-form {
+        @apply bg-card-background p-6 rounded-lg shadow-md mb-8 flex flex-wrap items-center gap-4;
+        border: 1px solid var(--color-light-border);
+    }
+    .filter-form label {
+        @apply text-sm font-medium text-neutral-text;
+    }
+    .filter-form select {
+        @apply form-select block w-full sm:w-auto px-4 py-2 border border-light-border rounded-md shadow-sm focus:ring-primary-blue focus:border-primary-blue sm:text-sm;
+        background-color: var(--color-light-background);
+        color: var(--color-neutral-text);
+        -webkit-appearance: none; /* Remove default arrow */
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2334495E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+        padding-right: 2.5rem; /* Make space for the custom arrow */
+    }
+    .filter-form .btn-filter {
+        @apply cta-button cta-button-primary;
+        padding: 0.625rem 1.25rem; /* Smaller padding for filter button */
+        font-size: 0.9rem;
+    }
+
+    /* Order Card Styling */
+    .order-card {
+        background-color: var(--color-card-background); /* White background for cards */
+        border: 1px solid var(--color-light-border);
+        color: var(--color-neutral-text); /* Dark text inside cards */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.06); /* Subtle shadow */
+        @apply p-6 rounded-lg;
+    }
+    .order-card:hover {
+        transform: translateY(-6px); /* Slightly more pronounced lift */
+        box-shadow: 0 12px 25px rgba(0,0,0,0.15); /* Deeper shadow on hover */
+    }
+    .order-card h5 {
+        @apply text-xl font-semibold text-primary-blue mb-2;
+    }
+    .order-card p {
+        @apply text-gray-600 text-sm mb-1;
+    }
+    .order-card .status-badge {
+        @apply inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+    }
+    .order-card .status-pending { background-color: var(--color-status-pending); color: white; }
+    .order-card .status-processing { background-color: var(--color-status-processing); color: white; }
+    .order-card .status-shipped { background-color: var(--color-status-shipped); color: white; }
+    .order-card .status-delivered { background-color: var(--color-status-delivered); color: white; }
+    .order-card .status-cancelled { background-color: var(--color-status-cancelled); color: white; }
+    .order-card .status-refunded { background-color: var(--color-status-refunded); color: white; }
+
+    .order-card .payment-status-badge {
+        @apply inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider;
+    }
+    .order-card .payment-pending { background-color: var(--color-payment-pending); color: white; }
+    .order-card .payment-completed { background-color: var(--color-payment-completed); color: white; }
+    .order-card .payment-failed { background-color: var(--color-payment-failed); color: white; }
+    .order-card .payment-refunded { background-color: var(--color-payment-refunded); color: white; }
+
+    .order-card .item {
+        border-top: 1px dashed var(--color-light-border);
+        @apply py-3 first:border-t-0; /* No top border for the first item */
+    }
+    .order-card .item strong {
+        @apply text-primary-blue font-medium;
+    }
+    .order-card .item p {
+        @apply text-gray-700 text-sm mt-1;
+    }
+
+    /* Footer Styling */
+    .footer {
+        background-color: var(--color-footer-background); /* Dark charcoal background for footer */
+        border-top: 1px solid #333333; /* Slightly lighter border */
+        color: var(--color-footer-text); /* Light gray text for footer */
+    }
+    .footer-link { @apply text-gray-400 hover:text-accent-amber text-sm transition-colors duration-300; } /* Amber on footer link hover */
+    .footer-title { @apply font-semibold text-lg text-white mb-3; }
+
+    /* No orders found styling */
+    .no-orders-found {
+        @apply text-center py-16 bg-card-background rounded-lg shadow-md;
+        border: 1px solid var(--color-light-border);
+    }
+    .no-orders-found svg {
+        @apply mx-auto h-20 w-20 text-gray-400 mb-6;
+    }
+    .no-orders-found h3 {
+        @apply text-2xl font-semibold text-neutral-text mb-3;
+    }
+    .no-orders-found p {
+        @apply text-gray-600 text-lg mb-8;
+    }
+    </style>
+</head>
+<body>
+<header class="main-header sticky top-0 z-50 py-3 animate__animated animate__fadeInDown">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between">
+        <div class="flex items-center">
+            <a href="{% url 'dashboard' %}" class="flex items-center space-x-2 mr-6">
+                <svg class="h-10 w-10 text-primary-blue" fill="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="font-bebas text-3xl text-primary-blue tracking-wider">GNANOW</span>
+            </a>
+        </div>
+
+        <nav class="hidden md:flex space-x-8 items-center order-3 md:order-2 w-full md:w-auto mt-2 md:mt-0">
+            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'product_list' %}" class="nav-link">Products</a>
+            <a href="#" class="nav-link">Categories</a> 
+            <a href="{% url 'my_orders' %}" class="nav-link nav-link-active">My Orders</a>
+            <a href="{% url 'my_addresses' %}" class="nav-link">My Addresses</a>
+            <a href="#" class="nav-link">Feedback</a>
+        </nav>
+
+        <div class="header-icons-group flex items-center space-x-5 order-2 md:order-3">
+            <a href="{% url 'view_cart' %}" class="header-icon" title="Cart"><i class="fas fa-shopping-cart fa-fw"></i></a>
+            <a href="{% url 'profile' %}" class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></a>
+            <a href="{% url 'wishlist' %}" class="header-icon" title="Wishlist"><i class="fas fa-heart fa-fw"></i></a>
+            <button id="mobileMenuButton" class="md:hidden header-icon">
+                <i class="fas fa-bars fa-fw"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white/95 py-2 animate__animated animate__fadeIn border-t border-light-border">
+        <a href="{% url 'dashboard' %}" class="block nav-link px-4">Dashboard</a>
+        <a href="{% url 'product_list' %}" class="block nav-link px-4">Products</a>
+        <a href="#" class="block nav-link px-4">Categories</a>
+        <a href="{% url 'my_orders' %}" class="block nav-link nav-link-active px-4">My Orders</a>
+        <a href="{% url 'my_addresses' %}" class="block nav-link px-4">My Addresses</a>
+        <a href="#" class="block nav-link px-4">Feedback</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex-grow">
+    <h1 class="font-bebas text-4xl sm:text-5xl text-primary-blue tracking-wide mb-8 animate__animated animate__fadeInUp">My Orders</h1>
+
+    <form method="get" class="filter-form animate__animated animate__fadeInUp animate__delay-0.2s">
+        <label class="mr-2">Order Status:</label>
+        <select name="status">
+            <option value="">All</option>
+            {% for s in status_choices %}
+                <option value="{{ s }}" {% if request.GET.status == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="mr-2">Payment Status:</label>
+        <select name="payment_status">
+            <option value="">All</option>
+            {% for p in payment_status_choices %}
+                <option value="{{ p }}" {% if request.GET.payment_status == p %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="mr-2">Payment Method:</label>
+        <select name="method">
+            <option value="">All</option>
+            {% for m in method_choices %}
+                <option value="{{ m }}" {% if request.GET.method == m %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn-filter">Filter Orders</button>
+    </form>
+
+    {% if orders %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            {% for order in orders %}
+                <div class="order-card animate__animated animate__fadeInUp animate__delay-0.{{ forloop.counter0 }}s">
+                    <div class="flex justify-between items-center mb-3">
+                        <h5 class="text-primary-blue">Order #{{ order.order_id }}</h5>
+                        <span class="status-badge status-{{ order.status|lower }}">
+                            {{ order.status }}
+                        </span>
+                    </div>
+                    <p><strong>Total:</strong> ₹{{ order.total_amount }}</p>
+                    <p><strong>Ordered On:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+                    
+                    {% if order.payment %}
+                        <div class="flex justify-between items-center mt-2 mb-4">
+                            <p class="text-sm text-gray-600"><strong>Payment Method:</strong> {{ order.payment.method }}</p>
+                            <span class="payment-status-badge payment-{{ order.payment.status|lower }}">
+                                {{ order.payment.status }}
+                            </span>
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-4 pt-4 border-t border-light-border">
+                        <h6 class="text-md font-semibold text-neutral-text mb-3">Items:</h6>
+                        {% for item in order.items.all %}
+                            <div class="item">
+                                <div class="flex justify-between items-center">
+                                    <strong>{{ item.product.name }}</strong>
+                                    <span class="text-primary-blue font-medium">₹{{ item.price }}</span>
+                                </div>
+                                <p>Quantity: {{ item.quantity }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-orders-found animate__animated animate__fadeInUp">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" class="w-20 h-20 mx-auto text-gray-400 mb-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+            <h3>No Orders Found</h3>
+            <p>It looks like you haven't placed any orders yet. Start shopping now!</p>
+            <a href="{% url 'product_list' %}" class="cta-button cta-button-primary">
+                <i class="fas fa-shopping-bag mr-2"></i> Start Shopping
+            </a>
+        </div>
+    {% endif %}
+</main>
+
+<footer class="footer mt-auto py-12 md:py-16 animate__animated animate__fadeInUp animate__delay-0.5s">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+            <div>
+                <h3 class="footer-title font-bebas text-2xl text-accent-amber">GNANOW</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Unleash Your Style. Future of Fashion.</p>
+            </div>
+            <div>
+                <h3 class="footer-title">Shop</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'product_list' %}" class="footer-link">All Products</a></li>
+                    <li><a href="#" class="footer-link">New Arrivals</a></li>
+                    <li><a href="#" class="footer-link">Collections</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">My Account</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'profile' %}" class="footer-link">Profile</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
+                    <li><a href="{% url 'my_addresses' %}" class="footer-link">My Addresses</a></li>
+                    <li><a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                    <li><a href="#" class="footer-link">FAQs</a></li>
+                    <li><a href="#" class="footer-link">Shipping</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                <h3 class="footer-title">Connect</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-8 text-center text-sm">
+            <p class="text-gray-500">&copy; {% now "Y" %} GNANOW. All rights reserved. Future of Fashion.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mobile Menu
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+</body>
+</html> {% endcomment %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - GNANOW</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F0F0F0; } /* Light track */
+        ::-webkit-scrollbar-thumb { background: #F39C12; border-radius: 10px; } /* Accent Amber */
+        ::-webkit-scrollbar-thumb:hover { background: #E67E22; } /* Darker Amber on hover */
+
+        /* Gnanow Official Brand Colors */
+        :root {
+            --color-primary-blue: #2C3E50; /* Deep Midnight Blue */
+            --color-primary-blue-dark: #1A2C3D; /* Even darker blue for hover */
+            --color-accent-amber: #F39C12; /* Muted Amber/Gold */
+            --color-accent-amber-dark: #E67E22; /* Slightly more orange/darker amber for hover */
+            --color-light-background: #FDFDFD; /* Almost white, very subtle warmth */
+            --color-card-background: #FFFFFF; /* Pure white for crispness */
+            --color-neutral-text: #34495E; /* Dark Slate Gray for main text */
+            --color-light-border: #EAECEE; /* Very light gray for borders */
+            --color-footer-background: #222222; /* Dark charcoal for a solid footer */
+            --color-footer-text: #BDC3C7; /* Light gray for readability on dark footer */
+
+            /* Status colors */
+            --color-status-pending: #F39C12; /* Amber */
+            --color-status-processing: #3498DB; /* Blue */
+            --color-status-shipped: #2ECC71; /* Green */
+            --color-status-delivered: #27AE60; /* Darker Green */
+            --color-status-cancelled: #E74C3C; /* Red */
+            --color-status-refunded: #9B59B6; /* Purple */
+
+            /* Payment status colors (if needed, though not explicitly in screenshot) */
+            --color-payment-pending: #F39C12; /* Amber */
+            --color-payment-completed: #27AE60; /* Green */
+            --color-payment-failed: #E74C3C; /* Red */
+            --color-payment-refunded: #9B59B6; /* Purple */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-light-background);
+            color: var(--color-neutral-text);
+            overflow-x: hidden; /* Prevent horizontal scroll on some animations */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure footer sticks to bottom */
+        }
+
+        .font-bebas { font-family: 'Bebas Neue', cursive; }
+
+        /* Color Utility Classes - Re-applying Tailwind-like properties as direct CSS */
+        .bg-primary-blue { background-color: var(--color-primary-blue); }
+        .text-primary-blue { color: var(--color-primary-blue); }
+        .border-primary-blue { border-color: var(--color-primary-blue); }
+        .hover\:bg-primary-blue-dark:hover { background-color: var(--color-primary-blue-dark); }
+        .hover\:text-primary-blue-dark:hover { color: var(--color-primary-blue-dark); }
+
+        .bg-accent-amber { background-color: var(--color-accent-amber); }
+        .text-accent-amber { color: var(--color-accent-amber); }
+        .border-accent-amber { border-color: var(--color-accent-amber); }
+        .hover\:bg-accent-amber-dark:hover { background-color: var(--color-accent-amber-dark); }
+        .hover\:text-accent-amber-dark:hover { color: var(--color-accent-amber-dark); }
+
+        /* Header & Nav Styling */
+        .main-header {
+            background-color: var(--color-card-background);
+            border-bottom: 1px solid var(--color-light-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .nav-link {
+            padding-left: 1.25rem; /* px-5 -> 1.25rem */
+            padding-right: 1.25rem; /* px-5 -> 1.25rem */
+            padding-top: 0.75rem; /* py-3 -> 0.75rem */
+            padding-bottom: 0.75rem; /* py-3 -> 0.75rem */
+            font-size: 1rem; /* text-base -> 1rem */
+            color: #4B5563; /* text-gray-600 */
+            transition: color 0.3s ease-in-out;
+            position: relative;
+            font-weight: 500; /* font-medium */
+        }
+        .nav-link:hover {
+            color: var(--color-accent-amber);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--color-accent-amber);
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link-active::after {
+            width: calc(100% - 2.5rem); /* Adjusted width for new padding */
+        }
+        .nav-link-active {
+            color: var(--color-accent-amber);
+            font-weight: 600; /* font-semibold */
+        }
+        .header-icon {
+            color: #6B7280; /* text-gray-500 */
+            transition: color 0.3s ease-in-out;
+            font-size: 1.25rem; /* text-xl */
+        }
+        .header-icon:hover {
+            color: var(--color-accent-amber);
+        }
+
+        /* CTA Button Styles */
+        .cta-button {
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            font-size: 1rem; /* text-base */
+            letter-spacing: 0.025em; /* tracking-wide */
+            padding: 0.875rem 1.75rem; /* py-3.5 px-7 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center; /* Ensure text is centered */
+        }
+        .cta-button-primary {
+            background-color: var(--color-primary-blue);
+            color: white;
+            border: 2px solid var(--color-primary-blue);
+        }
+        .cta-button-primary:hover {
+            background-color: var(--color-primary-blue-dark);
+            border-color: var(--color-primary-blue-dark);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(30, 58, 138, 0.2); /* Deeper shadow with subtle blue glow */
+            transform: translateY(-2px); /* Slight lift */
+        }
+        .cta-button-outline {
+            background-color: transparent;
+            border: 2px solid var(--color-primary-blue);
+        }
+        .cta-button-outline:hover {
+            background-color: var(--color-primary-blue);
+            color: white;
+            border-color: var(--color-primary-blue);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(30, 58, 138, 0.2);
+            transform: translateY(-2px);
+        }
+        .cta-button-red-outline {
+            background-color: transparent;
+            color: #EF4444; /* red-500 */
+            border: 2px solid #EF4444;
+        }
+        .cta-button-red-outline:hover {
+            background-color: #DC2626; /* red-600 */
+            color: white;
+            border-color: #DC2626;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(220, 38, 38, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Filter Form Styling */
+        .filter-form {
+            background-color: var(--color-card-background);
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* shadow-md */
+            margin-bottom: 2rem; /* mb-8 */
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem; /* gap-4 */
+            border: 1px solid var(--color-light-border);
+        }
+        .filter-form label {
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            color: var(--color-neutral-text);
+        }
+        .filter-form select {
+            display: block;
+            width: 100%; /* w-full */
+            padding: 0.5rem 1rem; /* px-4 py-2 */
+            border: 1px solid var(--color-light-border);
+            border-radius: 0.375rem; /* rounded-md */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* shadow-sm */
+            font-size: 0.875rem; /* sm:text-sm */
+            background-color: var(--color-light-background);
+            color: var(--color-neutral-text);
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2334495E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+        .filter-form select:focus {
+            outline: 2px solid transparent; /* outline-none */
+            outline-offset: 2px;
+            box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.2); /* focus:ring-primary-blue */
+            border-color: var(--color-primary-blue); /* focus:border-primary-blue */
+        }
+        .filter-form .btn-filter {
+            padding: 0.625rem 1.25rem; /* Smaller padding for filter button */
+            font-size: 0.9rem;
+            {% comment %} background-color:blue; {% endcomment %}
+              background-color: transparent;
+            border: 2px solid var(--color-primary-blue);
+            /* Inherits cta-button and cta-button-primary styles */
+        }
+
+        /* Order Card Styling */
+        .order-card {
+            background-color: var(--color-card-background);
+            border: 1px solid var(--color-light-border);
+            color: var(--color-neutral-text);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+            padding: 1.5rem; /* p-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Pushes buttons to the bottom if content is short */
+        }
+        .order-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        .order-card h5 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            color: var(--color-primary-blue);
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .order-card p {
+            color: #4B5563; /* gray-600 */
+            font-size: 0.875rem; /* text-sm */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+        .order-card p:last-of-type {
+            margin-bottom: 1rem; /* mb-4 for the total price */
+        }
+
+        .order-card .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem; /* px-3 py-1 */
+            border-radius: 9999px; /* rounded-full */
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600; /* font-semibold */
+            text-transform: uppercase;
+            letter-spacing: 0.05em; /* tracking-wider */
+            color: white; /* Default for all status badges */
+        }
+        .order-card .status-pending { background-color: var(--color-status-pending); }
+        .order-card .status-processing { background-color: var(--color-status-processing); }
+        .order-card .status-shipped { background-color: var(--color-status-shipped); }
+        .order-card .status-delivered { background-color: var(--color-status-delivered); }
+        .order-card .status-cancelled { background-color: var(--color-status-cancelled); }
+        .order-card .status-refunded { background-color: var(--color-status-refunded); }
+
+        /* Payment status colors (if needed, but not used in the screenshot layout) */
+        .order-card .payment-status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: black;
+        }
+        .order-card .payment-pending { background-color: var(--color-payment-pending); }
+        .order-card .payment-completed { background-color: var(--color-payment-completed); }
+        .order-card .payment-failed { background-color: var(--color-payment-failed); }
+        .order-card .payment-refunded { background-color: var(--color-payment-refunded); }
+
+        /* Order item details (removed to match screenshot, but keeping styles if you re-add) */
+        .order-card .item {
+            border-top: 1px dashed var(--color-light-border);
+            padding-top: 0.75rem; /* py-3 */
+            padding-bottom: 0.75rem; /* py-3 */
+        }
+        .order-card .item:first-of-type {
+            border-top: 0; /* first:border-t-0 */
+        }
+        .order-card .item strong {
+            color: var(--color-primary-blue);
+            font-weight: 500; /* font-medium */
+        }
+        .order-card .item p {
+            color: #374151; /* gray-700 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem; /* mt-1 */
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: var(--color-footer-background);
+            border-top: 1px solid #333333;
+            color: var(--color-footer-text);
+            padding-top: 3rem; /* py-12 */
+            padding-bottom: 3rem; /* py-12 */
+        }
+        @media (min-width: 768px) { /* md */
+            .footer {
+                padding-top: 4rem; /* md:py-16 */
+                padding-bottom: 4rem; /* md:py-16 */
+            }
+        }
+        .footer-link {
+            color: #9CA3AF; /* gray-400 */
+            transition: color 0.3s ease-in-out;
+            font-size: 0.875rem; /* text-sm */
+        }
+        .footer-link:hover {
+            color: var(--color-accent-amber);
+        }
+        .footer-title {
+            font-weight: 600; /* font-semibold */
+            font-size: 1.125rem; /* text-lg */
+            color: white;
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+
+        /* No orders found styling */
+        .no-orders-found {
+            text-align: center;
+            padding-top: 4rem; /* py-16 */
+            padding-bottom: 4rem; /* py-16 */
+            background-color: var(--color-card-background);
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* shadow-md */
+            border: 1px solid var(--color-light-border);
+        }
+        .no-orders-found svg {
+            margin-left: auto;
+            margin-right: auto;
+            height: 5rem; /* h-20 */
+            width: 5rem; /* w-20 */
+            color: #9CA3AF; /* gray-400 */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        .no-orders-found h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600; /* font-semibold */
+            color: var(--color-neutral-text);
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .no-orders-found p {
+            color: #4B5563; /* gray-600 */
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+
+        /* Responsive adjustments for filter form and order cards */
+        @media (min-width: 640px) { /* sm breakpoint */
+            .filter-form select {
+                width: auto; /* sm:w-auto */
+            }
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            .main-header .container {
+                flex-wrap: nowrap; /* Prevent nav from wrapping on md+ */
+            }
+            .main-header nav {
+                width: auto; /* md:w-auto */
+                margin-top: 0; /* md:mt-0 */
+                display: flex; /* Ensure it's visible */
+            }
+            #mobileMenu {
+                display: none; /* Hide mobile menu on md+ */
+            }
+            .filter-form {
+                justify-content: flex-start; /* Align filter items to start */
+            }
+        }
+
+        @media (min-width: 1024px) { /* lg breakpoint */
+            .grid-cols-1 {
+                grid-template-columns: repeat(2, minmax(0, 1fr)); /* lg:grid-cols-2 */
+            }
+        }
+
+        /* Additional button styles for the order cards */
+        .order-card .btn {
+            display: block; /* Make buttons stack vertically */
+            width: 100%; /* Full width */
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center; /* Center text within buttons */
+            border: none; /* Remove default button border */
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .order-card .btn-primary {
+            background-color: var(--color-primary-blue);
+            color: white;
+        }
+        .order-card .btn-primary:hover {
+            background-color: var(--color-primary-blue-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .order-card .btn-danger {
+            background-color: #EF4444; /* red-500 */
+            color: white;
+        }
+        .order-card .btn-danger:hover {
+            background-color: #DC2626; /* red-600 */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .order-card .btn-success {
+            background-color: #2ECC71; /* green-500 equivalent */
+            color: white;
+        }
+        .order-card .btn-success:hover {
+            background-color: #27AE60; /* darker green */
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+    </style>
+</head>
+<body>
+
+<header class="main-header sticky top-0 z-50 py-3 animate__animated animate__fadeInDown">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between">
+        <div class="flex items-center">
+            <a href="{% url 'dashboard' %}" class="flex items-center space-x-2 mr-6">
+                <svg class="h-10 w-10 text-primary-blue" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="font-bebas text-3xl text-primary-blue tracking-wider">GNANOW</span>
+            </a>
+        </div>
+
+        <nav class="hidden md:flex space-x-8 items-center order-3 md:order-2 w-full md:w-auto mt-2 md:mt-0">
+            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'product_list' %}" class="nav-link">Products</a>
+            <a href="#" class="nav-link">Categories</a>
+            <a href="{% url 'my_orders' %}" class="nav-link nav-link-active">My Orders</a>
+            <a href="{% url 'my_addresses' %}" class="nav-link">My Addresses</a>
+            <a href="#" class="nav-link">Feedback</a>
+        </nav>
+
+        <div class="header-icons-group flex items-center space-x-5 order-2 md:order-3">
+            <a href="{% url 'view_cart' %}" class="header-icon" title="Cart"><i class="fas fa-shopping-cart fa-fw"></i></a>
+            <a href="{% url 'profile' %}" class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></a>
+            <a href="{% url 'wishlist' %}" class="header-icon" title="Wishlist"><i class="fas fa-heart fa-fw"></i></a>
+            <button id="mobileMenuButton" class="md:hidden header-icon">
+                <i class="fas fa-bars fa-fw"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white/95 py-2 animate__animated animate__fadeIn border-t border-light-border">
+        <a href="{% url 'dashboard' %}" class="block nav-link px-4">Dashboard</a>
+        <a href="{% url 'product_list' %}" class="block nav-link px-4">Products</a>
+        <a href="#" class="block nav-link px-4">Categories</a>
+        <a href="{% url 'my_orders' %}" class="block nav-link nav-link-active px-4">My Orders</a>
+        <a href="{% url 'my_addresses' %}" class="block nav-link px-4">My Addresses</a>
+        <a href="#" class="block nav-link px-4">Feedback</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex-grow">
+    <h1 class="font-bebas text-4xl sm:text-5xl text-primary-blue tracking-wide mb-8 animate__animated animate__fadeInUp">My Orders</h1>
+
+    <form method="get" class="filter-form animate__animated animate__fadeInUp animate__delay-0.2s">
+        <label class="mr-2">Order Status:</label>
+        <select name="status">
+            <option value="">All</option>
+            {% for s in status_choices %}
+                <option value="{{ s }}" {% if request.GET.status == s %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="mr-2">Payment Status:</label>
+        <select name="payment_status">
+            <option value="">All</option>
+            {% for p in payment_status_choices %}
+                <option value="{{ p }}" {% if request.GET.payment_status == p %}selected{% endif %}>{{ p }}</option>
+            {% endfor %}
+        </select>
+
+        <label class="mr-2">Payment Method:</label>
+        <select name="method">
+            <option value="">All</option>
+            {% for m in method_choices %}
+                <option value="{{ m }}" {% if request.GET.method == m %}selected{% endif %}>{{ m }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn-filter">Apply Filter</button>
+    </form>
+
+    {% if orders %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            {# Iterate through orders, limiting to 3 for this example in the template. #}
+            {# For production, it's better to limit the queryset in the Django view itself. #}
+            {% for order in orders %}
+                <div class="order-card animate__animated animate__fadeInUp animate__delay-0.{{ forloop.counter0 }}s">
+                    <h5 class="text-primary-blue mb-2">Order ID: {{ order.order_id }}</h5>
+                    <p class="text-gray-600 text-sm mb-1">Date: {{ order.created_at|date:"M d, Y, H:i a" }}</p>
+                    <p class="text-gray-600 text-sm mb-1">Status: <span class="status-badge status-{{ order.status|lower }}">{{ order.status }}</span></p>
+                    {# Conditionally display payment status if available, though not in screenshot #}
+                    {% if order.payment %}
+                    <p class="text-gray-600 text-sm mb-4">Payment: <span class="payment-status-badge payment-{{ order.payment.status|lower }}">{{ order.payment.status }}</span></p>
+                    {% else %}
+                    <p class="text-gray-600 text-sm mb-4">Payment: Not available</p>
+                    {% endif %}
+                    <p class="text-gray-600 text-sm mb-4">Total Price: ₹{{ order.total_amount }}</p>
+
+                    <div class="flex flex-col space-y-3 mt-auto pt-4 border-t border-light-border">
+                        <a href="{% url 'order_items' order.order_id %}" class="btn btn-success">Order Items</a>
+
+                        {% comment %} <button class="btn btn-primary">Track Order</button> {% endcomment %}
+                       <a href="{% url 'track_order' order.order_id %}" class="btn btn-primary" class="btn btn-info btn-sm">Track Order</a>
+
+    {% comment %} <td>{{ order.order_id }}</td>
+    <td>{{ order.status }}</td>
+    <td>{{ order.created_at }}</td> {% endcomment %}
+  
+      {% comment %} {% if order.status != "Shipped" %}
+        <form action="{% url 'initiate_cancel_order' order.order_id %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Cancel Order</button>
+        </form>
+      {% else %}
+        <button class="btn btn-secondary" disabled>Cancellation Disabled</button>
+      {% endif %} {% endcomment %}
+
+
+      
+      {% if order.status != "Shipped" and order.status != "Cancelled" %}
+    <form action="{% url 'initiate_cancel_order' order.order_id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Cancel Order</button>
+    </form>
+{% else %}
+    <button class="btn btn-secondary" disabled>
+        {% if order.status == "Shipped" %}
+            Cancellation Disabled (Shipped)
+        {% else %}
+            Already Cancelled
+        {% endif %}
+    </button>
+{% endif %}
+
+
+                        {% comment %} <button class="btn btn-danger">Cancel Order</button> {% endcomment %}
+                        {% comment %} <button class="btn btn-success">Order Items</button> {% endcomment %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-orders-found animate__animated animate__fadeInUp">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" class="w-20 h-20 mx-auto text-gray-400 mb-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+            </svg>
+            <h3>No Orders Found</h3>
+            <p>It looks like you haven't placed any orders yet. Start shopping now!</p>
+            <a href="{% url 'product_list' %}" class="cta-button cta-button-primary">
+                <i class="fas fa-shopping-bag mr-2"></i> Start Shopping
+            </a>
+        </div>
+    {% endif %}
+</main>
+
+<footer class="footer mt-auto py-12 md:py-16 animate__animated animate__fadeInUp animate__delay-0.5s">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+            <div>
+                <h3 class="footer-title font-bebas text-2xl text-accent-amber">GNANOW</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Unleash Your Style. Future of Fashion.</p>
+            </div>
+            <div>
+                <h3 class="footer-title">Shop</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'product_list' %}" class="footer-link">All Products</a></li>
+                    <li><a href="#" class="footer-link">New Arrivals</a></li>
+                    <li><a href="#" class="footer-link">Collections</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">My Account</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'profile' %}" class="footer-link">Profile</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
+                    <li><a href="{% url 'my_addresses' %}" class="footer-link">My Addresses</a></li>
+                    <li><a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                    <li><a href="#" class="footer-link">FAQs</a></li>
+                    <li><a href="#" class="footer-link">Shipping</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                <h3 class="footer-title">Connect</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-8 text-center text-sm">
+            <p class="text-gray-500">&copy; {% now "Y" %} GNANOW. All rights reserved. Future of Fashion.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mobile Menu
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+</body>
+</html>

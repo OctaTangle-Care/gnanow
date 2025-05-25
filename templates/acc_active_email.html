@@ -1,0 +1,17 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>account activate</title>
+</head>
+<body>
+    Hi {{ new_user.user_fname }},
+
+<p>Please click the link below to confirm your email address and complete your registration:</p>
+
+<a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activate your account</a> 
+
+</body>
+</html>

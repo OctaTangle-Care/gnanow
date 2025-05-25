@@ -1,0 +1,3068 @@
+{% comment %} {% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - Gnanow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Base dark for futuristic */
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #facc15; /* Yellow */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; /* Darker yellow */
+        }
+
+        .brand-yellow { color: #facc15; }
+        .bg-brand-yellow { background-color: #facc15; }
+        .border-brand-yellow { border-color: #facc15; }
+        .text-brand-black { color: #0a0a0a; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-fadeInUp { animation: fadeInUp 0.5s ease-out forwards; }
+        .animate-scaleIn { animation: scaleIn 0.3s ease-out forwards; }
+
+        .nav-link {
+            @apply px-3 py-2 text-sm text-gray-300 hover:text-brand-yellow transition-colors duration-300;
+        }
+        .nav-link-active {
+            @apply text-brand-yellow font-semibold;
+        }
+        .header-icon {
+            @apply text-gray-300 hover:text-brand-yellow transition-colors duration-300;
+        }
+
+        .filter-button {
+            @apply px-4 py-2 text-sm border border-gray-700 rounded-md hover:border-brand-yellow hover:text-brand-yellow transition-all duration-300 flex items-center justify-between;
+        }
+        .product-card {
+            @apply bg-gray-900/70 border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-yellow-500/50 transform hover:-translate-y-1;
+            animation: fadeInUp 0.5s ease-out backwards; /* Backwards to apply initial state */
+        }
+        .product-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4) { animation-delay: 0.4s; }
+        /* Add more delays if needed */
+
+        .pagination-button {
+            @apply w-10 h-10 flex items-center justify-center text-sm border border-gray-700 rounded-md hover:bg-brand-yellow hover:text-brand-black hover:border-brand-yellow transition-all duration-300;
+        }
+        .pagination-button.active {
+            @apply bg-brand-yellow text-brand-black border-brand-yellow;
+        }
+
+        .footer-link {
+            @apply text-gray-400 hover:text-brand-yellow text-sm transition-colors duration-300;
+        }
+        .footer-title {
+            @apply text-white text-base font-semibold mb-3;
+        }
+        .input-dark {
+            @apply bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm rounded-md focus:ring-brand-yellow focus:border-brand-yellow block w-full p-2.5 transition-colors duration-300;
+        }
+        .btn-yellow {
+            @apply bg-brand-yellow text-brand-black font-semibold py-2.5 px-5 rounded-md hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105;
+        }
+        .dropdown-content {
+            @apply absolute mt-1 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20;
+            display: none; /* Hidden by default */
+        }
+        .dropdown-content.open {
+            display: block;
+            animation: scaleIn 0.2s ease-out forwards;
+        }
+        .dropdown-item {
+            @apply block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-brand-yellow;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-40 bg-black/80 backdrop-blur-md shadow-lg animate-fadeIn">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="#" class="text-2xl font-bold brand-yellow">GNANOW</a>
+                </div>
+
+                <nav class="hidden md:flex space-x-1 items-center">
+                    <a href="#" class="nav-link nav-link-active">Home</a>
+                    <a href="#" class="nav-link">Shop</a>
+                    <a href="#" class="nav-link">Products</a>
+                    <a href="#" class="nav-link">Pages</a>
+                    <a href="#" class="nav-link">Blog</a>
+                    <a href="#" class="nav-link">Elements</a>
+                </nav>
+
+                <div class="flex items-center space-x-3 sm:space-x-4">
+                    <button class="header-icon"><i class="fas fa-search fa-fw"></i></button>
+                    <button class="header-icon"><i class="fas fa-user fa-fw"></i></button>
+                    <button class="header-icon relative">
+                        <i class="fas fa-heart fa-fw"></i>
+                        <span class="absolute -top-1 -right-1 bg-brand-yellow text-brand-black text-xs w-4 h-4 rounded-full flex items-center justify-center">3</span>
+                    </button>
+                    <button class="header-icon relative">
+                        <i class="fas fa-shopping-cart fa-fw"></i>
+                        <span class="absolute -top-1 -right-1 bg-brand-yellow text-brand-black text-xs w-4 h-4 rounded-full flex items-center justify-center">2</span>
+                    </button>
+                    <button id="mobileMenuButton" class="md:hidden header-icon">
+                        <i class="fas fa-bars fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="md:hidden hidden bg-gray-900/95 backdrop-blur-sm py-2">
+            <a href="#" class="block nav-link nav-link-active px-4">Home</a>
+            <a href="#" class="block nav-link px-4">Shop</a>
+            <a href="#" class="block nav-link px-4">Products</a>
+            <a href="#" class="block nav-link px-4">Pages</a>
+            <a href="#" class="block nav-link px-4">Blog</a>
+            <a href="#" class="block nav-link px-4">Elements</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+        <div class="mb-6 animate-fadeInUp">
+            <nav class="text-sm mb-2" aria-label="Breadcrumb">
+                <ol class="list-none p-0 inline-flex">
+                    <li class="flex items-center">
+                        <a href="#" class="text-gray-400 hover:text-brand-yellow">Home</a>
+                        <i class="fas fa-chevron-right fa-xs mx-2 text-gray-600"></i>
+                    </li>
+                    <li class="flex items-center">
+                        <span class="text-white">Shop</span>
+                    </li>
+                </ol>
+            </nav>
+            <h1 class="text-3xl sm:text-4xl font-bold text-white">Shop</h1>
+        </div>
+
+        <div class="mb-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:items-center lg:justify-between gap-3 animate-fadeInUp" style="animation-delay: 0.1s;">
+            <div class="relative col-span-1">
+                <button id="categoriesFilterButton" class="filter-button w-full">
+                    Categories <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                </button>
+                <div id="categoriesFilterDropdown" class="dropdown-content">
+                    <a href="#" class="dropdown-item">Outerwear</a>
+                    <a href="#" class="dropdown-item">Tech-Shirts</a>
+                    <a href="#" class="dropdown-item">Nano-Pants</a>
+                    <a href="#" class="dropdown-item">Accessories</a>
+                </div>
+            </div>
+             <div class="relative col-span-1">
+                <button id="colorFilterButton" class="filter-button w-full">
+                    Color <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                </button>
+                <div id="colorFilterDropdown" class="dropdown-content">
+                    <a href="#" class="dropdown-item">Black</a>
+                    <a href="#" class="dropdown-item">White</a>
+                    <a href="#" class="dropdown-item">Yellow</a>
+                    <a href="#" class="dropdown-item">Cyber Blue</a>
+                </div>
+            </div>
+            <div class="relative col-span-1">
+                <button id="sizeFilterButton" class="filter-button w-full">
+                    Size <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                </button>
+                 <div id="sizeFilterDropdown" class="dropdown-content">
+                    <a href="#" class="dropdown-item">S</a>
+                    <a href="#" class="dropdown-item">M</a>
+                    <a href="#" class="dropdown-item">L</a>
+                    <a href="#" class="dropdown-item">XL</a>
+                </div>
+            </div>
+             <div class="relative col-span-1">
+                <button id="brandFilterButton" class="filter-button w-full">
+                    Brand <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                </button>
+                <div id="brandFilterDropdown" class="dropdown-content">
+                    <a href="#" class="dropdown-item">Gnanow Core</a>
+                    <a href="#" class="dropdown-item">G-Tech</a>
+                    <a href="#" class="dropdown-item">AuraWear</a>
+                </div>
+            </div>
+             <div class="relative col-span-2 sm:col-span-1">
+                <button id="priceFilterButton" class="filter-button w-full">
+                    Price <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                </button>
+                <div id="priceFilterDropdown" class="dropdown-content">
+                    <a href="#" class="dropdown-item">$0 - $50</a>
+                    <a href="#" class="dropdown-item">$50 - $100</a>
+                    <a href="#" class="dropdown-item">$100 - $200</a>
+                    <a href="#" class="dropdown-item">$200+</a>
+                </div>
+            </div>
+            <div class="relative col-span-2 sm:col-span-2 md:col-span-1 lg:ml-auto">
+                 <select class="filter-button w-full appearance-none pr-8" style="background-position: right 0.5rem center;">
+                    <option>Default Sorting</option>
+                    <option>Sort by Popularity</option>
+                    <option>Sort by Price: Low to High</option>
+                    <option>Sort by Price: High to Low</option>
+                </select>
+                <i class="fas fa-chevron-down fa-xs absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400"></i>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 animate-fadeInUp" style="animation-delay: 0.2s;">
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/1A1A1A/FACC15?text=Gnanow+Jacket&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Cybernetic Stealth Jacket</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$189.00</p>
+                    <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow"></span>
+                        <span class="w-5 h-5 rounded-full bg-gray-700 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Charcoal"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/0A0A0A/FDE047?text=Gnanow+Shirt&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Quantum Weave Shirt</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$79.00</p>
+                    <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                        <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/111827/FACC15?text=Gnanow+Pants&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Chrono-Trousers Mk.II</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$120.00</p>
+                     <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        <span class="w-5 h-5 rounded-full bg-gray-200 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Light Gray"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/000000/FFFFFF?text=Gnanow+Hoodie&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Nova Hoodie - White Edition</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$95.00</p>
+                    <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                        <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+             <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/1A1A1A/FACC15?text=Gnanow+Cap&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Stealth-Mesh Cap</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$35.00</p>
+                    <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/0A0A0A/FDE047?text=Gnanow+Gloves&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Tactical Grip Gloves</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$49.00</p>
+                     <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow Accents"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/111827/FACC15?text=Gnanow+Boots&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Zero-G Combat Boots</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$250.00</p>
+                    <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-gray-800 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Dark Gray"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <a href="#">
+                    <img src="https://placehold.co/400x500/000000/FFFFFF?text=Gnanow+Scarf&font=Inter" alt="Product Name" class="w-full h-64 sm:h-72 object-cover">
+                </a>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Adaptive Camo Scarf</a></h3>
+                    <p class="text-brand-yellow text-xl font-bold mb-2">$65.00</p>
+                    <div class="flex space-x-2 mb-3">
+                        <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Arctic White"></span>
+                        <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Obsidian Black"></span>
+                    </div>
+                    <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                </div>
+            </div>
+        </div>
+
+        <nav class="mt-12 flex justify-center animate-fadeInUp" style="animation-delay: 0.3s;" aria-label="Pagination">
+            <button class="pagination-button active">1</button>
+            <button class="pagination-button ml-2">2</button>
+            <button class="pagination-button ml-2">3</button>
+            <button class="pagination-button ml-2">4</button>
+            <button class="pagination-button ml-2"><i class="fas fa-arrow-right"></i></button>
+        </nav>
+    </main>
+
+    <footer class="bg-gray-900/80 border-t border-gray-800/50 pt-12 pb-8 animate-fadeIn" style="animation-delay: 0.4s;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">Receive an exclusive <span class="brand-yellow">20%</span> discount code</h2>
+                    <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+                </div>
+                <form class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+                    <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Press</a></li>
+                        <li><a href="#" class="footer-link">Affiliates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Customer Care</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help & FAQ</a></li>
+                        <li><a href="#" class="footer-link">Size Guide</a></li>
+                        <li><a href="#" class="footer-link">Track My Order</a></li>
+                        <li><a href="#" class="footer-link">Return My Order</a></li>
+                        <li><a href="#" class="footer-link">Refer a Friend</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Terms & Policies</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Cookie Policy</a></li>
+                        <li><a href="#" class="footer-link">Shipping Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Follow Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link"><i class="fab fa-instagram mr-2"></i>Instagram</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-tiktok mr-2"></i>TikTok</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-facebook-f mr-2"></i>Facebook</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-x-twitter mr-2"></i>X (Twitter)</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-pinterest mr-2"></i>Pinterest</a></li>
+                    </ul>
+                </div>
+                 <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                    <h3 class="footer-title">GNANOW HQ</h3>
+                    <p class="text-gray-400 text-sm">
+                        123 Cyber District, Neo City, 90210<br>
+                        United Future States<br>
+                        Email: <a href="mailto:support@gnanow.tech" class="hover:text-brand-yellow">support@gnanow.tech</a><br>
+                        Phone: <a href="tel:+10001234567" class="hover:text-brand-yellow">+1 (000) 123-4567</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <div class="text-gray-400 mb-4 md:mb-0">
+                    <span class="font-bold text-lg brand-yellow mr-2">GNANOW</span> &copy; <span id="currentYear"></span>. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2 text-2xl text-gray-500">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                        <i class="fab fa-cc-amex"></i>
+                    </div>
+                    <div class="relative">
+                        <button id="languageButton" class="text-gray-400 hover:text-brand-yellow flex items-center">
+                            <i class="fas fa-globe mr-1"></i> EN <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <div id="languageDropdown" class="dropdown-content bottom-full mb-1 right-0 w-28">
+                             <a href="#" class="dropdown-item">English</a>
+                             <a href="#" class="dropdown-item">Español</a>
+                             <a href="#" class="dropdown-item">Français</a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button id="currencyButton" class="text-gray-400 hover:text-brand-yellow flex items-center">
+                            USD <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <div id="currencyDropdown" class="dropdown-content bottom-full mb-1 right-0 w-24">
+                             <a href="#" class="dropdown-item">USD</a>
+                             <a href="#" class="dropdown-item">EUR</a>
+                             <a href="#" class="dropdown-item">GBP</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Generic dropdown toggle function
+        function setupDropdown(buttonId, dropdownId) {
+            const button = document.getElementById(buttonId);
+            const dropdown = document.getElementById(dropdownId);
+
+            if (button && dropdown) {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation(); // Prevent click from closing immediately
+                    // Close other open dropdowns
+                    document.querySelectorAll('.dropdown-content.open').forEach(openDropdown => {
+                        if (openDropdown !== dropdown) {
+                            openDropdown.classList.remove('open');
+                        }
+                    });
+                    dropdown.classList.toggle('open');
+                });
+            }
+        }
+
+        // Setup filter dropdowns
+        setupDropdown('categoriesFilterButton', 'categoriesFilterDropdown');
+        setupDropdown('colorFilterButton', 'colorFilterDropdown');
+        setupDropdown('sizeFilterButton', 'sizeFilterDropdown');
+        setupDropdown('brandFilterButton', 'brandFilterDropdown');
+        setupDropdown('priceFilterButton', 'priceFilterDropdown');
+        
+        // Setup footer dropdowns
+        setupDropdown('languageButton', 'languageDropdown');
+        setupDropdown('currencyButton', 'currencyDropdown');
+
+        // Close dropdowns if clicked outside
+        document.addEventListener('click', (event) => {
+            document.querySelectorAll('.dropdown-content.open').forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !document.getElementById(dropdown.id.replace('Dropdown', 'Button'))?.contains(event.target)) {
+                     dropdown.classList.remove('open');
+                }
+            });
+        });
+
+        // Placeholder for form submissions (e.g., newsletter)
+        // In a real app, you'd send data to a server.
+        const newsletterForm = document.querySelector('footer form');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const emailInput = newsletterForm.querySelector('input[type="email"]');
+                if (emailInput && emailInput.value) {
+                    // You can add a small message area or a more sophisticated notification
+                    console.log('Newsletter signup:', emailInput.value);
+                    alert('Thanks for subscribing to Gnanow updates!'); // Replace with a nicer modal/toast
+                    emailInput.value = '';
+                }
+            });
+        }
+
+    </script>
+</body>
+</html> {% endcomment %}
+
+{% comment %} 
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Explore Our Collections</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; 
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #facc15; /* Yellow */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; /* Darker yellow */
+        }
+
+        .brand-yellow { color: #facc15; }
+        .bg-brand-yellow { background-color: #facc15; }
+        .border-brand-yellow { border-color: #facc15; }
+        .text-brand-black { color: #0a0a0a; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+
+
+        .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
+        .animate-scaleIn { animation: scaleIn 0.4s ease-out forwards; }
+        .animate-slideInRight { animation: slideInRight 0.6s ease-out forwards; }
+        .animate-slideInLeft { animation: slideInLeft 0.6s ease-out forwards; }
+
+
+        .nav-link {
+            @apply px-3 py-2 text-sm text-gray-300 hover:text-brand-yellow transition-colors duration-300 relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #facc15;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link-active::after {
+            width: calc(100% - 1.5rem); /* Adjust to not span full padding */
+        }
+        .nav-link-active {
+            @apply text-brand-yellow font-semibold;
+        }
+        .header-icon {
+            @apply text-gray-300 hover:text-brand-yellow transition-colors duration-300 text-xl; /* Increased icon size */
+        }
+
+        /* Image Viewer (Carousel) */
+        .image-viewer {
+            height: 60vh; /* Adjust as needed */
+            max-height: 500px;
+        }
+        .image-viewer .slide {
+            min-width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        /* Large Search Bar */
+        .large-search-bar input {
+            @apply bg-gray-800 border-2 border-gray-700 text-white placeholder-gray-500 text-lg rounded-l-lg focus:ring-brand-yellow focus:border-brand-yellow block w-full p-4 transition-colors duration-300;
+        }
+        .large-search-bar button {
+            @apply bg-brand-yellow text-brand-black font-semibold p-4 rounded-r-lg hover:bg-yellow-300 transition-all duration-300 text-lg;
+        }
+
+        .filter-button {
+            @apply px-4 py-2.5 text-sm border border-gray-700 rounded-md hover:border-brand-yellow hover:text-brand-yellow transition-all duration-300 flex items-center justify-between w-full bg-gray-800/50;
+        }
+        .category-card {
+            @apply bg-gray-900/70 border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-yellow-500/50 transform hover:-translate-y-2 flex flex-col text-center items-center p-6;
+            animation: fadeInUp 0.5s ease-out backwards;
+        }
+         .category-card img {
+            @apply w-32 h-32 object-contain mb-4 rounded-md transition-transform duration-300;
+        }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+        .category-card h3 {
+            @apply text-xl font-semibold text-brand-yellow mb-1;
+        }
+        .category-card p {
+            @apply text-sm text-gray-400;
+        }
+
+
+        .product-card {
+            @apply bg-gray-900/70 border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-yellow-500/50 transform hover:-translate-y-1;
+            animation: fadeInUp 0.5s ease-out backwards; /* Backwards to apply initial state */
+        }
+        /* Staggered animation for product cards */
+        .product-grid > .product-card { opacity: 0; } /* Initially hide for JS animation */
+
+
+        .pagination-button {
+            @apply w-10 h-10 flex items-center justify-center text-sm border border-gray-700 rounded-md hover:bg-brand-yellow hover:text-brand-black hover:border-brand-yellow transition-all duration-300;
+        }
+        .pagination-button.active {
+            @apply bg-brand-yellow text-brand-black border-brand-yellow;
+        }
+
+        .footer-link {
+            @apply text-gray-400 hover:text-brand-yellow text-sm transition-colors duration-300;
+        }
+        .footer-title {
+            @apply text-white text-base font-semibold mb-3;
+        }
+        .input-dark {
+            @apply bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm rounded-md focus:ring-brand-yellow focus:border-brand-yellow block w-full p-2.5 transition-colors duration-300;
+        }
+        .btn-yellow {
+            @apply bg-brand-yellow text-brand-black font-semibold py-2.5 px-5 rounded-md hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105;
+        }
+        .dropdown-content {
+            @apply absolute mt-1 w-full sm:w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20;
+            display: none; /* Hidden by default */
+        }
+        .dropdown-content.open {
+            display: block;
+            animation: scaleIn 0.2s ease-out forwards;
+        }
+        .dropdown-item {
+            @apply block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-brand-yellow;
+        }
+
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-40 bg-black/80 backdrop-blur-md shadow-lg animate-fadeIn">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20"> 
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-2 mr-6">
+                        <img src="{% static 'images/logo.jpg' %} alt="missed" />
+                        <span class="text-3xl font-bold brand-yellow tracking-wider">GNANOW</span>
+                    </a>
+                </div>
+
+                <nav class="hidden lg:flex space-x-2 items-center">
+                    <a href="#" class="nav-link nav-link-active">Home</a>
+                    <a href="#" class="nav-link">Shop</a>
+                    <a href="#" class="nav-link">Products</a>
+                    <a href="#" class="nav-link">Categories</a>
+                    <a href="#" class="nav-link">My Orders</a>
+                    <a href="#" class="nav-link">My Addresses</a>
+                    <a href="#" class="nav-link">Feedback</a>
+                </nav>
+
+                <div class="flex items-center space-x-4 sm:space-x-5">
+                    <button class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></button>
+                    <button class="header-icon relative" title="Wishlist">
+                        <i class="fas fa-heart fa-fw"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold"></span>
+                    </button>
+                    <button class="header-icon relative" title="Cart">
+                        <i class="fas fa-shopping-cart fa-fw"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold"></span>
+                    </button>
+                    <button id="mobileMenuButton" class="lg:hidden header-icon">
+                        <i class="fas fa-bars fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="lg:hidden hidden bg-gray-900/95 backdrop-blur-sm py-2 animate-scaleIn">
+            <a href="#" class="block nav-link nav-link-active px-4">Home</a>
+            <a href="#" class="block nav-link px-4">Shop</a>
+            <a href="#" class="block nav-link px-4">Products</a>
+            <a href="#" class="block nav-link px-4">Categories</a>
+            <a href="#" class="block nav-link px-4">My Orders</a>
+            <a href="#" class="block nav-link px-4">My Addresses</a>
+            <a href="#" class="block nav-link px-4">Feedback</a>
+        </div>
+    </header>
+
+    <section class="image-viewer w-full overflow-hidden relative animate-fadeInUp" style="animation-delay: 0.2s;">
+        <div class="flex transition-transform duration-500 ease-in-out h-full" id="imageSlider">
+            <div class="slide min-w-full h-full bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x500/000000/FACC15?text=GNANOW+Hero+1&font=Inter');">
+                <div class="bg-black/50 p-8 rounded-lg text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <h2 class="text-4xl md:text-5xl font-bold brand-yellow mb-4">Urban Edge Collection</h2>
+                    <p class="text-lg md:text-xl mb-6">Define your style. Explore the latest drops.</p>
+                    <a href="#shop-products" class="btn-yellow text-lg px-8 py-3">Shop Now</a>
+                </div>
+            </div>
+            <div class="slide min-w-full h-full bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x500/111111/FDE047?text=GNANOW+Special+Offer&font=Inter');">
+                 <div class="bg-black/50 p-8 rounded-lg text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <h2 class="text-4xl md:text-5xl font-bold brand-yellow mb-4">Limited Time: 30% OFF</h2>
+                    <p class="text-lg md:text-xl mb-6">On all tech-wear jackets. Don't miss out!</p>
+                    <a href="#shop-products" class="btn-yellow text-lg px-8 py-3">Grab the Deal</a>
+                </div>
+            </div>
+            <div class="slide min-w-full h-full bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x500/0a0a0a/FFFFFF?text=GNANOW+Lookbook&font=Inter');">
+                 <div class="bg-black/50 p-8 rounded-lg text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <h2 class="text-4xl md:text-5xl font-bold brand-yellow mb-4">Style Inspiration</h2>
+                    <p class="text-lg md:text-xl mb-6">Discover curated looks for the modern individual.</p>
+                    <a href="#shop-products" class="btn-yellow text-lg px-8 py-3">View Lookbook</a>
+                </div>
+            </div>
+        </div>
+        <button id="prevSlide" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-brand-yellow hover:text-brand-black transition-all text-xl focus:outline-none z-10">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="nextSlide" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-brand-yellow hover:text-brand-black transition-all text-xl focus:outline-none z-10">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </section>
+
+    <section class="py-10 md:py-12 bg-gray-900/50 animate-fadeInUp" style="animation-delay: 0.3s;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <form class="large-search-bar flex max-w-3xl mx-auto shadow-2xl">
+                <input type="search" placeholder="Search for products, brands, or categories..." class="flex-grow"/>
+                <button type="submit"><i class="fas fa-search mr-2"></i>Search</button>
+            </form>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 0.4s;">
+            <h2 class="text-2xl font-semibold text-white mb-4">Filter & Find Your Style</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="categoriesFilterDropdown">
+                        Categories <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="categoriesFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">Outerwear</a>
+                        <a href="#" class="dropdown-item">Tech-Shirts</a>
+                        <a href="#" class="dropdown-item">Nano-Pants</a>
+                        <a href="#" class="dropdown-item">Hoodies</a>
+                        <a href="#" class="dropdown-item">Accessories</a>
+                        <a href="#" class="dropdown-item">Footwear</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="colorFilterDropdown">
+                        Color <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="colorFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">Black</a>
+                        <a href="#" class="dropdown-item">White</a>
+                        <a href="#" class="dropdown-item">Yellow</a>
+                        <a href="#" class="dropdown-item">Cyber Blue</a>
+                        <a href="#" class="dropdown-item">Stealth Gray</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="sizeFilterDropdown">
+                        Size <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="sizeFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">XS</a>
+                        <a href="#" class="dropdown-item">S</a>
+                        <a href="#" class="dropdown-item">M</a>
+                        <a href="#" class="dropdown-item">L</a>
+                        <a href="#" class="dropdown-item">XL</a>
+                        <a href="#" class="dropdown-item">XXL</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="brandFilterDropdown">
+                        Brand <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="brandFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">Gnanow Core</a>
+                        <a href="#" class="dropdown-item">G-Tech</a>
+                        <a href="#" class="dropdown-item">AuraWear</a>
+                        <a href="#" class="dropdown-item">Collaborations</a>
+                    </div>
+                </div>
+                <div class="relative">
+                     <button class="filter-button dropdown-toggle" data-target="priceFilterDropdown">
+                        Price <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="priceFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">$0 - $50</a>
+                        <a href="#" class="dropdown-item">$50 - $100</a>
+                        <a href="#" class="dropdown-item">$100 - $200</a>
+                        <a href="#" class="dropdown-item">$200 - $500</a>
+                        <a href="#" class="dropdown-item">$500+</a>
+                    </div>
+                </div>
+                 <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="otherFilterDropdown">
+                        Other <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="otherFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">New Arrivals</a>
+                        <a href="#" class="dropdown-item">On Sale</a>
+                        <a href="#" class="dropdown-item">Eco-Friendly</a>
+                        <a href="#" class="dropdown-item">Limited Edition</a>
+                    </div>
+                </div>
+            </div>
+             <div class="mt-4 flex justify-end">
+                <div class="relative w-full sm:w-auto sm:max-w-xs">
+                     <select class="filter-button w-full appearance-none pr-8" style="background-position: right 0.75rem center;">
+                        <option value="all">Sort By: All (Default)</option>
+                        <option value="popularity">Sort by Popularity</option>
+                        <option value="price_asc">Sort by Price: Low to High</option>
+                        <option value="price_desc">Sort by Price: High to Low</option>
+                        <option value="newest">Sort by Newest</option>
+                    </select>
+                    <i class="fas fa-chevron-down fa-xs absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12 animate-fadeInUp" style="animation-delay: 0.5s;">
+            <h2 class="text-3xl font-semibold text-white mb-6">Explore Categories</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <a href="#" class="category-card" style="animation-delay: 0.1s;">
+                    <img src="https://placehold.co/300x300/1A1A1A/FACC15?text=Outerwear&font=Inter" alt="Outerwear">
+                    <h3>Outerwear</h3>
+                    <p>Jackets, Coats & Vests for the urban explorer.</p>
+                </a>
+                <a href="#" class="category-card" style="animation-delay: 0.2s;">
+                    <img src="https://placehold.co/300x300/0A0A0A/FDE047?text=Tops&font=Inter" alt="Tops">
+                    <h3>Tops & Tees</h3>
+                    <p>Futuristic shirts, tech-tees, and everyday basics.</p>
+                </a>
+                <a href="#" class="category-card" style="animation-delay: 0.3s;">
+                    <img src="https://placehold.co/300x300/111827/FACC15?text=Bottoms&font=Inter" alt="Bottoms">
+                    <h3>Bottoms</h3>
+                    <p>Nano-pants, cargo trousers, and sleek joggers.</p>
+                </a>
+                <a href="#" class="category-card" style="animation-delay: 0.4s;">
+                    <img src="https://placehold.co/300x300/000000/FFFFFF?text=Hoodies&font=Inter" alt="Hoodies">
+                    <h3>Hoodies & Sweatshirts</h3>
+                    <p>Comfort meets cutting-edge design for all seasons.</p>
+                </a>
+                <a href="#" class="category-card" style="animation-delay: 0.5s;">
+                     <img src="https://placehold.co/300x300/1A1A1A/FACC15?text=Footwear&font=Inter" alt="Footwear">
+                    <h3>Footwear</h3>
+                    <p>Sneakers, boots, and innovative shoe designs.</p>
+                </a>
+                <a href="#" class="category-card" style="animation-delay: 0.6s;">
+                    <img src="https://placehold.co/300x300/0A0A0A/FDE047?text=Accessories&font=Inter" alt="Accessories">
+                    <h3>Accessories</h3>
+                    <p>Caps, bags, gloves, and other tech essentials.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="shop-products" class="animate-fadeInUp" style="animation-delay: 0.6s;">
+             <div class="flex justify-between items-center mb-6">
+                 <h2 class="text-3xl font-semibold text-white">Discover Products</h2>
+                 <span class="text-sm text-gray-400">Showing 1-8 of 120 results</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 product-grid">
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/1A1A1A/FACC15?text=Gnanow+Jacket&font=Inter" alt="Cybernetic Stealth Jacket" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Cybernetic Stealth Jacket</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$189.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                            <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/0A0A0A/FDE047?text=Gnanow+Shirt&font=Inter" alt="Quantum Weave Shirt" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Quantum Weave Shirt</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$79.00</p>
+                        <div class="flex space-x-2 mb-3">
+                             <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                 <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/111827/FACC15?text=Gnanow+Pants&font=Inter" alt="Chrono-Trousers Mk.II" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Chrono-Trousers Mk.II</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$120.00</p>
+                        <div class="flex space-x-2 mb-3">
+                             <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                 <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/000000/FFFFFF?text=Gnanow+Hoodie&font=Inter" alt="Nova Hoodie - White Edition" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Nova Hoodie - White Edition</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$95.00</p>
+                         <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                 <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/1A1A1A/FACC15?text=Gnanow+Cap&font=Inter" alt="Stealth-Mesh Cap" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Stealth-Mesh Cap</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$35.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/0A0A0A/FDE047?text=Gnanow+Gloves&font=Inter" alt="Tactical Grip Gloves" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Tactical Grip Gloves</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$49.00</p>
+                         <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                            <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow Accents"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/111827/FACC15?text=Gnanow+Boots&font=Inter" alt="Zero-G Combat Boots" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Zero-G Combat Boots</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$250.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-gray-800 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Dark Gray"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/000000/FFFFFF?text=Gnanow+Scarf&font=Inter" alt="Adaptive Camo Scarf" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Adaptive Camo Scarf</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$65.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Arctic White"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="mt-12 flex justify-center" aria-label="Pagination">
+                <button class="pagination-button active">1</button>
+                <button class="pagination-button ml-2">2</button>
+                <button class="pagination-button ml-2">3</button>
+                <button class="pagination-button ml-2 hidden sm:flex">4</button> {/* Hide on very small screens */}
+                <button class="pagination-button ml-2"><i class="fas fa-arrow-right"></i></button>
+            </nav>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900/80 border-t border-gray-800/50 pt-12 pb-8 animate-fadeIn" style="animation-delay: 0.7s;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">Receive an exclusive <span class="brand-yellow">20%</span> discount code</h2>
+                    <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+                </div>
+                <form class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+                    <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Press</a></li>
+                        <li><a href="#" class="footer-link">Affiliates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Customer Care</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help & FAQ</a></li>
+                        <li><a href="#" class="footer-link">Size Guide</a></li>
+                        <li><a href="#" class="footer-link">Track My Order</a></li>
+                        <li><a href="#" class="footer-link">Return My Order</a></li>
+                        <li><a href="#" class="footer-link">Refer a Friend</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Terms & Policies</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Cookie Policy</a></li>
+                        <li><a href="#" class="footer-link">Shipping Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Follow Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link"><i class="fab fa-instagram mr-2"></i>Instagram</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-tiktok mr-2"></i>TikTok</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-facebook-f mr-2"></i>Facebook</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-x-twitter mr-2"></i>X (Twitter)</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-pinterest mr-2"></i>Pinterest</a></li>
+                    </ul>
+                </div>
+                 <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                    <h3 class="footer-title">GNANOW HQ</h3>
+                    <p class="text-gray-400 text-sm">
+                        123 Cyber District, Neo City, 90210<br>
+                        United Future States<br>
+                        Email: <a href="mailto:support@gnanow.tech" class="hover:text-brand-yellow">support@gnanow.tech</a><br>
+                        Phone: <a href="tel:+10001234567" class="hover:text-brand-yellow">+1 (000) 123-4567</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <div class="text-gray-400 mb-4 md:mb-0">
+                    <span class="font-bold text-lg brand-yellow mr-2">GNANOW</span> &copy; <span id="currentYear"></span>. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2 text-2xl text-gray-500">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                        <i class="fab fa-cc-amex"></i>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-400 hover:text-brand-yellow flex items-center dropdown-toggle" data-target="languageDropdown">
+                            <i class="fas fa-globe mr-1"></i> EN <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <div id="languageDropdown" class="dropdown-content bottom-full mb-1 right-0 w-28">
+                             <a href="#" class="dropdown-item">English</a>
+                             <a href="#" class="dropdown-item">Español</a>
+                             <a href="#" class="dropdown-item">Français</a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-400 hover:text-brand-yellow flex items-center dropdown-toggle" data-target="currencyDropdown">
+                            USD <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <div id="currencyDropdown" class="dropdown-content bottom-full mb-1 right-0 w-24">
+                             <a href="#" class="dropdown-item">USD</a>
+                             <a href="#" class="dropdown-item">EUR</a>
+                             <a href="#" class="dropdown-item">GBP</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile Menu
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Dropdown Toggle
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                const targetId = toggle.dataset.target;
+                const dropdownContent = document.getElementById(targetId);
+                if (dropdownContent) {
+                    toggle.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        // Close other open dropdowns
+                        document.querySelectorAll('.dropdown-content.open').forEach(openDropdown => {
+                            if (openDropdown.id !== targetId) {
+                                openDropdown.classList.remove('open');
+                            }
+                        });
+                        dropdownContent.classList.toggle('open');
+                    });
+                }
+            });
+            // Close dropdowns when clicking outside
+            window.addEventListener('click', (event) => {
+                document.querySelectorAll('.dropdown-content.open').forEach(openDropdown => {
+                    if (!openDropdown.parentElement.contains(event.target)) {
+                        openDropdown.classList.remove('open');
+                    }
+                });
+            });
+
+            // Image Viewer (Carousel)
+            const slider = document.getElementById('imageSlider');
+            const prevButton = document.getElementById('prevSlide');
+            const nextButton = document.getElementById('nextSlide');
+            if (slider && prevButton && nextButton) {
+                const slides = slider.querySelectorAll('.slide');
+                let currentIndex = 0;
+                const totalSlides = slides.length;
+                let slideInterval;
+
+                function updateSlider() {
+                    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }
+
+                function nextSlide() {
+                    currentIndex = (currentIndex + 1) % totalSlides;
+                    updateSlider();
+                }
+
+                function prevSlide() {
+                    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                    updateSlider();
+                }
+
+                function startSlideShow() {
+                    stopSlideShow(); // Clear existing interval
+                    slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+                }
+                
+                function stopSlideShow() {
+                    clearInterval(slideInterval);
+                }
+
+                prevButton.addEventListener('click', () => {
+                    prevSlide();
+                    stopSlideShow(); // Optional: stop auto-slide on manual navigation
+                    // startSlideShow(); // Optional: restart auto-slide after manual navigation
+                });
+                nextButton.addEventListener('click', () => {
+                    nextSlide();
+                    stopSlideShow();
+                    // startSlideShow(); 
+                });
+                
+                // Autoplay
+                startSlideShow();
+                
+                // Pause on hover
+                slider.addEventListener('mouseenter', stopSlideShow);
+                slider.addEventListener('mouseleave', startSlideShow);
+            }
+
+
+            // Current Year for Footer
+            const currentYearSpan = document.getElementById('currentYear');
+            if (currentYearSpan) {
+                currentYearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Staggered animation for product cards (Intersection Observer)
+            const productGrid = document.querySelector('.product-grid');
+            if (productGrid) {
+                const productCards = productGrid.querySelectorAll('.product-card');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.classList.add('animate-fadeInUp');
+                            }, (entry.target.dataset.delay || index) * 100); // Use existing delay or stagger
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                productCards.forEach(card => {
+                    observer.observe(card);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 
+
+
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Futuristic Apparel Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Base Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Deep charcoal for futuristic feel */
+            color: #ffffff;
+            overflow-x: hidden; /* Prevent horizontal scroll on animations */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #facc15; /* Bright yellow for accent */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; /* Darker yellow on hover */
+        }
+
+        /* Brand Colors */
+        .brand-yellow { color: #facc15; }
+        .bg-brand-yellow { background-color: #facc15; }
+        .border-brand-yellow { border-color: #facc15; }
+        .text-brand-black { color: #0a0a0a; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
+
+        .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+        .animate-fadeInUp { animation: fadeInUp 0.6s ease-out forwards; }
+        .animate-scaleIn { animation: scaleIn 0.4s ease-out forwards; }
+        .animate-slideInRight { animation: slideInRight 0.6s ease-out forwards; }
+        .animate-slideInLeft { animation: slideInLeft 0.6s ease-out forwards; }
+
+        /* Header Navigation Links */
+        .nav-link {
+            @apply px-3 py-2 text-sm text-gray-300 hover:text-brand-yellow transition-colors duration-300 relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: #facc15;
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link-active::after {
+            width: calc(100% - 1.5rem); /* Adjust to not span full padding */
+        }
+        .nav-link-active {
+            @apply text-brand-yellow font-semibold;
+        }
+        .header-icon {
+            @apply text-gray-300 hover:text-brand-yellow transition-colors duration-300 text-xl; /* Increased icon size */
+        }
+
+        /* Hero Carousel */
+        .image-viewer {
+            height: 60vh; /* Responsive height */
+            max-height: 500px; /* Max height for larger screens */
+        }
+        .image-viewer .slide {
+            min-width: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+        
+        /* Large Search Bar */
+        .large-search-bar input {
+            @apply bg-gray-800 border-2 border-gray-700 text-white placeholder-gray-500 text-lg rounded-l-lg focus:ring-brand-yellow focus:border-brand-yellow block w-full p-4 transition-colors duration-300;
+        }
+        .large-search-bar button {
+            @apply bg-brand-yellow text-brand-black font-semibold p-4 rounded-r-lg hover:bg-yellow-300 transition-all duration-300 text-lg;
+        }
+
+        /* Filter Buttons */
+        .filter-button {
+            @apply px-4 py-2.5 text-sm border border-gray-700 rounded-md hover:border-brand-yellow hover:text-brand-yellow transition-all duration-300 flex items-center justify-between w-full bg-gray-800/50;
+        }
+        .dropdown-content {
+            @apply absolute mt-1 w-full sm:w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20;
+            display: none; /* Hidden by default */
+        }
+        .dropdown-content.open {
+            display: block;
+            animation: scaleIn 0.2s ease-out forwards;
+        }
+        .dropdown-item {
+            @apply block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-brand-yellow;
+        }
+
+        /* Category Cards */
+        .category-card {
+            @apply bg-gray-900/70 border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-yellow-500/50 transform hover:-translate-y-2 flex flex-col text-center items-center p-6;
+            animation: fadeInUp 0.5s ease-out backwards; /* Base animation for categories */
+        }
+        .category-card img {
+            @apply w-32 h-32 object-contain mb-4 rounded-md transition-transform duration-300;
+        }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+        .category-card h3 {
+            @apply text-xl font-semibold text-brand-yellow mb-1;
+        }
+        .category-card p {
+            @apply text-sm text-gray-400;
+        }
+
+        /* Product Cards */
+        .product-card {
+            @apply bg-gray-900/70 border border-gray-800 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-yellow-500/50 transform hover:-translate-y-1;
+            opacity: 0; /* Initially hidden for JS animation */
+        }
+        /* Staggered animation for product cards via JS (Intersection Observer) */
+
+
+        /* Pagination */
+        .pagination-button {
+            @apply w-10 h-10 flex items-center justify-center text-sm border border-gray-700 rounded-md hover:bg-brand-yellow hover:text-brand-black hover:border-brand-yellow transition-all duration-300;
+        }
+        .pagination-button.active {
+            @apply bg-brand-yellow text-brand-black border-brand-yellow;
+        }
+
+        /* Footer */
+        .footer-link {
+            @apply text-gray-400 hover:text-brand-yellow text-sm transition-colors duration-300;
+        }
+        .footer-title {
+            @apply text-white text-base font-semibold mb-3;
+        }
+        .input-dark {
+            @apply bg-gray-800 border border-gray-700 text-white placeholder-gray-500 text-sm rounded-md focus:ring-brand-yellow focus:border-brand-yellow block w-full p-2.5 transition-colors duration-300;
+        }
+        .btn-yellow {
+            @apply bg-brand-yellow text-brand-black font-semibold py-2.5 px-5 rounded-md hover:bg-yellow-300 transition-all duration-300 transform hover:scale-105;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="sticky top-0 z-40 bg-black/80 backdrop-blur-md shadow-lg animate-fadeIn">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center">
+                    <a href="" class="flex items-center space-x-2 mr-6">
+                        <img src="{% static 'images/logo.jpg' %}" alt="Gnanow Logo" class="h-10 w-auto"/>
+                        <span class="text-3xl font-bold brand-yellow tracking-wider">GNANOW</span>
+                    </a>
+                </div>
+
+                <nav class="hidden lg:flex space-x-2 items-center">
+                    <a href="" class="nav-link nav-link-active">Home</a>
+                    <a href="#" class="nav-link">Shop</a>
+                    <a href="#" class="nav-link">Products</a>
+                    <a href="#" class="nav-link">Categories</a>
+                    <a href="#" class="nav-link">My Orders</a>
+                    <a href="#" class="nav-link">My Addresses</a>
+                    <a href="#" class="nav-link">Feedback</a>
+                </nav>
+
+                <div class="flex items-center space-x-4 sm:space-x-5">
+                    <button class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></button>
+                    <button class="header-icon relative" title="Wishlist">
+                        <i class="fas fa-heart fa-fw"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">3</span>
+                    </button>
+                    <button class="header-icon relative" title="Cart">
+                        <i class="fas fa-shopping-cart fa-fw"></i>
+                        <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">2</span>
+                    </button>
+                    <button id="mobileMenuButton" class="lg:hidden header-icon">
+                        <i class="fas fa-bars fa-fw"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="lg:hidden hidden bg-gray-900/95 backdrop-blur-sm py-2 animate-scaleIn">
+            <a href="{% url 'dashboard' %}" class="block nav-link nav-link-active px-4">Home</a>
+            <a href="#" class="block nav-link px-4">Shop</a>
+            <a href="#" class="block nav-link px-4">Products</a>
+            <a href="#" class="block nav-link px-4">Categories</a>
+            <a href="#" class="block nav-link px-4">My Orders</a>
+            <a href="#" class="block nav-link px-4">My Addresses</a>
+            <a href="#" class="block nav-link px-4">Feedback</a>
+        </div>
+    </header>
+
+    <section class="image-viewer w-full overflow-hidden relative animate-fadeInUp" style="animation-delay: 0.2s;">
+        <div class="flex transition-transform duration-500 ease-in-out h-full" id="imageSlider">
+            <div class="slide min-w-full h-full bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x500/000000/FACC15?text=GNANOW+Hero+1&font=Inter');">
+                <div class="bg-black/50 p-8 rounded-lg text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <h2 class="text-4xl md:text-5xl font-bold brand-yellow mb-4">Urban Edge Collection</h2>
+                    <p class="text-lg md:text-xl mb-6">Define your style. Explore the latest drops.</p>
+                    <a href="#shop-products" class="btn-yellow text-lg px-8 py-3">Shop Now</a>
+                </div>
+            </div>
+            <div class="slide min-w-full h-full bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x500/111111/FDE047?text=GNANOW+Special+Offer&font=Inter');">
+                 <div class="bg-black/50 p-8 rounded-lg text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <h2 class="text-4xl md:text-5xl font-bold brand-yellow mb-4">Limited Time: 30% OFF</h2>
+                    <p class="text-lg md:text-xl mb-6">On all tech-wear jackets. Don't miss out!</p>
+                    <a href="#shop-products" class="btn-yellow text-lg px-8 py-3">Grab the Deal</a>
+                </div>
+            </div>
+            <div class="slide min-w-full h-full bg-cover bg-center flex items-center justify-center text-white" style="background-image: url('https://placehold.co/1920x500/0a0a0a/FFFFFF?text=GNANOW+Lookbook&font=Inter');">
+                 <div class="bg-black/50 p-8 rounded-lg text-center animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <h2 class="text-4xl md:text-5xl font-bold brand-yellow mb-4">Style Inspiration</h2>
+                    <p class="text-lg md:text-xl mb-6">Discover curated looks for the modern individual.</p>
+                    <a href="#shop-products" class="btn-yellow text-lg px-8 py-3">View Lookbook</a>
+                </div>
+            </div>
+        </div>
+        <button id="prevSlide" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-brand-yellow hover:text-brand-black transition-all text-xl focus:outline-none z-10">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button id="nextSlide" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-brand-yellow hover:text-brand-black transition-all text-xl focus:outline-none z-10">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </section>
+
+    <section class="py-10 md:py-12 bg-gray-900/50 animate-fadeInUp" style="animation-delay: 0.3s;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <form class="large-search-bar flex max-w-3xl mx-auto shadow-2xl rounded-lg">
+                <input type="search" placeholder="Search for products, brands, or categories..." class="flex-grow"/>
+                <button type="submit"><i class="fas fa-search mr-2"></i>Search</button>
+            </form>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+        <section class="mb-8 animate-fadeInUp" style="animation-delay: 0.4s;">
+            <h2 class="text-2xl font-semibold text-white mb-4">Filter & Find Your Style</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="categoriesFilterDropdown">
+                        Categories <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="categoriesFilterDropdown" class="dropdown-content">
+                        {% for category in categories %}
+                            <a href="#" class="dropdown-item">{{ category.name }}</a>
+                        {% endfor %}
+                        <a href="#" class="dropdown-item">Outerwear</a>
+                        <a href="#" class="dropdown-item">Tech-Shirts</a>
+                        <a href="#" class="dropdown-item">Nano-Pants</a>
+                        <a href="#" class="dropdown-item">Hoodies</a>
+                        <a href="#" class="dropdown-item">Accessories</a>
+                        <a href="#" class="dropdown-item">Footwear</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="colorFilterDropdown">
+                        Color <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="colorFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">Black</a>
+                        <a href="#" class="dropdown-item">White</a>
+                        <a href="#" class="dropdown-item">Red</a>
+                        <a href="#" class="dropdown-item">Blue</a>
+                        <a href="#" class="dropdown-item">Green</a>
+                        <a href="#" class="dropdown-item">Yellow</a>
+                        <a href="#" class="dropdown-item">Cyber Blue</a>
+                        <a href="#" class="dropdown-item">Stealth Gray</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="sizeFilterDropdown">
+                        Size <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="sizeFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">XS</a>
+                        <a href="#" class="dropdown-item">S</a>
+                        <a href="#" class="dropdown-item">M</a>
+                        <a href="#" class="dropdown-item">L</a>
+                        <a href="#" class="dropdown-item">XL</a>
+                        <a href="#" class="dropdown-item">XXL</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="brandFilterDropdown">
+                        Brand <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="brandFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">Gnanow Core</a>
+                        <a href="#" class="dropdown-item">G-Tech</a>
+                        <a href="#" class="dropdown-item">AuraWear</a>
+                        <a href="#" class="dropdown-item">Collaborations</a>
+                    </div>
+                </div>
+                <div class="relative">
+                     <button class="filter-button dropdown-toggle" data-target="priceFilterDropdown">
+                        Price <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="priceFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">$0 - $50</a>
+                        <a href="#" class="dropdown-item">$50 - $100</a>
+                        <a href="#" class="dropdown-item">$100 - $200</a>
+                        <a href="#" class="dropdown-item">$200 - $500</a>
+                        <a href="#" class="dropdown-item">$500+</a>
+                    </div>
+                </div>
+                <div class="relative">
+                    <button class="filter-button dropdown-toggle" data-target="otherFilterDropdown">
+                        Other <i class="fas fa-chevron-down fa-xs ml-auto"></i>
+                    </button>
+                    <div id="otherFilterDropdown" class="dropdown-content">
+                        <a href="#" class="dropdown-item">New Arrivals</a>
+                        <a href="#" class="dropdown-item">On Sale</a>
+                        <a href="#" class="dropdown-item">Eco-Friendly</a>
+                        <a href="#" class="dropdown-item">Limited Edition</a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 flex justify-end">
+                <div class="relative w-full sm:w-auto sm:max-w-xs">
+                     <select class="filter-button w-full appearance-none pr-8" style="background-position: right 0.75rem center;">
+                        <option value="all">Sort By: All (Default)</option>
+                        <option value="popularity">Sort by Popularity</option>
+                        <option value="price_asc">Sort by Price: Low to High</option>
+                        <option value="price_desc">Sort by Price: High to Low</option>
+                        <option value="newest">Sort by Newest</option>
+                    </select>
+                    <i class="fas fa-chevron-down fa-xs absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-12 animate-fadeInUp" style="animation-delay: 0.5s;">
+            <h2 class="text-3xl font-semibold text-white mb-6">Explore Categories</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 category-grid">
+                {% for category in categories %}
+                <a href="#" class="category-card">
+                    {% if category.image %}
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="object-contain">
+                    {% else %}
+                        <img src="https://placehold.co/300x300/1A1A1A/FACC15?text={{ category.name|urlencode }}&font=Inter" alt="{{ category.name }}">
+                    {% endif %}
+                    <h3>{{ category.name }}</h3>
+                    <p>{{ category.description|default:"Discover unique items within this category." }}</p>
+                </a>
+                {% empty %}
+                <div class="col-span-full text-center text-gray-400">
+                    <p>No categories to display at the moment.</p>
+                </div>
+                {% endfor %}
+                <a href="#" class="category-card">
+                    <img src="https://placehold.co/300x300/1A1A1A/FACC15?text=Outerwear&font=Inter" alt="Outerwear">
+                    <h3>Outerwear</h3>
+                    <p>Jackets, Coats & Vests for the urban explorer.</p>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://placehold.co/300x300/0A0A0A/FDE047?text=Tops&font=Inter" alt="Tops">
+                    <h3>Tops & Tees</h3>
+                    <p>Futuristic shirts, tech-tees, and everyday basics.</p>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://placehold.co/300x300/111827/FACC15?text=Bottoms&font=Inter" alt="Bottoms">
+                    <h3>Bottoms</h3>
+                    <p>Nano-pants, cargo trousers, and sleek joggers.</p>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://placehold.co/300x300/000000/FFFFFF?text=Hoodies&font=Inter" alt="Hoodies">
+                    <h3>Hoodies & Sweatshirts</h3>
+                    <p>Comfort meets cutting-edge design for all seasons.</p>
+                </a>
+                <a href="#" class="category-card">
+                     <img src="https://placehold.co/300x300/1A1A1A/FACC15?text=Footwear&font=Inter" alt="Footwear">
+                    <h3>Footwear</h3>
+                    <p>Sneakers, boots, and innovative shoe designs.</p>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="https://placehold.co/300x300/0A0A0A/FDE047?text=Accessories&font=Inter" alt="Accessories">
+                    <h3>Accessories</h3>
+                    <p>Caps, bags, gloves, and other tech essentials.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="shop-products" class="animate-fadeInUp" style="animation-delay: 0.6s;">
+             <div class="flex justify-between items-center mb-6">
+                 <h2 class="text-3xl font-semibold text-white">Discover Products</h2>
+                 <span class="text-sm text-gray-400">Showing 1-8 of 120 results</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 product-grid">
+                {% for product in products %}
+                <div class="product-card">
+                    <a href="#">
+                        {% if product.variants.first.images.first.image %}
+                            <img src="{{ product.variants.first.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 sm:h-72 object-cover">
+                        {% else %}
+                            <img src="https://placehold.co/400x500/1A1A1A/FACC15?text={{ product.name|urlencode }}&font=Inter" alt="{{ product.name }}" class="w-full h-64 sm:h-72 object-cover">
+                        {% endif %}
+                    </a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">{{ product.name }}</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">${{ product.base_price|floatformat:2 }}</p>
+                        <div class="flex space-x-2 mb-3">
+                            {% for variant in product.variants.all %}
+                                {% if variant.color == 'black' %}
+                                    <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                                {% elif variant.color == 'white' %}
+                                    <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                                {% elif variant.color == 'red' %}
+                                    <span class="w-5 h-5 rounded-full bg-red-600 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Red"></span>
+                                {% elif variant.color == 'blue' %}
+                                    <span class="w-5 h-5 rounded-full bg-blue-600 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Blue"></span>
+                                {% elif variant.color == 'green' %}
+                                    <span class="w-5 h-5 rounded-full bg-green-600 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Green"></span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center text-gray-400">
+                    <p>No products to display at the moment.</p>
+                </div>
+                {% endfor %}
+
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/1A1A1A/FACC15?text=Gnanow+Jacket&font=Inter" alt="Cybernetic Stealth Jacket" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Cybernetic Stealth Jacket</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$189.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                            <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/0A0A0A/FDE047?text=Gnanow+Shirt&font=Inter" alt="Quantum Weave Shirt" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Quantum Weave Shirt</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$79.00</p>
+                        <div class="flex space-x-2 mb-3">
+                             <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                 <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/111827/FACC15?text=Gnanow+Pants&font=Inter" alt="Chrono-Trousers Mk.II" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Chrono-Trousers Mk.II</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$120.00</p>
+                        <div class="flex space-x-2 mb-3">
+                             <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                 <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/000000/FFFFFF?text=Gnanow+Hoodie&font=Inter" alt="Nova Hoodie - White Edition" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Nova Hoodie - White Edition</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$95.00</p>
+                         <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="White"></span>
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                 <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/1A1A1A/FACC15?text=Gnanow+Cap&font=Inter" alt="Stealth-Mesh Cap" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Stealth-Mesh Cap</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$35.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/0A0A0A/FDE047?text=Gnanow+Gloves&font=Inter" alt="Tactical Grip Gloves" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Tactical Grip Gloves</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$49.00</p>
+                         <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-black border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Black"></span>
+                            <span class="w-5 h-5 rounded-full bg-yellow-400 border-2 border-gray-500 cursor-pointer hover:border-white" title="Yellow Accents"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/111827/FACC15?text=Gnanow+Boots&font=Inter" alt="Zero-G Combat Boots" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Zero-G Combat Boots</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$250.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-gray-800 border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Dark Gray"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <a href="#"><img src="https://placehold.co/400x500/000000/FFFFFF?text=Gnanow+Scarf&font=Inter" alt="Adaptive Camo Scarf" class="w-full h-64 sm:h-72 object-cover"></a>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-white mb-1 truncate"><a href="#" class="hover:text-brand-yellow">Adaptive Camo Scarf</a></h3>
+                        <p class="text-brand-yellow text-xl font-bold mb-2">$65.00</p>
+                        <div class="flex space-x-2 mb-3">
+                            <span class="w-5 h-5 rounded-full bg-white border-2 border-gray-500 cursor-pointer hover:border-brand-yellow" title="Arctic White"></span>
+                        </div>
+                        <button class="w-full btn-yellow text-sm py-2"><i class="fas fa-cart-plus mr-2"></i>Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="mt-12 flex justify-center" aria-label="Pagination">
+                <button class="pagination-button active">1</button>
+                <button class="pagination-button ml-2">2</button>
+                <button class="pagination-button ml-2">3</button>
+                <button class="pagination-button ml-2 hidden sm:flex">4</button> {# Hide on very small screens #}
+                <button class="pagination-button ml-2"><i class="fas fa-arrow-right"></i></button>
+            </nav>
+        </section>
+    </main>
+
+    <footer class="bg-gray-900/80 border-t border-gray-800/50 pt-12 pb-8 animate-fadeIn" style="animation-delay: 0.7s;">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">Receive an exclusive <span class="brand-yellow">20%</span> discount code</h2>
+                    <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+                </div>
+                <form class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+                    <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h3 class="footer-title">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="#" class="footer-link">Careers</a></li>
+                        <li><a href="#" class="footer-link">Press</a></li>
+                        <li><a href="#" class="footer-link">Affiliates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Customer Care</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Help & FAQ</a></li>
+                        <li><a href="#" class="footer-link">Size Guide</a></li>
+                        <li><a href="#" class="footer-link">Track My Order</a></li>
+                        <li><a href="#" class="footer-link">Return My Order</a></li>
+                        <li><a href="#" class="footer-link">Refer a Friend</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Terms & Policies</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+                        <li><a href="#" class="footer-link">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link">Cookie Policy</a></li>
+                        <li><a href="#" class="footer-link">Shipping Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="footer-title">Follow Us</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link"><i class="fab fa-instagram mr-2"></i>Instagram</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-tiktok mr-2"></i>TikTok</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-facebook-f mr-2"></i>Facebook</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-x-twitter mr-2"></i>X (Twitter)</a></li>
+                        <li><a href="#" class="footer-link"><i class="fab fa-pinterest mr-2"></i>Pinterest</a></li>
+                    </ul>
+                </div>
+                 <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                    <h3 class="footer-title">GNANOW HQ</h3>
+                    <p class="text-gray-400 text-sm">
+                        123 Cyber District, Neo City, 90210<br>
+                        United Future States<br>
+                        Email: <a href="mailto:support@gnanow.tech" class="hover:text-brand-yellow">support@gnanow.tech</a><br>
+                        Phone: <a href="tel:+10001234567" class="hover:text-brand-yellow">+1 (000) 123-4567</a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <div class="text-gray-400 mb-4 md:mb-0">
+                    <span class="font-bold text-lg brand-yellow mr-2">GNANOW</span> &copy; <span id="currentYear"></span>. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="flex space-x-2 text-2xl text-gray-500">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                        <i class="fab fa-cc-amex"></i>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-400 hover:text-brand-yellow flex items-center dropdown-toggle" data-target="languageDropdown">
+                            <i class="fas fa-globe mr-1"></i> EN <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <div id="languageDropdown" class="dropdown-content bottom-full mb-1 right-0 w-28">
+                             <a href="#" class="dropdown-item">English</a>
+                             <a href="#" class="dropdown-item">Español</a>
+                             <a href="#" class="dropdown-item">Français</a>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-400 hover:text-brand-yellow flex items-center dropdown-toggle" data-target="currencyDropdown">
+                            USD <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                        </button>
+                        <div id="currencyDropdown" class="dropdown-content bottom-full mb-1 right-0 w-24">
+                             <a href="#" class="dropdown-item">USD</a>
+                             <a href="#" class="dropdown-item">EUR</a>
+                             <a href="#" class="dropdown-item">GBP</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set current year in footer
+            const currentYearSpan = document.getElementById('currentYear');
+            if (currentYearSpan) {
+                currentYearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Generic Dropdown Toggle Functionality
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                const targetId = toggle.dataset.target;
+                const dropdownContent = document.getElementById(targetId);
+                if (dropdownContent) {
+                    toggle.addEventListener('click', (event) => {
+                        event.stopPropagation(); // Prevent click from closing immediately
+                        // Close other open dropdowns
+                        document.querySelectorAll('.dropdown-content.open').forEach(openDropdown => {
+                            if (openDropdown.id !== targetId) {
+                                openDropdown.classList.remove('open');
+                            }
+                        });
+                        dropdownContent.classList.toggle('open');
+                    });
+                }
+            });
+
+            // Close dropdowns when clicking outside
+            window.addEventListener('click', (event) => {
+                document.querySelectorAll('.dropdown-content.open').forEach(openDropdown => {
+                    // Check if the click was outside the dropdown and its toggle button
+                    const toggleButton = document.querySelector(`[data-target="${openDropdown.id}"]`);
+                    if (!openDropdown.contains(event.target) && (!toggleButton || !toggleButton.contains(event.target))) {
+                         openDropdown.classList.remove('open');
+                    }
+                });
+            });
+
+            // Hero Carousel Functionality
+            const slider = document.getElementById('imageSlider');
+            const prevButton = document.getElementById('prevSlide');
+            const nextButton = document.getElementById('nextSlide');
+            if (slider && prevButton && nextButton) {
+                const slides = slider.querySelectorAll('.slide');
+                let currentIndex = 0;
+                const totalSlides = slides.length;
+                let slideInterval;
+
+                function updateSliderPosition() {
+                    slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+                }
+
+                function nextSlide() {
+                    currentIndex = (currentIndex + 1) % totalSlides;
+                    updateSliderPosition();
+                }
+
+                function prevSlide() {
+                    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                    updateSliderPosition();
+                }
+
+                function startSlideShow() {
+                    stopSlideShow(); // Clear any existing interval
+                    slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+                }
+
+                function stopSlideShow() {
+                    clearInterval(slideInterval);
+                }
+
+                // Event Listeners for Carousel Buttons
+                prevButton.addEventListener('click', () => {
+                    prevSlide();
+                    stopSlideShow(); // Stop auto-slide on manual navigation
+                    // startSlideShow(); // Uncomment to restart auto-slide after manual navigation
+                });
+                nextButton.addEventListener('click', () => {
+                    nextSlide();
+                    stopSlideShow(); // Stop auto-slide on manual navigation
+                    // startSlideShow(); // Uncomment to restart auto-slide after manual navigation
+                });
+
+                // Start autoplay on load
+                startSlideShow();
+
+                // Pause/Resume autoplay on hover
+                slider.addEventListener('mouseenter', stopSlideShow);
+                slider.addEventListener('mouseleave', startSlideShow);
+            }
+
+            // Staggered animation for product cards (Intersection Observer)
+            // This will make product cards fade in with a delay as they enter the viewport.
+            const productGrid = document.querySelector('.product-grid');
+            if (productGrid) {
+                const productCards = productGrid.querySelectorAll('.product-card');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            // Apply animation with a staggered delay
+                            setTimeout(() => {
+                                entry.target.classList.add('animate-fadeInUp');
+                            }, index * 100); // Stagger by 100ms per card
+                            observer.unobserve(entry.target); // Stop observing once animated
+                        }
+                    });
+                }, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+
+                productCards.forEach(card => {
+                    observer.observe(card);
+                });
+            }
+
+            // Staggered animation for category cards (Intersection Observer)
+            const categoryGrid = document.querySelector('.category-grid');
+            if (categoryGrid) {
+                const categoryCards = categoryGrid.querySelectorAll('.category-card');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach((entry, index) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(() => {
+                                entry.target.classList.add('animate-fadeInUp');
+                            }, index * 100); // Stagger by 100ms per card
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                categoryCards.forEach(card => {
+                    observer.observe(card);
+                });
+            }
+
+            // Simple Newsletter Form Submission (replace with actual Django form handling)
+            const newsletterForm = document.querySelector('footer form');
+            if (newsletterForm) {
+                newsletterForm.addEventListener('submit', (e) => {
+                    e.preventDefault(); // Prevent default form submission
+                    const emailInput = newsletterForm.querySelector('input[type="email"]');
+                    if (emailInput && emailInput.value) {
+                        // In a real Django app, you'd send this data via AJAX
+                        console.log('Newsletter signup:', emailInput.value);
+                        // Provide user feedback (e.g., a custom modal or toast notification)
+                        // For now, a console log is used. Avoid alert() in production.
+                        alert('Thanks for subscribing to Gnanow updates!'); // Temporary, replace with better UI
+                        emailInput.value = ''; // Clear input
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> {% endcomment %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-T-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Fashion Forward</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background for contrast with yellow/white */
+            color: #F3F4F6; /* Light gray text */
+        }
+
+ 
+      
+
+
+        .custom-alert {
+      position: fixed;
+      top: 20px;
+      right: -400px;
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 16px 50px 16px 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
+      z-index: 1000;
+      transition: right 0.6s ease, opacity 0.5s ease;
+      opacity: 0;
+      min-width: 250px;
+      max-width: 300px;
+    }
+
+    .custom-alert.show {
+      right: 20px;
+      opacity: 1;
+    }
+
+    .custom-alert .close-btn {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: red;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .custom-alert .close-btn:hover {
+      color: darkred;
+    }
+        /* Brand Colors */
+        .bg-brand-yellow { background-color: #FBBF24; /* Amber 400 */ }
+        .text-brand-yellow { color: #FBBF24; }
+        .border-brand-yellow { border-color: #FBBF24; }
+
+        .bg-brand-black { background-color: #000000; }
+        .text-brand-black { color: #000000; }
+
+        .bg-brand-white { background-color: #FFFFFF; }
+        .text-brand-white { color: #FFFFFF; }
+
+        /* Navbar styling */
+        .navbar {
+            transition: background-color 0.3s ease-in-out;
+        }
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.9); /* Dark bg with opacity */
+            backdrop-filter: blur(10px);
+        }
+
+        /* Offer Slider */
+        .offer-slider-container {
+            overflow: hidden;
+            position: relative;
+        }
+        .offer-slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .offer-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            position: relative; /* For text overlay */
+        }
+        .offer-slide img {
+            width: 100%;
+            height: 50vh; /* Adjust as needed */
+            object-fit: cover;
+            border-radius: 0.5rem; /* Rounded corners for slides */
+        }
+        .offer-slide-content {
+            position: absolute;
+            bottom: 10%;
+            left: 5%;
+            color: white;
+            background-color: rgba(0,0,0,0.5);
+            padding: 1rem 1.5rem;
+            border-radius: 0.375rem;
+        }
+        .slider-nav button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: background-color 0.3s ease;
+        }
+
+         /* Custom styles for Quantity Selector */
+    .quantity-btn {
+        @apply p-2 rounded-md transition-colors duration-200 hover:bg-gray-700;
+    }
+    .quantity-input::-webkit-outer-spin-button,
+    .quantity-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .quantity-input {
+        -moz-appearance: textfield; /* Firefox */
+    }
+        .slider-nav button:hover {
+            background-color: rgba(251, 191, 36, 0.8); /* Yellow on hover */
+        }
+        .slider-nav .prev { left: 1rem; }
+        .slider-nav .next { right: 1rem; }
+
+        /* Card styles */
+        .card {
+            background-color: #1F2937; /* Gray 800 */
+            border-radius: 0.75rem; /* More rounded */
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure cards in a row have same height */
+        }
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.2); /* Yellowish shadow */
+        }
+        .card-image {
+            width: 100%;
+            height: 200px; /* Fixed height for category images */
+            object-fit: cover;
+        }
+        .product-card-image {
+            width: 100%;
+            height: 250px; /* Fixed height for product images */
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 1rem;
+            flex-grow: 1; /* Allows content to fill space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .btn-primary {
+            background-color: #FBBF24; /* Brand yellow */
+            color: #111827; /* Dark text for yellow bg */
+        }
+        .btn-primary:hover {
+            background-color: #F59E0B; /* Amber 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #FBBF24;
+            border: 2px solid #FBBF24;
+        }
+        .btn-secondary:hover {
+            background-color: #FBBF24;
+            color: #111827;
+            transform: translateY(-2px);
+        }
+        .icon-btn {
+            background: transparent;
+            border: none;
+            color: #9CA3AF; /* Gray 400 */
+            transition: color 0.3s ease;
+            font-size: 1.25rem; /* Slightly larger icons */
+        }
+        .icon-btn:hover {
+            color: #FBBF24; /* Yellow on hover */
+        }
+        .icon-btn.active {
+            color: #FBBF24; /* Yellow when active (e.g., favorited) */
+        }
+
+        /* Search Bar */
+        .search-bar-container {
+            background-color: #1F2937; /* Gray 800 */
+            padding: 2rem;
+            border-radius: 0.75rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .search-input {
+            background-color: #374151; /* Gray 700 */
+            color: #F3F4F6;
+            border: 2px solid #4B5563; /* Gray 600 */
+        }
+        .search-input:focus {
+            border-color: #FBBF24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.3);
+        }
+
+        /* Section Heading */
+        .section-heading {
+            font-size: 2.25rem; /* Larger heading */
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #FBBF24; /* Yellow heading */
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000000; /* Black footer */
+            color: #9CA3AF; /* Gray 400 */
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in-section {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar .hidden { display: none; } /* Hide desktop nav links */
+            .navbar .flex-col { display: flex; } /* Show mobile menu items */
+            .offer-slide img { height: 35vh; }
+            .section-heading { font-size: 1.75rem; }
+            .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* 2 products per row on mobile */
+            .category-grid { grid-template-columns: repeat(1, minmax(0, 1fr)); } /* 1 category per row on mobile */
+        }
+         @media (max-width: 1024px) {
+            .product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } /* 3 products per row on tablet */
+            .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } /* 2 categories per row on tablet */
+        }
+        
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    z-index: 9999; /* Ensure this is higher than other elements */
+}
+
+.tooltip {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 4px 8px;
+    position: absolute;
+    z-index: 10000; /* Tooltip itself also needs high z-index */
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    white-space: nowrap;
+}
+
+.tooltip-container:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+    </style>
+</head>
+<body>
+ {% if status == "1" or status == "0" %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.createElement('div');
+        alert.className = 'custom-alert';
+
+        {% if status == "1" %}
+          alert.innerHTML = `Item added to wishlist! <span class="close-btn" onclick="this.parentElement.remove()">×</span>`;
+          alert.style.backgroundColor = '#d4edda';
+          alert.style.color = 'green';
+        {% elif status == "0" %}
+          alert.innerHTML = `Item removed from wishlist. <span class="close-btn" onclick="this.parentElement.remove()">×</span>`;
+          alert.style.backgroundColor = '#f8d7da';
+          alert.style.color = 'red';
+                {% endif %}
+
+        document.body.appendChild(alert);
+
+        setTimeout(() => {
+          alert.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+          alert.classList.remove('show');
+          setTimeout(() => alert.remove(), 500);
+        }, 30000);
+      });
+    </script>
+  {% endif %}
+    <nav class="navbar navbar-sticky p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <span class="text-3xl font-extrabold text-brand-yellow">G</span>
+                <h1 class="text-2xl font-bold text-brand-white">GNANOW</h1>
+            </a>
+
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="/dashboard" class="text-gray-300 hover:text-brand-yellow transition duration-300">Home</a>
+                <a href="/products" class="text-gray-300 hover:text-brand-yellow transition duration-300">Products</a>
+                <a href="/categories" class="text-gray-300 hover:text-brand-yellow transition duration-300">Categories</a>
+                <a href="/my-orders" class="text-gray-300 hover:text-brand-yellow transition duration-300">My Orders</a>
+                <a href="/my-addresses" class="text-gray-300 hover:text-brand-yellow transition duration-300">My Address</a>
+            </div>
+
+            <div class="flex items-center space-x-5">
+                <a href="/profile" class="text-gray-300 hover:text-brand-yellow transition duration-300">
+                    <i class="fas fa-user text-xl"></i>
+                </a>
+                {% comment %} <a href="/cart" class="text-gray-300 hover:text-brand-yellow transition duration-300 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span>
+                </a> {% endcomment %}
+                <a href="/cart" class="relative">
+  <i class="fas fa-shopping-cart text-xl"></i>
+  {% if cart_count > 0 %}
+  <span class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full px-2 py-0.5">
+    {{ cart_count }}
+  </span>
+  {% endif %}
+</a>
+                {% comment %} <a href="{% url "wishlist" %}" class="text-gray-300 hover:text-brand-yellow transition duration-300">
+                    <i class="fas fa-heart text-xl"></i>
+                </a> {% endcomment %}
+                <a href="{% url 'wishlist' %}" class="relative">
+  <i class="fas fa-heart text-white text-xl"></i>
+  {% if wishlist_count > 0 %}
+  <span class="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full px-2 py-0.5">
+    {{ wishlist_count }}
+  </span>
+  {% endif %}
+</a>
+
+                  <a href="/logout_view" class="text-gray-300 hover:text-brand-yellow transition duration-300">Logout</a>
+                <button id="mobileMenuButton" class="md:hidden text-gray-300 hover:text-brand-yellow transition duration-300">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden mt-3 space-y-2 px-4">
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Home</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Products</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Categories</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">My Orders</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">My Address</a>
+        </div>
+    </nav>
+
+    <section class="offer-slider-container container mx-auto mt-2 p-4 md:p-0">
+        <div class="offer-slider">
+            <div class="offer-slide">
+                <img src="{% static 'images/offer2.png' %}" alt="Offer 1">
+                <div class="offer-slide-content">
+                    <h2 class="text-2xl md:text-4xl font-bold">Summer Styles Arrived!</h2>
+                    <p class="text-sm md:text-lg mt-2">Up to 50% off on selected items.</p>
+                </div>
+            </div>
+            <div class="offer-slide">
+                <img src="{% static 'images/offer3.png' %}" alt="Offer 2">
+                 <div class="offer-slide-content">
+                    <h2 class="text-2xl md:text-4xl font-bold">Fresh Collection Drops!</h2>
+                    <p class="text-sm md:text-lg mt-2">Discover the latest trends.</p>
+                </div>
+            </div>
+            <div class="offer-slide">
+                <img src="{% static 'images/offer4.png' %}" alt="Offer 3">
+                 <div class="offer-slide-content">
+                    <h2 class="text-2xl md:text-4xl font-bold">Exclusive Deals Just For You</h2>
+                    <p class="text-sm md:text-lg mt-2">Don't miss out!</p>
+                </div>
+            </div>
+            <div class="offer-slide">
+                <img src="{% static 'images/offer5.png' %}" alt="Offer 4">
+                 <div class="offer-slide-content">
+                    <h2 class="text-2xl md:text-4xl font-bold">Get Ready for the Festivities</h2>
+                    <p class="text-sm md:text-lg mt-2">Shine bright this season.</p>
+                </div>
+            </div>
+            <div class="offer-slide">
+                <img src="{% static 'images/offer1.jpg' %}" alt="Offer 5">
+                 <div class="offer-slide-content">
+                    <h2 class="text-2xl md:text-4xl font-bold">Free Shipping Over $50</h2>
+                    <p class="text-sm md:text-lg mt-2">Shop your heart out!</p>
+                </div>
+            </div>
+        </div>
+        <div class="slider-nav">
+            <button class="prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </section>
+
+    <section class="container mx-auto px-4 search-bar-container fade-in-section">
+        <form method="get" action="{% url 'product_list' %}">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+            <input type="text" placeholder="Search for products, brands and more..."  name="q" class="search-input w-full md:w-2/3 p-4 rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-brand-yellow" value="{{ query }}" >
+            <button class="btn btn-primary w-full md:w-auto" type="submit">
+                <i class="fas fa-search mr-2"></i>Search
+            </button>
+        </div>
+    </form>
+    </section>
+
+    {% comment %} <section class="container mx-auto py-8 px-4 fade-in-section">
+        <h2 class="section-heading">Explore Categories</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 category-grid">
+            <a href="#" class="card group">
+                <img src="https://placehold.co/400x300/FBBF24/1F2937?text=Men's+Fashion" alt="Category 1" class="card-image">
+                <div class="card-content">
+                    <div>
+                        <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Men's Fashion</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Latest trends in men's clothing, from casual to formal.</p>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <img src="https://placehold.co/400x300/EC4899/1F2937?text=Women's+Wear" alt="Category 2" class="card-image">
+                <div class="card-content">
+                     <div>
+                        <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Women's Wear</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Chic and stylish outfits for every occasion.</p>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <img src="https://placehold.co/400x300/8B5CF6/1F2937?text=Kid's+Collection" alt="Category 3" class="card-image">
+                <div class="card-content">
+                     <div>
+                        <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Kid's Collection</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Fun and comfortable clothing for the little ones.</p>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <img src="https://placehold.co/400x300/10B981/1F2937?text=Accessories" alt="Category 4" class="card-image">
+                <div class="card-content">
+                     <div>
+                        <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Accessories</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Complete your look with stylish accessories.</p>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <img src="https://placehold.co/400x300/3B82F6/1F2937?text=Footwear" alt="Category 5" class="card-image">
+                <div class="card-content">
+                     <div>
+                        <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Footwear</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Step out in style with our diverse shoe collection.</p>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <img src="https://placehold.co/400x300/EF4444/1F2937?text=Sportswear" alt="Category 6" class="card-image">
+                <div class="card-content">
+                     <div>
+                        <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Sportswear</h3>
+                        <p class="text-gray-400 mt-2 text-sm">Performance and style for your active lifestyle.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="text-center mt-10">
+            <button class="btn btn-secondary">Explore All Categories</button>
+        </div>
+    </section> {% endcomment %}
+
+
+<section class="container mx-auto py-8 px-4 fade-in-section">
+    <h2 class="section-heading">Explore Categories</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 category-grid">
+        {% for category in top_categories %}
+        {% comment %} <a href="" class="category-card"> {% endcomment %}
+        <a href="{% url 'product_list' %}?category={{ category.slug }}" class="card group">
+            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="card-image">
+            <div class="card-content">
+                <div>
+                    <h3 class="text-xl font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">{{ category.name }}</h3>
+                    <p class="text-gray-400 mt-2 text-sm">{{ category.description|truncatechars:100 }}</p>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-10">
+        <a href="/categories">
+            <button class="btn btn-secondary">Explore All Categories</button>
+        </a>
+    </div>
+</section>
+
+
+    {% comment %} <section class="container mx-auto py-8 px-4 fade-in-section">
+        <h2 class="section-heading">Featured Products</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 product-grid">
+            <a href="#" class="card group">
+                <div class="relative">
+                    <img src="https://placehold.co/300x400/FBBF24/1F2937?text=Product+1" alt="Product 1" class="product-card-image">
+                    <button class="icon-btn absolute top-3 right-3 z-10 bg-gray-800 bg-opacity-50 rounded-full p-2">
+                        <i class="far fa-heart"></i>
+                        </button>
+                </div>
+                <div class="card-content">
+                    <div>
+                        <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Classic Cotton Tee</h3>
+                        <p class="text-brand-yellow font-bold text-xl mt-1">$29.99</p>
+                        <div class="flex items-center mt-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star-half-alt text-yellow-400"></i>
+                            <span class="text-gray-400 text-sm ml-2">(120)</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <div class="relative">
+                    <img src="https://placehold.co/300x400/EC4899/1F2937?text=Product+2" alt="Product 2" class="product-card-image">
+                     <button class="icon-btn absolute top-3 right-3 z-10 bg-gray-800 bg-opacity-50 rounded-full p-2">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div>
+                        <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Slim Fit Denim Jeans</h3>
+                        <p class="text-brand-yellow font-bold text-xl mt-1">$59.50</p>
+                         <div class="flex items-center mt-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="far fa-star text-yellow-400"></i>
+                            <span class="text-gray-400 text-sm ml-2">(85)</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <div class="relative">
+                    <img src="https://placehold.co/300x400/8B5CF6/1F2937?text=Product+3" alt="Product 3" class="product-card-image">
+                     <button class="icon-btn absolute top-3 right-3 z-10 bg-gray-800 bg-opacity-50 rounded-full p-2">
+                        <i class="fas fa-heart text-brand-yellow"></i> </button>
+                </div>
+                <div class="card-content">
+                    <div>
+                        <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Floral Print Dress</h3>
+                        <p class="text-brand-yellow font-bold text-xl mt-1">$75.00</p>
+                         <div class="flex items-center mt-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <span class="text-gray-400 text-sm ml-2">(210)</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+                </div>
+            </a>
+            <a href="#" class="card group">
+                <div class="relative">
+                    <img src="https://placehold.co/300x400/10B981/1F2937?text=Product+4" alt="Product 4" class="product-card-image">
+                     <button class="icon-btn absolute top-3 right-3 z-10 bg-gray-800 bg-opacity-50 rounded-full p-2">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                <div class="card-content">
+                    <div>
+                        <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">Leather Ankle Boots</h3>
+                        <p class="text-brand-yellow font-bold text-xl mt-1">$120.00</p>
+                         <div class="flex items-center mt-1">
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star text-yellow-400"></i>
+                            <i class="fas fa-star-half-alt text-yellow-400"></i>
+                            <i class="far fa-star text-yellow-400"></i>
+                            <span class="text-gray-400 text-sm ml-2">(65)</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+                </div>
+            </a>
+            </div>
+        <div class="text-center mt-10">
+            <button class="btn btn-secondary">View More Products</button>
+        </div>
+        <br>
+        <br>
+        <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+                <div>
+                    <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">Receive an exclusive <span class="brand-yellow">20%</span> discount code</h2>
+                    <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+                </div>
+                <form class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+                    <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+                </form>
+            </div>
+ 
+    </section> {% endcomment %}
+
+    {% comment %} <section class="container mx-auto py-8 px-4 fade-in-section">
+    <h2 class="section-heading">Featured Products</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 product-grid">
+        {% for product in featured_products %}
+        <a href="#" class="card group">
+            <div class="relative">
+                {% with variant=product.variants.first %}
+                    {% if variant and variant.images.first %}
+                        <img src="{{ variant.images.first.image.url }}" alt="{{ product.name }}" class="product-card-image">
+                    {% else %}
+                        <img src="https://placehold.co/300x400/999/fff?text=No+Image" alt="{{ product.name }}" class="product-card-image">
+                    {% endif %}
+                    {% if variant.id in wishlist_variant_ids %}
+                <a href="{% url 'remove_from_wishlist' variant.id %}" class="icon-btn absolute top-3 right-3 z-10 bg-gray-800 bg-opacity-50 rounded-full p-2">
+                    <i class="fas fa-heart text-brand-yellow"></i>
+                </a>
+            {% else %}
+                <a href="{% url 'add_to_wishlist' variant.id %}" class="icon-btn absolute top-3 right-3 z-10 bg-gray-800 bg-opacity-50 rounded-full p-2">
+                    <i class="far fa-heart text-white"></i>
+                </a>
+            {% endif %}
+                {% endwith %}
+               
+            </div>
+            <div class="card-content">
+                <div>
+                    <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">
+                        {{ product.name }}
+                    </h3>
+                    <p class="text-brand-yellow font-bold text-xl mt-1">
+                        ${{ product.base_price }}
+                    </p>
+                    <div class="flex items-center mt-1">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <i class="far fa-star text-yellow-400"></i>
+                        <span class="text-gray-400 text-sm ml-2">(123)</span> <!-- You can replace this with actual rating logic -->
+                    </div>
+                </div>
+                <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-10">
+        <a href="#"><button class="btn btn-secondary">View More Products</button></a>
+    </div>
+    <br><br>
+
+    <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+        <div>
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">
+                Receive an exclusive <span class="brand-yellow">20%</span> discount code
+            </h2>
+            <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+        </div>
+        <form class="flex flex-col sm:flex-row gap-3">
+            <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+            <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+        </form>
+    </div>
+</section> {% endcomment %}
+
+
+<section class="container mx-auto py-8 px-4 fade-in-section">
+    <h2 class="section-heading">Featured Products</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 product-grid">
+     
+        {% for product in featured_products %}
+       
+        {% with variant=product.first_variant %}
+<div class="card group relative bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+    <div class="relative">
+        {% if variant and variant.images.first %}
+            <img src="{{ variant.images.first.image.url }}" alt="{{ product.name }}" class="product-card-image">
+        {% else %}
+            <img src="https://placehold.co/300x400/999/fff?text=No+Image" alt="{{ product.name }}" class="product-card-image">
+        {% endif %}
+
+        <!-- Wishlist button -->
+        <form method="post" action="{% url 'toggle_wishlist_dashboard' variant.id %}" class="absolute top-3 right-3 z-10">
+            {% csrf_token %}
+            <button type="submit">
+                <i style="font-size: 27px;"
+                   class="{% if variant.id in wishlist_variant_ids %}
+                            fas fa-heart text-brand-yellow
+                          {% else %}
+                            far fa-heart text-white
+                          {% endif %}">
+                </i>
+            </button>
+        </form>
+
+        <!-- 🆕 Out of Stock label -->
+      {% if product.variant_stock == 0 %}
+    <span class="absolute bottom-2 left-2 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">Out of Stock</span>
+{% endif %}
+
+    </div>
+
+    <div class="card-content p-4">
+        <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">
+            {{ product.name }}
+        </h3>
+        <p class="text-brand-yellow font-bold text-xl mt-1">
+            ${{ product.base_price|floatformat:2 }}
+        </p>
+        <div class="flex items-center mt-1">
+            <i class="fas fa-star text-yellow-400"></i>
+            <i class="fas fa-star text-yellow-400"></i>
+            <i class="fas fa-star text-yellow-400"></i>
+            <i class="fas fa-star text-yellow-400"></i>
+            <i class="far fa-star text-yellow-400"></i>
+            <span class="text-gray-400 text-sm ml-2">(123)</span>
+        </div>
+            {% comment %} <form action="{% url 'add_to_cart' variant.id %}" method="post">
+                {% csrf_token %}
+                <div class="flex items-center justify-center mt-4 mb-4 border border-gray-700 rounded-lg p-1 bg-gray-900">
+                    <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                        <i class="fas fa-minus text-gray-300 group-hover:text-brand-yellow"></i>
+                    </button>
+                    <input type="number" name="quantity" value="1" min="1" max="99"
+                        class="quantity-input w-16 text-center bg-transparent border-none focus:ring-0 text-white font-semibold"
+                        aria-label="Product quantity">
+                    <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                        <i class="fas fa-plus text-gray-300 group-hover:text-brand-yellow"></i>
+                    </button>
+                </div>
+                <button class="btn btn-primary mt-4 w-full text-sm" type="submit">Add to Cart</button>
+            </form> {% endcomment %}
+            {% if product.variant_stock > 0 %}
+    <form action="{% url 'add_to_cart' variant.id %}" method="post">
+        {% csrf_token %}
+        <div class="flex items-center justify-center mt-4 mb-4 border border-gray-700 rounded-lg p-1 bg-gray-900">
+            <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                <i class="fas fa-minus text-gray-300 group-hover:text-brand-yellow"></i>
+            </button>
+            <input type="number" name="quantity" value="1" min="1" max="99"
+                class="quantity-input w-16 text-center bg-transparent border-none focus:ring-0 text-white font-semibold"
+                aria-label="Product quantity">
+            <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                <i class="fas fa-plus text-gray-300 group-hover:text-brand-yellow"></i>
+            </button>
+        </div>
+        <button class="btn btn-primary mt-4 w-full text-sm" type="submit">Add to Cart</button>
+    </form>
+{% else %}
+    <button class="btn btn-secondary mt-4 w-full text-sm opacity-60 cursor-not-allowed" disabled>Out of Stock</button>
+{% endif %}
+
+        <a href="{% url 'product_detail' product.slug %}">
+            <button class="btn btn-primary mt-4 w-full text-sm">View Details</button>
+        </a>
+    </div>
+</div>
+{% endwith %}
+
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-10">
+        <a href="/products"><button class="btn btn-secondary">View More Products</button></a>
+    </div>
+
+    <br><br>
+
+    <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+        <div>
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">
+                Receive an exclusive <span class="brand-yellow">20%</span> discount code
+            </h2>
+            <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+        </div>
+        <form class="flex flex-col sm:flex-row gap-3">
+            <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+            <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+        </form>
+    </div>
+    
+</section>
+{% comment %} <section class="container mx-auto py-8 px-4 fade-in-section">
+    <h2 class="section-heading">Featured Products</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8 product-grid">
+        {% for product in featured_products %}
+        {% with variant=product.variants.first %}
+        <div class="card group relative bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+            <div class="relative">
+                {% if variant and variant.images.first %}
+                    <img src="{{ variant.images.first.image.url }}" alt="{{ product.name }}" class="product-card-image">
+                {% else %}
+                    <img src="https://placehold.co/300x400/999/fff?text=No+Image" alt="{{ product.name }}" class="product-card-image">
+                {% endif %}
+
+          <form method="post" action="{% url 'toggle_wishlist' variant.id %}" class="absolute top-3 right-3 z-10">
+    {% csrf_token %}
+    <button type="submit" class="icon-btn bg-gray-800 bg-opacity-50 rounded-full p-2">
+        <i class="{% if variant.id in wishlist_variant_ids %}fas fa-heart text-brand-yellow{% else %}far fa-heart text-white{% endif %}"></i>
+    </button>
+</form>
+            </div>
+
+            <div class="card-content p-4">
+                <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">
+                    {{ product.name }}
+                </h3>
+                <p class="text-brand-yellow font-bold text-xl mt-1">
+                    {{ product.base_price }}
+                </p>
+                <div class="flex items-center mt-1">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="far fa-star text-yellow-400"></i>
+                    <span class="text-gray-400 text-sm ml-2">(123)</span>
+                </div>
+                 Qunatity: <input type="number"  name="qq" class="" />
+                <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-10">
+        <a href="#"><button class="btn btn-secondary">View More Products</button></a>
+    </div>
+
+    <br><br>
+
+    <div class="bg-gray-800/60 p-6 sm:p-8 rounded-lg mb-10 grid md:grid-cols-2 gap-6 items-center border border-yellow-500/20 shadow-xl">
+        <div>
+            <h2 class="text-xl sm:text-2xl font-semibold text-white mb-1">
+                Receive an exclusive <span class="brand-yellow">20%</span> discount code
+            </h2>
+            <p class="text-gray-400 text-sm">when you sign up for our Gnanow updates.</p>
+        </div>
+        <form class="flex flex-col sm:flex-row gap-3">
+            <input type="email" placeholder="Enter your email" class="input-dark flex-grow" required>
+            <button type="submit" class="btn-yellow whitespace-nowrap">Subscribe</button>
+        </form>
+    </div>
+</section> {% endcomment %}
+
+
+    <footer class="footer">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Contact</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Terms of Service</a>
+                
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Feedback</a>
+                
+            </div>
+            
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-facebook-f text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-instagram text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-pinterest text-xl"></i></a>
+            </div>
+
+            <p>&copy; <span id="currentYear"></span> GNANOW. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Designed with <i class="fas fa-heart text-brand-yellow"></i> for Fashion Lovers</p>
+            <br>
+        <div class="flex justify-center space-x-7 mb-4">
+                    <div class="flex space-x-2 text-2xl text-gray-500">
+                        <i class="fab fa-cc-visa"></i>
+                        <i class="fab fa-cc-mastercard"></i>
+                        <i class="fab fa-cc-paypal"></i>
+                        <i class="fab fa-cc-amex"></i>
+                    </div>
+    </footer>
+        </div>
+        
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Offer Slider Logic
+        const slider = document.querySelector('.offer-slider');
+        const slides = document.querySelectorAll('.offer-slide');
+        const prevButton = document.querySelector('.slider-nav .prev');
+        const nextButton = document.querySelector('.slider-nav .next');
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+        let slideInterval;
+
+        function updateSliderPosition() {
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        function nextSlide() {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSliderPosition();
+        }
+
+        function prevSlide() {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSliderPosition();
+        }
+
+        nextButton.addEventListener('click', () => {
+            nextSlide();
+            resetInterval();
+        });
+        prevButton.addEventListener('click', () => {
+            prevSlide();
+            resetInterval();
+        });
+
+        function startSlider() {
+            slideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            startSlider();
+        }
+
+        startSlider(); // Auto-play slider
+
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Wishlist Icon Toggle (Example for one button, you'd apply to all)
+        const wishlistButtons = document.querySelectorAll('.icon-btn .fa-heart');
+        wishlistButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent link navigation if card is a link
+                event.stopPropagation(); // Prevent card click event
+                this.classList.toggle('far'); // Regular heart
+                this.classList.toggle('fas'); // Solid heart
+                this.classList.toggle('text-brand-yellow'); // Toggle active color
+            });
+        });
+
+        // Fade-in sections on scroll (simple version)
+        const fadeElements = document.querySelectorAll('.fade-in-section');
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // Trigger when 10% of the element is visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                    observer.unobserve(entry.target); // Optional: stop observing after animation
+                }
+            });
+        }, observerOptions);
+
+        fadeElements.forEach(el => {
+            el.style.animationPlayState = 'paused'; // Initially pause animation
+            observer.observe(el);
+        });
+
+    </script>
+</body>
+</html>

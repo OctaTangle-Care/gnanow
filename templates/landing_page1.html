@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Redefine Urban Fashion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Light track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFD700; /* Yellow thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e6c200; /* Darker yellow on hover */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Changed to Inter for a cleaner look */
+            background-color: #ffffff; /* White background */
+            color: #1f2937; /* Dark gray text (Tailwind gray-800) */
+            overflow-x: hidden; /* Prevent horizontal scroll on body */
+        }
+        
+        .gnanow-brand {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: #000000; /* Black brand name */
+        }
+
+        .tagline {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 500;
+            color: #4b5563; /* Tailwind gray-600 */
+        }
+
+        /* Navigation Bar Styling */
+        .main-nav {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-link {
+            color: #374151; /* Tailwind gray-700 */
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #FFD700; /* Yellow accent */
+        }
+        .nav-icons i {
+            font-size: 1.25rem;
+            color: #374151;
+            transition: color 0.3s ease;
+        }
+        .nav-icons i:hover {
+            color: #FFD700;
+        }
+
+
+        /* CTA Button Styles */
+        .cta-button-primary {
+            background-color: #000000; /* Black background */
+            color: #FFD700; /* Yellow text */
+            border: 2px solid #000000;
+            transition: all 0.3s ease;
+        }
+        .cta-button-primary:hover {
+            background-color: #333333; /* Darker black */
+            border-color: #333333;
+        }
+        .cta-button-secondary {
+            background-color: transparent;
+            color: #000000; /* Black text */
+            border: 2px solid #000000; /* Black border */
+            transition: all 0.3s ease;
+        }
+        .cta-button-secondary:hover {
+            background-color: #000000;
+            color: #FFD700; /* Yellow text */
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            color: #111827; /* Tailwind gray-900 */
+        }
+        .section-subtitle {
+            color: #6b7280; /* Tailwind gray-500 */
+        }
+
+        /* Filter button styling */
+        .filter-btn {
+            transition: all 0.3s ease;
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */
+            color: #4b5563; /* Tailwind gray-600 */
+            font-weight: 500;
+        }
+        .filter-btn:hover {
+            border-color: #FFD700;
+            color: #FFD700;
+        }
+        .filter-btn.active {
+            background-color: #000000; /* Black background */
+            color: #FFD700; /* Yellow text */
+            border-color: #000000;
+        }
+        
+        /* Product Card Styling */
+        .product-card {
+            background-color: #f9fafb; /* Tailwind gray-50 */
+            border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.07), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+        .product-card img {
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover img {
+            transform: scale(1.03);
+        }
+        .product-title {
+            color: #111827; /* Tailwind gray-900 */
+            font-weight: 600;
+        }
+        .product-category {
+            color: #6b7280; /* Tailwind gray-500 */
+            font-size: 0.875rem;
+        }
+        .product-price {
+            color: #111827;
+            font-weight: 600;
+        }
+        .add-to-cart-btn {
+            background-color: #FFD700; /* Yellow background */
+            color: #000000; /* Black text */
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #e6c200; /* Darker yellow */
+        }
+
+
+        /* Dark Sections (About, Newsletter, Footer) */
+        .dark-section {
+            background-color: #000000; /* Black background */
+            color: #e5e7eb; /* Tailwind gray-200 */
+        }
+        .dark-section .section-title, .dark-section .stat-value {
+            color: #FFD700; /* Yellow text for titles and stats in dark sections */
+        }
+        .dark-section .section-subtitle, .dark-section .stat-label, .dark-section p {
+            color: #d1d5db; /* Tailwind gray-300 for text */
+        }
+        .dark-section .form-input {
+            background-color: #1f2937; /* Dark input background */
+            border-color: #4b5563; /* Darker border */
+            color: #e5e7eb;
+        }
+        .dark-section .form-input:focus {
+            border-color: #FFD700;
+        }
+        .dark-section .form-label {
+            color: #9ca3af; /* Lighter label color */
+            background-color: #1f2937; /* Match input background */
+        }
+        .dark-section .form-input:focus + .form-label,
+        .dark-section .form-input:not(:placeholder-shown) + .form-label {
+            color: #FFD700;
+        }
+        .dark-section .subscribe-btn {
+            background-color: #FFD700;
+            color: #000000;
+        }
+        .dark-section .subscribe-btn:hover {
+            background-color: #e6c200;
+        }
+        .dark-section .footer-link {
+            color: #d1d5db;
+            transition: color 0.3s ease;
+        }
+        .dark-section .footer-link:hover {
+            color: #FFD700;
+        }
+        .dark-section .social-icon i {
+            color: #d1d5db;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .dark-section .social-icon i:hover {
+            color: #FFD700;
+            transform: translateY(-2px);
+        }
+
+        /* Newsletter floating label (general, can be overridden by dark-section) */
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem; /* Slightly taller input */
+            border: 1px solid #d1d5db; /* Tailwind gray-300 */
+            border-radius: 0.375rem; /* Tailwind rounded-md */
+            background-color: #ffffff;
+            color: #1f2937;
+            transition: border-color 0.3s ease;
+            font-size: 1rem;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #FFD700; /* Yellow focus */
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.3);
+        }
+        .form-label {
+            position: absolute;
+            left: 1rem;
+            top: 0.875rem;
+            color: #6b7280; /* Tailwind gray-500 */
+            pointer-events: none;
+            transition: all 0.2s ease;
+            background-color: #ffffff; /* Match input background for smooth transition */
+            padding: 0 0.25rem;
+            font-size: 1rem;
+        }
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            top: -0.6rem; /* Adjust for better positioning */
+            left: 0.75rem;
+            font-size: 0.75rem;
+            color: #FFD700;
+        }
+
+        /* Scroll-triggered animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .reveal-on-scroll.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Horizontal scroll container */
+        .horizontal-scroll-container {
+            display: flex;
+            overflow-x: auto;
+            padding-bottom: 1rem; /* For scrollbar visibility */
+        }
+        .horizontal-scroll-container > * {
+            flex-shrink: 0;
+            margin-right: 1.5rem; /* Spacing between items */
+        }
+        .horizontal-scroll-container > *:last-child {
+            margin-right: 0;
+        }
+
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav id="navbar" class="main-nav sticky top-0 left-0 right-0 z-50 py-3">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="#" class="text-3xl gnanow-brand">GNANOW</a>
+            <div class="hidden md:flex space-x-8 items-center">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#collections" class="nav-link">Collections</a>
+                <a href="#trending" class="nav-link">Trending Now</a>
+                <a href="/about" class="nav-link">About Us</a>
+                <a href="/c_us" class="nav-link">Contact Us</a>
+            </div>
+            <div class="hidden md:flex items-center space-x-5 nav-icons">
+                <a href="#"><i class="fas fa-search"></i></a>
+                <a href="#"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-shopping-bag"></i></a>
+            </div>
+            <div class="md:hidden">
+                <button id="mobile-menu-button" class="text-gray-700 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden mt-2 bg-white shadow-lg">
+            <a href="#hero" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100">Home</a>
+            <a href="#collections" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100">Collections</a>
+            <a href="#trending" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100">Trending Now</a>
+            <a href="#about" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100">About Us</a>
+            <a href="/c_us" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100">Contact Us</a>
+            <div class="border-t border-gray-200 my-2"></div>
+            <a href="#" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100"><i class="fas fa-search mr-2"></i>Search</a>
+            <a href="#" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100"><i class="fas fa-user mr-2"></i>Account</a>
+            <a href="#" class="block py-2 px-4 text-sm nav-link hover:bg-gray-100"><i class="fas fa-shopping-bag mr-2"></i>Cart</a>
+        </div>
+    </nav>
+
+    <section id="hero" class="min-h-[calc(100vh-64px)] flex flex-col items-center justify-center text-center p-6 bg-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-5xl md:text-7xl gnanow-brand mb-4 reveal-on-scroll">GNANOW</h1>
+            <p class="text-xl md:text-2xl tagline mb-10 reveal-on-scroll" data-reveal-delay="100">Redefine Urban Fashion.</p>
+            <div class="space-y-4 sm:space-y-0 sm:space-x-4 reveal-on-scroll" data-reveal-delay="200">
+                <button class="cta-button-primary font-semibold py-3 px-10 rounded-md text-lg w-full sm:w-auto">
+                    Shop Collection
+                </button>
+                <button class="cta-button-secondary font-semibold py-3 px-10 rounded-md text-lg w-full sm:w-auto">
+                    Explore Lookbook
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="collections" class="py-16 md:py-20 bg-gray-50 px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl section-title text-center mb-5 reveal-on-scroll">Collections</h2>
+            <div class="flex justify-center space-x-2 md:space-x-3 mb-12 reveal-on-scroll" data-reveal-delay="100">
+                <button class="filter-btn active py-2 px-5 rounded-md text-sm" data-filter="all">All</button>
+                <button class="filter-btn py-2 px-5 rounded-md text-sm" data-filter="men">Men</button>
+                <button class="filter-btn py-2 px-5 rounded-md text-sm" data-filter="women">Women</button>
+                <button class="filter-btn py-2 px-5 rounded-md text-sm" data-filter="urban">Urban</button>
+                <button class="filter-btn py-2 px-5 rounded-md text-sm" data-filter="streetwear">Streetwear</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-5 lg:col-span-6 reveal-on-scroll" data-reveal-delay="150">
+                    <img src="https://placehold.co/600x750/e0e0e0/333333?text=Featured+Collection" alt="Featured Collection" class="w-full h-auto object-cover rounded-lg shadow-lg">
+                </div>
+                <div class="md:col-span-7 lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="product-item product-card rounded-lg overflow-hidden reveal-on-scroll" data-category="men urban" data-reveal-delay="200">
+                        <img src="https://placehold.co/400x400/cccccc/333333?text=Urban+Jacket" alt="Urban Jacket" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg product-title mb-1">Cybernetic Bomber</h3>
+                            <p class="product-category mb-2">Men's Urban</p>
+                            <p class="text-xl product-price">$199.99</p>
+                        </div>
+                    </div>
+                    <div class="product-item product-card rounded-lg overflow-hidden reveal-on-scroll" data-category="women streetwear" data-reveal-delay="250">
+                        <img src="https://placehold.co/400x400/cccccc/333333?text=Street+Hoodie" alt="Street Hoodie" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg product-title mb-1">Nova Hoodie</h3>
+                            <p class="product-category mb-2">Women's Streetwear</p>
+                            <p class="text-xl product-price">$129.99</p>
+                        </div>
+                    </div>
+                     <div class="product-item product-card rounded-lg overflow-hidden reveal-on-scroll sm:col-span-2" data-category="urban streetwear" data-reveal-delay="300">
+                        <img src="https://placehold.co/820x400/cccccc/333333?text=Tech+Pants" alt="Tech Pants" class="w-full h-64 object-cover">
+                        <div class="p-4">
+                            <h3 class="text-lg product-title mb-1">Vector Cargo Pants</h3>
+                            <p class="product-category mb-2">Unisex Techwear</p>
+                            <p class="text-xl product-price">$159.99</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="trending" class="py-16 md:py-20 bg-white px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto">
+            <h2 class="text-3xl md:text-4xl section-title text-center mb-5 reveal-on-scroll">Trending Now</h2>
+            <p class="text-center section-subtitle mb-12 max-w-2xl mx-auto reveal-on-scroll" data-reveal-delay="100">Discover the latest pieces making waves in urban fashion.</p>
+            
+            <div class="horizontal-scroll-container pb-8 reveal-on-scroll" data-reveal-delay="150">
+                <div class="w-64 sm:w-72 product-card rounded-lg overflow-hidden">
+                    <img src="https://placehold.co/400x350/cccccc/333333?text=Trending+1" alt="Trending Product" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-md product-title mb-1">Quantum Pullover</h3>
+                        <p class="product-category mb-2">Limited Edition</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <p class="text-lg product-price">$179.00</p>
+                            <button class="add-to-cart-btn text-xs py-2 px-3 rounded-md">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-64 sm:w-72 product-card rounded-lg overflow-hidden">
+                    <img src="https://placehold.co/400x350/cccccc/333333?text=Trending+2" alt="Trending Product" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-md product-title mb-1">Nebula Sneakers</h3>
+                        <p class="product-category mb-2">Footwear Collection</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <p class="text-lg product-price">$299.00</p>
+                            <button class="add-to-cart-btn text-xs py-2 px-3 rounded-md">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-64 sm:w-72 product-card rounded-lg overflow-hidden">
+                    <img src="https://placehold.co/400x350/cccccc/333333?text=Trending+3" alt="Trending Product" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-md product-title mb-1">Chrono Watch</h3>
+                        <p class="product-category mb-2">Accessories</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <p class="text-lg product-price">$499.00</p>
+                            <button class="add-to-cart-btn text-xs py-2 px-3 rounded-md">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-64 sm:w-72 product-card rounded-lg overflow-hidden">
+                    <img src="https://placehold.co/400x350/cccccc/333333?text=Trending+4" alt="Trending Product" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-md product-title mb-1">Glitch Cap</h3>
+                        <p class="product-category mb-2">Headwear</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <p class="text-lg product-price">$49.00</p>
+                            <button class="add-to-cart-btn text-xs py-2 px-3 rounded-md">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+                 <div class="w-64 sm:w-72 product-card rounded-lg overflow-hidden">
+                    <img src="https://placehold.co/400x350/cccccc/333333?text=Trending+5" alt="Trending Product" class="w-full h-56 object-cover">
+                    <div class="p-4">
+                        <h3 class="text-md product-title mb-1">Echo T-Shirt</h3>
+                        <p class="product-category mb-2">Minimalist Series</p>
+                        <div class="flex justify-between items-center mt-3">
+                            <p class="text-lg product-price">$69.00</p>
+                            <button class="add-to-cart-btn text-xs py-2 px-3 rounded-md">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 md:py-20 dark-section px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+                <div class="reveal-on-scroll">
+                    <h2 class="text-3xl md:text-4xl section-title mb-6">About GNANOW</h2>
+                    <p class="text-lg leading-relaxed mb-6">
+                        GNANOW is at the forefront of urban fashion, blending minimalist design with contemporary trends. We believe in clothing that empowers self-expression and defines the future of style.
+                    </p>
+                    <p class="leading-relaxed">
+                        Our collections are crafted with precision, using high-quality materials to ensure both comfort and durability. Join us in redefining fashion.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-6 text-center reveal-on-scroll" data-reveal-delay="100">
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <h3 class="text-4xl font-bold stat-value"><span class="stat-counter" data-target="5">0</span>+</h3>
+                        <p class="stat-label mt-1">Years Innovating</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <h3 class="text-4xl font-bold stat-value"><span class="stat-counter" data-target="20">0</span>+</h3>
+                        <p class="stat-label mt-1">Product Categories</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <h3 class="text-4xl font-bold stat-value"><span class="stat-counter" data-target="25000">0</span>+</h3>
+                        <p class="stat-label mt-1">Unique Styles</p>
+                    </div>
+                    <div class="bg-gray-800 p-6 rounded-lg">
+                        <h3 class="text-4xl font-bold stat-value"><span class="stat-counter" data-target="150">0</span>+</h3>
+                        <p class="stat-label mt-1">Global Partners</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="py-16 md:py-20 dark-section px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto max-w-2xl text-center">
+            <h2 class="text-3xl md:text-4xl section-title mb-4 reveal-on-scroll">Stay Updated</h2>
+            <p class="section-subtitle mb-10 reveal-on-scroll" data-reveal-delay="100">Subscribe to our newsletter for the latest drops, exclusive offers, and GNANOW news.</p>
+            <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto reveal-on-scroll" data-reveal-delay="150">
+                <div class="form-group flex-grow mb-0">
+                    <input type="email" id="newsletter_email" name="newsletter_email" class="form-input w-full" placeholder=" " required>
+                    <label for="newsletter_email" class="form-label">Enter your email address</label>
+                </div>
+                <button type="submit" class="subscribe-btn font-semibold py-3 px-8 rounded-md text-lg w-full sm:w-auto">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="dark-section pt-16 pb-8 text-center px-4 sm:px-6 lg:px-8">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10 text-left">
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 text-yellow-400">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link text-sm">New Arrivals</a></li>
+                        <li><a href="#" class="footer-link text-sm">Men</a></li>
+                        <li><a href="#" class="footer-link text-sm">Women</a></li>
+                        <li><a href="#" class="footer-link text-sm">Collections</a></li>
+                        <li><a href="#" class="footer-link text-sm">Sale</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 text-yellow-400">Company</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/about" class="footer-link text-sm">About Us</a></li>
+                        <li><a href="#" class="footer-link text-sm">Careers</a></li>
+                        <li><a href="#" class="footer-link text-sm">Press</a></li>
+                        <li><a href="#" class="footer-link text-sm">Affiliates</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 text-yellow-400">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/c_us" class="footer-link text-sm">Contact Us</a></li>
+                        <li><a href="#" class="footer-link text-sm">FAQs</a></li>
+                        <li><a href="#" class="footer-link text-sm">Shipping & Returns</a></li>
+                        <li><a href="#" class="footer-link text-sm">Track Order</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-lg mb-4 text-yellow-400">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link text-sm">Privacy Policy</a></li>
+                        <li><a href="#" class="footer-link text-sm">Terms of Service</a></li>
+                        <li><a href="#" class="footer-link text-sm">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8">
+                <div class="flex flex-col sm:flex-row justify-between items-center">
+                    <p class="text-gray-400 text-sm mb-4 sm:mb-0">&copy; <span id="current-year"></span> GNANOW. All Rights Reserved.</p>
+                    <div class="flex space-x-5">
+                        <a href="#" class="social-icon"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-tiktok text-xl"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-youtube text-xl"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            // Close mobile menu on link click
+            const mobileNavLinks = mobileMenu.querySelectorAll('a.nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Scroll-triggered animations
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = parseInt(entry.target.dataset.revealDelay) || 0;
+                        setTimeout(() => {
+                            entry.target.classList.add('revealed');
+                            // For counters, trigger once revealed
+                            if (entry.target.querySelector('.stat-counter')) {
+                                entry.target.querySelectorAll('.stat-counter').forEach(animateCounter);
+                            } else if (entry.target.classList.contains('stat-counter')) {
+                                 animateCounter(entry.target);
+                            }
+                        }, delay);
+                        // Optional: unobserve after revealing to save resources
+                        // revealObserver.unobserve(entry.target); 
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+            
+            // Animated Stats Counter
+            function animateCounter(element) {
+                if (element.dataset.animated) return; // Prevent re-animating
+
+                const target = +element.dataset.target;
+                const duration = 1500; 
+                const increment = target / (duration / 16); 
+                let current = 0;
+                element.dataset.animated = true; // Mark as animated
+
+                const updateCount = () => {
+                    current += increment;
+                    if (current < target) {
+                        element.textContent = Math.ceil(current).toLocaleString();
+                        requestAnimationFrame(updateCount);
+                    } else {
+                        element.textContent = target.toLocaleString() + (element.textContent.includes('+') ? '+' : '');
+                    }
+                };
+                requestAnimationFrame(updateCount);
+            }
+            
+            // Collection Filter
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const productItems = document.querySelectorAll('.product-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    const filterValue = this.dataset.filter;
+
+                    productItems.forEach(item => {
+                        const itemCategories = item.dataset.category ? item.dataset.category.split(' ') : [];
+                        if (filterValue === 'all' || itemCategories.includes(filterValue)) {
+                            item.style.display = 'block';
+                            item.style.animation = 'fadeInItem 0.5s ease-out forwards';
+                        } else {
+                            item.style.animation = 'fadeOutItem 0.3s ease-out forwards';
+                            setTimeout(() => item.style.display = 'none', 300);
+                        }
+                    });
+                });
+            });
+            // Define fadeIn/fadeOut animations for filtering
+            const styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = `
+                @keyframes fadeInItem { 
+                    from { opacity: 0; transform: scale(0.95) translateY(10px); } 
+                    to { opacity: 1; transform: scale(1) translateY(0); } 
+                }
+                @keyframes fadeOutItem { 
+                    from { opacity: 1; transform: scale(1) translateY(0); } 
+                    to { opacity: 0; transform: scale(0.95) translateY(10px); } 
+                }`;
+            document.head.appendChild(styleSheet);
+
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Smooth scroll for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Update active nav link
+                        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                        this.classList.add('active');
+                        if(mobileMenu.contains(this)) { // if clicked from mobile menu
+                           const desktopLink = document.querySelector(`.hidden.md\\:flex a[href="${targetId}"]`);
+                           if(desktopLink) desktopLink.classList.add('active');
+                        }
+
+
+                        const offset = document.getElementById('navbar').offsetHeight;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = targetElement.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Update active nav link on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navLi = document.querySelectorAll('nav .nav-link');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const navbarHeight = document.getElementById('navbar').offsetHeight;
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - navbarHeight - 50; // Add a 50px buffer
+                    if (pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLi.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+                 // Ensure Home is active if at the very top or no section is matched
+                if (current === '' || current === 'hero' && window.pageYOffset < sections[0].offsetTop - navbarHeight - 50) {
+                     const homeLink = document.querySelector('nav .nav-link[href="#hero"]');
+                     if (homeLink) homeLink.classList.add('active');
+                }
+            });
+
+
+        });
+    </script>
+</body>
+</html>

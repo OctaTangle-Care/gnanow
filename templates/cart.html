@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Your Shopping Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles (consistent with previous pages) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background */
+            color: #F3F4F6; /* Light gray text */
+        }
+
+        /* Brand Colors */
+        .bg-brand-yellow { background-color: #FBBF24; /* Amber 400 */ }
+        .text-brand-yellow { color: #FBBF24; }
+        .border-brand-yellow { border-color: #FBBF24; }
+
+        .bg-brand-black { background-color: #000000; }
+        .text-brand-black { color: #000000; }
+
+        .bg-brand-white { background-color: #FFFFFF; }
+        .text-brand-white { color: #FFFFFF; }
+
+        /* Navbar styling */
+        .navbar {
+            transition: background-color 0.3s ease-in-out;
+        }
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.9); /* Dark bg with opacity */
+            backdrop-filter: blur(10px);
+        }
+
+        /* Section Heading */
+        .section-heading {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #FBBF24; /* Yellow heading */
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Cart Item Styling */
+        .cart-item {
+            background-color: #1F2937; /* Gray 800 */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column; /* Stack on mobile */
+            gap: 1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0; /* For animation */
+            animation: fadeInItem 0.5s ease-out forwards;
+        }
+        @media (min-width: 768px) { /* md and up */
+            .cart-item {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+        .cart-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(251, 191, 36, 0.15);
+        }
+        .cart-item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 2px solid #374151; /* Gray 700 */
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-actions {
+            display: flex;
+            flex-direction: column; /* Stack actions on mobile */
+            align-items: flex-start; /* Align to start on mobile */
+            gap: 0.75rem;
+        }
+         @media (min-width: 768px) { /* md and up */
+            .cart-item-actions {
+                flex-direction: row;
+                align-items: center;
+            }
+        }
+
+
+        /* Quantity Input (Example - if you add quantity updates later) */
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            background-color: #374151; /* Gray 700 */
+            color: #F3F4F6;
+            border: 1px solid #4B5563; /* Gray 600 */
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        /* Remove Button */
+        .remove-btn {
+            background-color: transparent;
+            color: #EF4444; /* Red 500 */
+            border: 1px solid #EF4444;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .remove-btn:hover {
+            background-color: #EF4444;
+            color: #FFFFFF;
+        }
+
+        /* Cart Summary Styling */
+        .cart-summary {
+            background-color: #1F2937; /* Gray 800 */
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin-top: 2rem;
+            animation: fadeInSummary 0.6s 0.2s ease-out forwards; /* Delayed animation */
+            opacity: 0;
+        }
+        .cart-total {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #FBBF24;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+        }
+        .btn-primary { /* For Checkout */
+            background-color: #FBBF24;
+            color: #111827;
+            border: 2px solid #FBBF24;
+            width: 100%; /* Full width on mobile */
+        }
+        @media (min-width: 640px) { /* sm and up */
+             .btn-primary {
+                width: auto; /* Auto width on larger screens */
+            }
+        }
+        .btn-primary:hover {
+            background-color: #F59E0B;
+            border-color: #F59E0B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.4);
+        }
+        .btn-secondary { /* For Continue Shopping */
+            background-color: transparent;
+            color: #FBBF24;
+            border: 2px solid #FBBF24;
+        }
+        .btn-secondary:hover {
+            background-color: #FBBF24;
+            color: #111827;
+        }
+
+        /* Empty Cart State */
+        .empty-cart-container {
+            background-color: #1F2937; /* Gray 800 */
+            padding: 3rem 2rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            animation: fadeInEmptyCart 0.8s ease-out;
+        }
+        .empty-cart-icon {
+            font-size: 5rem; /* Larger emoji */
+            color: #FBBF24;
+            margin-bottom: 1.5rem;
+            animation: sadBounce 2s infinite ease-in-out;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000000;
+            color: #9CA3AF;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInItem {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInSummary {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInEmptyCart {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes sadBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-sticky p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <span class="text-3xl font-extrabold text-brand-yellow">G</span>
+                <h1 class="text-2xl font-bold text-brand-white">GNANOW</h1>
+            </a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="{% url 'dashboard' %}" class="text-gray-300 hover:text-brand-yellow transition duration-300">Home</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">Products</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">Categories</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">My Orders</a>
+            </div>
+            <div class="flex items-center space-x-5">
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300"><i class="fas fa-user text-xl"></i></a>
+                <a href="" class="text-gray-300 hover:text-brand-yellow transition duration-300 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">{{ request.session.cart|length }}</span>
+                </a>
+                <a href="{% url 'wishlist' %}" class="text-gray-300 hover:text-brand-yellow transition duration-300"><i class="fas fa-heart text-xl"></i></a>
+                <button id="mobileMenuButton" class="md:hidden text-gray-300 hover:text-brand-yellow transition duration-300"><i class="fas fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden mt-3 space-y-2 px-4">
+            <a href="{% url 'dashboard' %}" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Home</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Products</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Categories</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">My Orders</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto py-10 px-4">
+        <h2 class="section-heading">Your Shopping Cart</h2>
+
+        {% if cart_items %}
+        <div class="lg:flex lg:gap-8">
+            <div class="lg:w-2/3 space-y-4">
+                {% for item in cart_items %}
+                <div class="cart-item" >
+                   {% if item.variant.images.all %}
+    {% with item.variant.images.all.0 as img %}
+        <img src="{{ img.image.url }}" alt="{{ item.variant.product.name }}" class="cart-item-image">
+    {% endwith %}
+{% else %}
+    <img src="https://placehold.co/100x100/374151/F3F4F6?text=GN" alt="{{ item.variant.product.name }}" class="cart-item-image">
+{% endif %}
+
+                    <div class="cart-item-details">
+                        <h3 class="text-lg text-brand-yellow font-semibold">{{ item.variant.product.name }}</h3>
+                        {% if item.variant.name != "Default" %} <p class="text-sm text-gray-400">Variant: {{ item.variant.name }}</p>
+                        {% endif %}
+                        <p class="text-sm text-gray-300">Unit Price: ${{ item.variant.price|floatformat:2 }}</p>
+                    </div>
+
+                    <div class="cart-item-actions items-center">
+                         <div class="flex items-center gap-2 mr-4">
+                            <span class="text-white">Qty: {{ item.quantity }}</span>
+                            </div>
+                        <p class="text-white font-semibold text-md md:text-lg mr-4">Item Total: ${{ item.total_price|floatformat:2 }}</p>
+                        <form method="post" action="{% url 'remove_from_cart' item.id %}" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="remove-btn">
+                                <i class="fas fa-trash-alt text-xs"></i> Remove
+                            </button>
+                        </form>
+                         <!-- Quantity Display -->
+
+    <!-- Increase Button -->
+    <form method="post" action="{% url 'increase_cart_quantity' item.id %}">
+        {% csrf_token %}
+        <button type="submit" class="w-8 h-8 flex items-center justify-center bg-gray-700 text-white rounded hover:bg-green-600 transition">
+            <i class="fas fa-plus"></i>
+        </button>
+    </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="lg:w-1/3 mt-8 lg:mt-0">
+                <div class="cart-summary">
+                    <h3 class="text-xl font-semibold text-brand-white mb-4">Order Summary</h3>
+                    <div class="space-y-2 mb-6">
+                        <div class="flex justify-between text-gray-300">
+                            <span>Subtotal</span>
+                            <span>${{ subtotal|floatformat:2 }}</span>
+                        </div>
+                        <div class="flex justify-between text-gray-300">
+                            <span>Shipping</span>
+                            <span class="text-sm">(Calculated at checkout)</span>
+                        </div>
+                         </div>
+                    <div class="border-t border-gray-700 pt-4 mb-6">
+                        <div class="flex justify-between items-center text-brand-white font-bold">
+                            <span class="text-xl">Total</span>
+                            <span class="cart-total">${{ total|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                    <a href="/order/create/" class="btn btn-primary block text-center">
+                        <i class="fas fa-credit-card mr-2"></i>Proceed to Checkout
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="empty-cart-container">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i><i class="fas fa-sad-tear fa-xs" style="transform: translate(-15px, 15px);"></i>
+            </div>
+            <h3 class="text-2xl font-semibold text-brand-white">Your Cart is Feeling Lonely</h3>
+            <p class="text-gray-400 mt-2 mb-6">Looks like you haven't added any treasures yet. <br>Go on, find something amazing!</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-store mr-2"></i>Continue Shopping
+            </a>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Contact</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Terms of Service</a>
+            </div>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-facebook-f text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-instagram text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-pinterest text-xl"></i></a>
+            </div>
+            <p>&copy; <span id="currentYear"></span> GNANOW. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Designed with <i class="fas fa-heart text-brand-yellow"></i> for Fashion Lovers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Set current year in footer
+        const currentYearElement = document.getElementById('currentYear');
+        if (currentYearElement) {
+            currentYearElement.textContent = new Date().getFullYear();
+        }
+
+        // Staggered animation for cart items (already handled by inline style with forloop.counter0)
+        // If you prefer JS for this:
+       
+    </script>
+</body>
+</html>

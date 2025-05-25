@@ -1,0 +1,21 @@
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "{{ razorpay_key_id }}",
+        "amount": "{{ amount }}",
+        "currency": "INR",
+        "name": "MyShop",
+        "description": "Order Payment",
+        "order_id": "{{ razorpay_order_id }}",
+        "callback_url": "{{ callback_url }}",
+        "prefill": {
+            "name": "{{ request.user.username }}",
+            "email": "{{ request.user.email }}"
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp = new Razorpay(options);
+    rzp.open();
+</script>

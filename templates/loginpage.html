@@ -1,0 +1,367 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - GNANOW</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Basic Reset & Body Styling */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0; /* Light grey background for the whole page */
+        /* Removed overflow: hidden; to allow scrolling */
+      }
+
+      /* Login Container - Centers everything and defines the two columns */
+      .login-container {
+        display: flex;
+        width: 90%; /* Adjust as needed for desktop width */
+        max-width: 1000px; /* Max width for the entire container */
+        background-color: #fff; /* White background for the whole container */
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden; /* Ensures rounded corners are respected for video */
+        opacity: 0; /* Initial state for fade-in animation */
+        transform: translateY(20px); /* Initial state for slide-in animation */
+        animation: fadeInSlideIn 1s forwards ease-out;
+      }
+
+      /* Animation for form load */
+      @keyframes fadeInSlideIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Left side - Login Form Wrapper */
+      .login-form-wrapper {
+        flex: 1; /* Takes up 50% width */
+        display: flex;
+        flex-direction: column; /* Allows content to stack vertically */
+        justify-content: center;
+        align-items: center;
+        padding: 40px; /* Padding inside the form area */
+        background-color: #fff; /* Ensure it's white for the form */
+        position: relative; /* Crucial for positioning the back button */
+      }
+
+      .login-form {
+        width: 100%;
+        max-width: 350px; /* Max width for the form elements */
+        text-align: center;
+      }
+
+      /* Back Button Styling */
+      .back-button {
+        position: absolute; /* Position relative to .login-form-wrapper */
+        top: 20px; /* Distance from the top */
+        left: 20px; /* Distance from the left */
+        background: none;
+        border: none;
+        font-size: 1.2em;
+        color: #555;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 50%;
+        transition: color 0.3s ease, background-color 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none; /* If using an anchor tag */
+      }
+
+      .back-button:hover {
+        color: #000;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      /* SVG for the arrow */
+      .back-button svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor; /* Inherit color from parent */
+      }
+
+      /* Label for the back button */
+      .back-button span {
+        margin-left: 5px; /* Space between icon and text */
+        font-size: 0.9em; /* Adjust font size for the text label */
+        font-weight: 600;
+      }
+
+      /* Logo Image Styling */
+      .brand-logo {
+        max-width: 100px; /* Adjust logo size */
+        height: auto;
+        margin-bottom: 20px; /* Space between logo and heading */
+        display: block; /* Ensures no extra space below image */
+        margin-left: auto; /* Center the logo */
+        margin-right: auto; /* Center the logo */
+      }
+
+      .brand-heading {
+        font-size: 3em;
+        color: #000;
+        margin-bottom: 40px; /* Adjusted to make space for logo */
+        letter-spacing: 2px;
+        font-weight: 700;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+      }
+
+      input:where([type="text"], [type="password"]) {
+        width: 100%;
+        padding: 15px 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+        color: #333;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      input:where([type="text"], [type="password"]):focus {
+        outline: none;
+        border-color: #ffd700; /* Yellow glow on focus */
+        box-shadow: 0 0 8px rgba(255, 215, 0, 0.4); /* Subtle glow effect */
+      }
+
+      .forgot-password {
+        display: block;
+        text-align: right;
+        margin-top: -10px; /* Pull it up slightly */
+        margin-bottom: 25px;
+        color: #555;
+        text-decoration: none;
+        font-size: 0.9em;
+        transition: color 0.3s ease;
+      }
+
+      .forgot-password:hover {
+        color: #ffd700; /* Yellow on hover */
+      }
+
+      .login-button {
+        width: 100%;
+        padding: 15px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .login-button:hover {
+        background-color: #333; /* Darker black on hover */
+        transform: scale(1.02); /* Slight scale up on hover */
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .create-account {
+        margin-top: 30px;
+        font-size: 0.9em;
+        color: #555;
+      }
+
+      .create-account a {
+        color: #000;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+      }
+
+      .create-account a:hover {
+        color: #ffd700; /* Yellow on hover */
+      }
+
+      /* Right side - Video Wrapper */
+      .login-image-wrapper {
+        flex: 1; /* Takes up 50% width */
+        background-color: #eee; /* Placeholder background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden; /* Crucial for video fitting */
+        position: relative; /* For absolute positioning of video */
+      }
+
+      .background-video {
+        min-width: 100%; /* Ensure it covers the width */
+        min-height: 100%; /* Ensure it covers the height */
+        width: auto;
+        height: auto;
+        position: absolute;
+        top: 50%; /* Center vertically */
+        left: 50%; /* Center horizontally */
+        transform: translate(-50%, -50%); /* Adjust for the element's own size */
+        object-fit: cover; /* Scale and crop to fill, maintaining aspect ratio */
+        display: block;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .login-container {
+          flex-direction: column; /* Stack elements vertically on mobile */
+          width: 95%;
+          max-width: 450px; /* Adjust max width for mobile container */
+        }
+
+        .login-form-wrapper {
+          padding: 30px 20px; /* Reduce padding for smaller screens */
+        }
+
+        .back-button {
+          top: 15px; /* Adjust position for mobile */
+          left: 15px;
+          font-size: 1em;
+        }
+
+        .back-button svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .back-button span {
+            font-size: 0.8em; /* Smaller font for mobile label */
+        }
+
+        .login-image-wrapper {
+          height: 200px; /* Give the video a fixed height on mobile */
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+          border-bottom-left-radius: 15px; /* Apply bottom radius to video wrapper */
+          border-bottom-right-radius: 15px;
+        }
+
+        .login-form {
+          max-width: none; /* Allow form to take full available width */
+        }
+
+        .brand-logo {
+          max-width: 80px; /* Smaller logo on mobile */
+          margin-bottom: 15px;
+        }
+
+        .brand-heading {
+          font-size: 2.5em;
+          margin-bottom: 25px;
+        }
+
+        input:where([type="text"], [type="password"]),
+        .login-button {
+          padding: 12px 15px;
+          font-size: 0.95em;
+        }
+
+        .forgot-password,
+        .create-account {
+          font-size: 0.85em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .login-form-wrapper {
+          padding: 25px 15px;
+        }
+
+        .brand-heading {
+          font-size: 2em;
+          margin-bottom: 20px;
+        }
+
+        .brand-logo {
+          max-width: 70px;
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-form-wrapper">
+        <a href="javascript:history.back()" class="back-button" aria-label="Go back to previous page">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+          </svg>
+          <span>Go back</span>
+        </a>
+
+        <div class="login-form">
+          {% comment %} <img
+            src="{% static "images/logo.jpg" %}"
+            alt="GNANOW Logo"
+            class="brand-logo"
+          /> {% endcomment %}
+          <h1 class="brand-heading">GNANOW</h1>
+          <p>
+          {% if error_message1 %}
+          <p>{{ error_message1 }}</p>
+          
+          {% endif %}
+
+          <p>
+          {% if error_message2 %}
+          <p>{{ error_message2 }}</p>
+          
+          {% endif %}
+          <form action="{% url 'login_operation' %}" method="POST" >
+               {% csrf_token %}
+            <div class="input-group">
+              <input
+                type="text"
+                id="username"
+                placeholder="Email or Username"
+                name="email"
+                required
+              />
+            </div>
+            <div class="input-group">
+              <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                name="password"
+                required
+              />
+            </div>
+            <a href="/password_reset" class="forgot-password">Forgot password?</a>
+            <button type="submit" class="login-button">Login</button>
+            <p class="create-account">
+              Don't have an account? <a href="#">Create new account?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+      <div class="login-image-wrapper">
+        <video autoplay loop muted playsinline class="background-video">
+          <source src="{% static "videos/loginimg.mp4" %}" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </div>
+  </body>
+</html>

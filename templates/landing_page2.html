@@ -1,0 +1,938 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - Unleash Your Style</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a; /* Dark track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FFDE59; /* Vibrant Yellow thumb */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffd000; /* Brighter yellow on hover */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000; /* Black background */
+            color: #ffffff; /* White text */
+            overflow-x: hidden;
+        }
+        .nav-icon {
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+}
+
+.tooltip {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.nav-icon:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+  
+
+
+          /* Styles for the modal overlay */
+        .modal-overlay {
+            position: fixed; /* Stay in place even when scrolling */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+            display: flex; /* Use flexbox for centering */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            z-index: 1000; /* Ensure it's on top of other content */
+            opacity: 0; /* Initially hidden */
+            visibility: hidden; /* Initially hidden for accessibility */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Styles for the modal box itself */
+        .modal-box {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 450px; /* Max width of the modal */
+            text-align: center;
+            position: relative; /* For positioning the close button */
+            transform: scale(0.9); /* Initial scale for animation */
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.open .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-box h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .modal-box p {
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 1rem;
+        }
+
+        /* Style for the login button */
+        .login-button {
+            background-color: #007bff; /* Blue color, change as needed */
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Style for the close button */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8rem;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 1; /* Ensure proper vertical alignment */
+        }
+        .close-button:hover {
+            color: #333;
+        }
+
+        .font-bebas {
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        /* Primary Yellow Color */
+        .bg-primary-yellow { background-color: #FFDE59; }
+        .text-primary-yellow { color: #FFDE59; }
+        .border-primary-yellow { border-color: #FFDE59; }
+
+        /* Navigation Bar Styling */
+        .main-nav {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: background-color 0.3s ease;
+        }
+        .main-nav.scrolled {
+            background-color: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 4px 12px rgba(255, 222, 89, 0.1);
+        }
+        .nav-link {
+            position: relative;
+            color: #ffffff;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            padding: 0.5rem 0;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #FFDE59;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #FFDE59;
+        }
+        .nav-icons i {
+            font-size: 1.3rem;
+            color: #ffffff;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .nav-icons i:hover {
+            color: #FFDE59;
+            transform: scale(1.1);
+        }
+         
+
+        /* Hero Section */
+        .hero-section {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9)), url('https://placehold.co/1920x1080/111111/333333?text=Dynamic+Background') no-repeat center center/cover;
+            position: relative; /* For pseudo-elements if needed */
+        }
+        .hero-title {
+            text-shadow: 0 0 15px rgba(255, 222, 89, 0.5), 0 0 25px rgba(255, 222, 89, 0.3);
+        }
+        .hero-product-image {
+            max-height: 70vh;
+            filter: drop-shadow(0px 10px 30px rgba(255, 222, 89, 0.3));
+            transition: transform 0.5s ease-out;
+        }
+        .hero-product-image:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        /* CTA Button Styles */
+        .cta-button {
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600;
+            padding: 0.875rem 2.5rem; /* py-3.5 px-10 */
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .cta-button-yellow {
+            background-color: #FFDE59;
+            color: #000000;
+            border: 2px solid #FFDE59;
+        }
+        .cta-button-yellow:hover {
+            background-color: #ffd000;
+            box-shadow: 0 0 20px rgba(255, 222, 89, 0.5);
+            transform: translateY(-3px);
+        }
+        .cta-button-outline {
+            background-color: transparent;
+            color: #FFDE59;
+            border: 2px solid #FFDE59;
+        }
+        .cta-button-outline:hover {
+            background-color: #FFDE59;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255, 222, 89, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Section Titles */
+        .section-heading {
+            font-size: 3rem; /* ~48px */
+        }
+        @media (min-width: 768px) {
+            .section-heading {
+                font-size: 4rem; /* ~64px */
+            }
+        }
+
+        /* Product Card Styling */
+        .product-card {
+            background-color: #111111; /* Slightly lighter than body black */
+            border: 1px solid #222222;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 222, 89, 0.15), 0 5px 10px rgba(255, 222, 89, 0.1);
+        }
+        .product-image-container {
+            overflow: hidden;
+        }
+        .product-card img {
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
+        .product-tag {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background-color: #FFDE59;
+            color: #000000;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 0.25rem;
+            text-transform: uppercase;
+        }
+        .product-title {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .product-price {
+            color: #FFDE59;
+            font-weight: 700;
+        }
+        .add-to-cart-btn {
+            background-color: #FFDE59;
+            color: #000000;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .add-to-cart-btn:hover {
+            background-color: #ffd000;
+            transform: scale(1.05);
+        }
+
+        /* Special Offer Banner */
+        .offer-banner {
+            background: linear-gradient(45deg, #FFDE59, #FFC300);
+            color: #000000;
+        }
+
+        /* Testimonial Card */
+        .testimonial-card {
+            background-color: #1a1a1a;
+            border-left: 4px solid #FFDE59;
+        }
+        .testimonial-author {
+            color: #FFDE59;
+        }
+
+        /* Newsletter Section */
+        .newsletter-section {
+            background: #0a0a0a url('https://placehold.co/1920x600/0a0a0a/1a1a1a?text=Subtle+Pattern') repeat;
+        }
+        .newsletter-input {
+            background-color: #1f1f1f;
+            border: 1px solid #333333;
+            color: #ffffff;
+        }
+        .newsletter-input:focus {
+            border-color: #FFDE59;
+            box-shadow: 0 0 0 2px rgba(255, 222, 89, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #0a0a0a;
+            border-top: 1px solid #222222;
+        }
+        .footer-link:hover {
+            color: #FFDE59;
+        }
+        
+        /* Animations */
+        .fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+        .fade-in-down { animation: fadeInDown 1s ease-out forwards; }
+        .fade-in-left { animation: fadeInLeft 1s ease-out forwards; }
+        .fade-in-right { animation: fadeInRight 1s ease-out forwards; }
+        .zoom-in { animation: zoomIn 0.8s ease-out forwards; }
+
+        .stagger-children > * {
+            opacity: 0;
+        }
+        
+        /* Ken Burns Effect for Backgrounds */
+        .ken-burns-bg {
+            animation: kenburns 20s ease-in-out infinite alternate;
+            background-size: 120%; /* Start slightly zoomed in */
+        }
+
+        @keyframes kenburns {
+            0% {
+                background-size: 120%;
+                background-position: 50% 50%;
+            }
+            100% {
+                background-size: 100%;
+                background-position: 40% 60%; /* Or other varied positions */
+            }
+        }
+        .hero-section.ken-burns-bg {
+             background-image: url('https://images.unsplash.com/photo-1523381294911-8d3cead13475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y2xvdGhpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=1920&q=80');
+        }
+
+
+        
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav id="navbar" class="main-nav sticky top-0 left-0 right-0 z-50 py-3">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <a href="#" class="text-4xl font-bebas text-primary-yellow tracking-wider">GNANOW</a>
+            <div class="hidden lg:flex space-x-6 items-center">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#new-arrivals" class="nav-link">New Arrivals</a>
+                <a href="#collections" class="nav-link">Collections</a>
+                <a href="#lookbook" class="nav-link">Lookbook</a>
+                <a href="#about" class="nav-link">Our Story</a>
+            </div>
+            <div class="flex items-center space-x-3 nav-icons">
+                {% comment %} <a href="/profile"><i class="fas fa-user"></i>
+                  <span class="tooltip">Profile</span></a>
+                <a href="#"><i class="fas fa-shopping-bag"></i>
+                 <span class="tooltip">Your Cart</span></a>
+               {% endcomment %}
+                 <a href="/profile" class="nav-icon">
+        <i class="fas fa-user"></i>
+        <span class="tooltip">Profile</span>
+    </a>
+
+    <!-- Shopping Bag Icon -->
+    <a href="#" class="nav-icon">
+        <i class="fas fa-shopping-bag"></i>
+        <span class="tooltip">Your Cart</span>
+    </a>
+                <a></a>
+                {% comment %} <a href="/login" class="nav-log">Login/signup</a> {% endcomment %}
+                 <a href="/login" class="cta-button cta-button-yellow py-2">Login/signup</a>
+                {% comment %} <button id="mobile-menu-button" class="lg:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button> {% endcomment %}
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden lg:hidden bg-black absolute w-full shadow-xl">
+            <a href="#hero" class="block py-3 px-4 text-sm nav-link hover:bg-gray-900">Home</a>
+            <a href="#new-arrivals" class="block py-3 px-4 text-sm nav-link hover:bg-gray-900">New Arrivals</a>
+            <a href="#collections" class="block py-3 px-4 text-sm nav-link hover:bg-gray-900">Collections</a>
+            <a href="#lookbook" class="block py-3 px-4 text-sm nav-link hover:bg-gray-900">Lookbook</a>
+            <a href="#about" class="block py-3 px-4 text-sm nav-link hover:bg-gray-900">Our Story</a>
+        </div>
+    </nav>
+
+    <section id="hero" class="hero-section flex items-center justify-center text-center overflow-hidden ken-burns-bg">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 items-center gap-8">
+                <div class="md:text-left animate__animated animate__fadeInLeft animate__delay-0.5s">
+                    <h1 class="hero-title font-bebas text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-primary-yellow leading-tight">
+                        STYLE<br>REDEFINED.
+                    </h1>
+                    <p class="text-lg md:text-xl text-gray-300 mt-4 mb-8 max-w-md">
+                        Experience the future of urban fashion. Premium quality, iconic designs. This is GNANOW.
+                    </p>
+                    <div class="space-y-4 sm:space-y-0 sm:space-x-4">
+                        <a href="/signup" class="cta-button cta-button-yellow w-full sm:w-auto">Shop New Collection</a>
+                        {% comment %} <br>
+                        <button class="cta-button cta-button-outline w-full sm:w-auto">Explore Lookbook</button> {% endcomment %}
+                    </div>
+                </div>
+                <div class="animate__animated animate__fadeInRight animate__delay-1s">
+                    <img src="{% static 'images/core1.png' %}" alt="Featured Product - GNANOW Core Hoodie" class="hero-product-image mx-auto rounded-lg">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24 bg-black" id="collections">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center stagger-children">
+                <div class="reveal-on-scroll">
+                    <i class="fas fa-tshirt text-5xl text-primary-yellow mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Exclusive Designs</h3>
+                    <p class="text-gray-400">Unique pieces you won't find anywhere else, crafted for the bold.</p>
+                </div>
+                <div class="reveal-on-scroll" data-delay="100">
+                    <i class="fas fa-medal text-5xl text-primary-yellow mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Premium Quality</h3>
+                    <p class="text-gray-400">We use only the finest materials for lasting comfort and style.</p>
+                </div>
+                <div class="reveal-on-scroll" data-delay="200">
+                    <i class="fas fa-rocket text-5xl text-primary-yellow mb-4"></i>
+                    <h3 class="text-2xl font-semibold mb-2">Future Forward</h3>
+                    <p class="text-gray-400">Constantly innovating to bring you the next wave of urban fashion.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% comment %} 
+    <section id="new-arrivals" class="py-16 md:py-24 bg-gray-900">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-heading font-bebas text-center mb-4 text-primary-yellow reveal-on-scroll">New Arrivals</h2>
+            <p class="text-center text-gray-400 mb-12 max-w-xl mx-auto reveal-on-scroll" data-delay="100">Fresh drops, straight from the future. Be the first to own the trend.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 stagger-children">
+                <div class="product-card rounded-lg reveal-on-scroll" data-delay="150">
+                    <div class="relative product-image-container">
+                        <img src="https://placehold.co/400x500/1a1a1a/FFDE59?text=GNANOW+Tee+1" alt="New Arrival Product 1" class="w-full h-auto object-cover">
+                        <div class="product-tag">NEW</div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl product-title mb-1">Cyber V-Neck Tee</h3>
+                        <p class="text-sm text-gray-500 mb-2">Men's Collection</p>
+                        <p class="text-2xl product-price mb-3">$79.00</p>
+                        <button class="add-to-cart-btn w-full py-2.5 rounded-md text-sm">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card rounded-lg reveal-on-scroll" data-delay="250">
+                     <div class="relative product-image-container">
+                        <img src="https://placehold.co/400x500/0a0a0a/FFDE59?text=CORE+HOODIE" alt="GNANOW Core Hoodie" class="w-full h-auto object-cover">
+                        <div class="product-tag">FEATURED</div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl product-title mb-1">GNANOW Core Hoodie</h3>
+                        <p class="text-sm text-gray-500 mb-2">Unisex Signature</p>
+                        <p class="text-2xl product-price mb-3">$125.00</p>
+                        <button class="add-to-cart-btn w-full py-2.5 rounded-md text-sm">View Details</button>
+                    </div>
+                </div>
+                <div class="product-card rounded-lg reveal-on-scroll" data-delay="350">
+                     <div class="relative product-image-container">
+                        <img src="https://placehold.co/400x500/151515/FFDE59?text=GNANOW+Jacket" alt="New Arrival Product 3" class="w-full h-auto object-cover">
+                         <div class="product-tag">LIMITED</div>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl product-title mb-1">Stealth Bomber Jacket</h3>
+                        <p class="text-sm text-gray-500 mb-2">Outerwear</p>
+                        <p class="text-2xl product-price mb-3">$249.00</p>
+                        <button class="add-to-cart-btn w-full py-2.5 rounded-md text-sm">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-card rounded-lg reveal-on-scroll" data-delay="450">
+                     <div class="relative product-image-container">
+                        <img src="https://placehold.co/400x500/111111/FFDE59?text=GNANOW+BAG" alt="GNANOW Tech Backpack" class="w-full h-auto object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="text-xl product-title mb-1">Tech Utility Backpack</h3>
+                        <p class="text-sm text-gray-500 mb-2">Accessories</p>
+                        <p class="text-2xl product-price mb-3">$99.00</p>
+                        <button class="add-to-cart-btn w-full py-2.5 rounded-md text-sm">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+             <div class="text-center mt-12 reveal-on-scroll" data-delay="500">
+                <button class="cta-button cta-button-outline">View All New Arrivals</button>
+            </div>
+        </div>
+    </section> {% endcomment %}
+
+    <section id="new-arrivals" class="py-16 md:py-24 bg-gray-900">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="section-heading font-bebas text-center mb-4 text-primary-yellow reveal-on-scroll">New Arrivals</h2>
+        <p class="text-center text-gray-400 mb-12 max-w-xl mx-auto reveal-on-scroll" data-delay="100">Fresh drops, straight from the future. Be the first to own the trend.</p>
+        {% comment %} <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 stagger-children">
+            {% for product in new_arrivals %}
+            <div class="product-card rounded-lg reveal-on-scroll" >
+                <div class="relative product-image-container">
+                    {% if product.variants.first.images.first.image %}
+                    <img src="{{ product.variants.first.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-auto object-cover">
+                    {% else %}
+                    <img src="https://placehold.co/400x500?text=No+Image" alt="No image" class="w-full h-auto object-cover">
+                    {% endif %}
+                    <div class="product-tag">NEW</div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-xl product-title mb-1">{{ product.name }}</h3>
+                    <p class="text-sm text-gray-500 mb-2">{{ product.category.name }}</p>
+                    <p class="text-2xl product-price mb-3">${{ product.base_price }}</p>
+                    <button class="add-to-cart-btn w-full py-2.5 rounded-md text-sm">View Details</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div> {% endcomment %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 stagger-children">
+    {% for item in new_arrivals %}
+    <div class="product-card rounded-lg reveal-on-scroll" data-delay="{{ forloop.counter0|add:1 }}00">
+        <div class="relative product-image-container">
+            {% if item.image_url %}
+                <img src="{{ item.image_url }}" alt="{{ item.product.name }}" class="w-full h-auto object-cover">
+            {% else %}
+                <img src="https://placehold.co/400x500?text=No+Image" alt="No image" class="w-full h-auto object-cover">
+            {% endif %}
+            <div class="product-tag">NEW</div>
+        </div>
+        <div class="p-5">
+            <h3 class="text-xl product-title mb-1">{{ item.product.name }}</h3>
+            <p class="text-sm text-gray-500 mb-2">{{ item.product.category.name }}</p>
+            <p class="text-2xl product-price mb-3">{{ item.price }}</p>
+            <a href="/login" class="add-to-cart-btn w-full py-2.5 rounded-md text-sm">View Details</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+        <div class="text-center mt-12 reveal-on-scroll" data-delay="500">
+            <a href="/login"  class="cta-button cta-button-outline">View All New Arrivals</a>
+        </div>
+    </div>
+</section>
+
+
+    <section class="py-12 md:py-16 offer-banner reveal-on-scroll">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="font-bebas text-4xl md:text-5xl mb-3 animate__animated animate__pulse animate__infinite animate__slower">MID-SEASON MADNESS!</h2>
+            <p class="text-xl md:text-2xl font-semibold mb-6">Get Up To <span class="text-3xl md:text-4xl font-bebas">50% OFF</span> On Select Styles</p>
+            <button class="cta-button bg-black text-primary-yellow border-black hover:bg-gray-800 hover:text-primary-yellow">Shop The Sale</button>
+        </div>
+    </section>
+
+    {% comment %} <section id="lookbook" class="py-16 md:py-24 bg-black">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-heading font-bebas text-center mb-4 text-primary-yellow reveal-on-scroll">GNANOW Lookbook</h2>
+            <p class="text-center text-gray-400 mb-12 max-w-xl mx-auto reveal-on-scroll" data-delay="100">Get inspired. See how the GNANOW community wears the future.</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
+                <div class="overflow-hidden rounded-lg shadow-lg reveal-on-scroll" data-delay="150">
+                    <img src="https://placehold.co/500x700/1a1a1a/FFDE59?text=Look+1" alt="Lookbook Image 1" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-lg row-span-2 reveal-on-scroll" data-delay="200">
+                     <img src="https://placehold.co/500x1424/0a0a0a/FFDE59?text=Look+2+Tall" alt="Lookbook Image 2" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+                </div>
+                <div class="overflow-hidden rounded-lg shadow-lg reveal-on-scroll" data-delay="250">
+                     <img src="https://placehold.co/500x700/151515/FFDE59?text=Look+3" alt="Lookbook Image 3" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+                </div>
+                 <div class="overflow-hidden rounded-lg shadow-lg col-span-2 md:col-span-1 reveal-on-scroll" data-delay="300">
+                     <img src="https://placehold.co/500x700/111111/FFDE59?text=Look+4" alt="Lookbook Image 4" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+                </div>
+                 <div class="overflow-hidden rounded-lg shadow-lg col-span-2 md:col-span-2 reveal-on-scroll" data-delay="350">
+                     <img src="https://placehold.co/1024x700/1c1c1c/FFDE59?text=Look+5+Wide" alt="Lookbook Image 5" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+                </div>
+            </div>
+        </div>
+    </section> {% endcomment %}
+
+    {% load static %}
+
+<section id="lookbook" class="py-16 md:py-24 bg-black">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="section-heading font-bebas text-center mb-4 text-primary-yellow reveal-on-scroll">GNANOW Lookbook</h2>
+        <p class="text-center text-gray-400 mb-12 max-w-xl mx-auto reveal-on-scroll" data-delay="100">
+            Get inspired. See how the GNANOW community wears the future.
+        </p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 stagger-children">
+            {% for img in lookbook_images %}
+            <div class="overflow-hidden rounded-lg shadow-lg reveal-on-scroll" data-delay="{{ forloop.counter0|add:'150' }}">
+                <img src="{% static img %}" alt="Lookbook Image {{ forloop.counter }}" class="w-full h-full object-cover transform transition-transform duration-500 hover:scale-110">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+    
+    <section id="about" class="py-16 md:py-24 bg-gray-900">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="reveal-on-scroll">
+                    <img src="{% static 'images/team.jpg' %}" alt="GNANOW Brand Image" class="rounded-lg shadow-xl w-full">
+                </div>
+                <div class="reveal-on-scroll" data-delay="100">
+                    <h2 class="section-heading font-bebas text-primary-yellow mb-6">Our Story: <br>The GNANOW Ethos</h2>
+                    <p class="text-lg text-gray-300 mb-4 leading-relaxed">
+                        Born from a passion for disruptive design and urban culture, GNANOW is more than just a clothing brand – it's a movement. We craft apparel for individuals who aren't afraid to stand out and write their own narrative.
+                    </p>
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Every stitch, every fabric, every design is a testament to our commitment to quality, innovation, and the relentless pursuit of what's next. We're not just making clothes; we're engineering the future of your wardrobe.
+                    </p>
+                    <button class="cta-button cta-button-outline">Discover Our Universe</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24 bg-black">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="section-heading font-bebas text-center mb-12 text-primary-yellow reveal-on-scroll">Voices of GNANOW</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
+                <div class="testimonial-card p-6 rounded-lg shadow-lg reveal-on-scroll">
+                    <i class="fas fa-quote-left text-3xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-300 mb-4 italic">"The quality is insane! Seriously feels like I'm wearing the future. GNANOW is my new go-to."</p>
+                    <p class="testimonial-author font-semibold">- Alex R., Tech Innovator</p>
+                </div>
+                <div class="testimonial-card p-6 rounded-lg shadow-lg reveal-on-scroll" data-delay="100">
+                    <i class="fas fa-quote-left text-3xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-300 mb-4 italic">"Finally, a brand that gets it. Edgy, comfortable, and makes a statement. Love my Core Hoodie!"</p>
+                    <p class="testimonial-author font-semibold">- Maya S., Digital Artist</p>
+                </div>
+                <div class="testimonial-card p-6 rounded-lg shadow-lg reveal-on-scroll" data-delay="200">
+                    <i class="fas fa-quote-left text-3xl text-gray-700 mb-4"></i>
+                    <p class="text-gray-300 mb-4 italic">"Shipping was fast, and the unboxing experience was premium. The clothes? Even better. Highly recommend."</p>
+                    <p class="testimonial-author font-semibold">- Jordan K., Urban Explorer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 md:py-24 newsletter-section">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="section-heading font-bebas mb-4 text-primary-yellow reveal-on-scroll">JOIN THE <span class="text-white">GNANOW</span> REVOLUTION</h2>
+            <p class="text-gray-300 text-lg mb-10 max-w-xl mx-auto reveal-on-scroll" data-delay="100">
+                Be the first to know about exclusive drops, special offers, and insider news. Subscribe and get 10% off your first order.
+            </p>
+            <form class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto reveal-on-scroll" data-delay="150">
+                <input type="email" placeholder="Enter your email address" class="newsletter-input flex-grow py-3 px-4 rounded-md focus:outline-none" required>
+                <button type="submit" class="cta-button cta-button-yellow py-3">Subscribe Now</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer py-12 md:py-16">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 text-center md:text-left">
+                <div>
+                    <h4 class="font-bebas text-2xl mb-4 text-primary-yellow">GNANOW</h4>
+                    <p class="text-sm text-gray-400">Unleash Your Style. <br>Redefine Urban Fashion.</p>
+                </div>
+                <div>
+                    <h5 class="font-semibold text-lg mb-4 text-white">Shop</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link text-sm text-gray-400">New Arrivals</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Men's Collection</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Women's Collection</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Accessories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold text-lg mb-4 text-white">About</h5>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Our Story</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Careers</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Press & Media</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Sustainability</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold text-lg mb-4 text-white">Support</h5>
+                    <ul class="space-y-2">
+                        <li><a href="/c_us" class="footer-link text-sm text-gray-400">Contact Us</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">FAQs</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Shipping & Returns</a></li>
+                        <li><a href="#" class="footer-link text-sm text-gray-400">Size Guide</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-500 mb-4 md:mb-0">&copy; <span id="current-year"></span> GNANOW. All Rights Reserved. Crafted with &hearts; for the Future.</p>
+                <div class="flex space-x-5">
+                    <a href="https://www.instagram.com/gnanow?igsh=MTJud3hlNnQyYTV4cA==" class="text-gray-400 hover:text-primary-yellow transition-colors"><i class="fab fa-instagram text-xl"></i></a>
+                    <a href="https://x.com/gnanow_?t=v0L6_qBndZkFMAhhCfqqqw&s=09" class="text-gray-400 hover:text-primary-yellow transition-colors"><i class="fab fa-twitter text-xl"></i></a>
+                    <a href="https://x.com/gnanow_?t=v0L6_qBndZkFMAhhCfqqqw&s=09" class="text-gray-400 hover:text-primary-yellow transition-colors"><i class="fab fa-facebook-f text-xl"></i></a>
+                    <a href="https://www.instagram.com/gnanow?igsh=MTJud3hlNnQyYTV4cA==" class="text-gray-400 hover:text-primary-yellow transition-colors"><i class="fab fa-tiktok text-xl"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+<div id="loginAdModal" class="modal-overlay">
+        <div class="modal-box">
+            <button id="closeModalButton" class="close-button" title="Close">&times;</button>
+            <h2>Special Offer!</h2>
+            <p>Register now to unlock exclusive offers and features. Don't miss out!</p>
+            <a class="login-button" href="/signup">Register Now</a>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal element
+        const modal = document.getElementById('loginAdModal');
+        // Get the close button element
+        const closeModalButton = document.getElementById('closeModalButton');
+
+        // Function to open the modal
+        function openModal() {
+            if (modal) {
+                modal.classList.add('open');
+            }
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            if (modal) {
+                modal.classList.remove('open');
+            }
+        }
+
+        // Event listener for page load
+        window.addEventListener('load', () => {
+            // You can add a delay if you want
+            // setTimeout(openModal, 1000); // Opens modal after 1 second
+            openModal(); // Opens modal immediately
+        });
+
+        // Event listener for the close button
+        if (closeModalButton) {
+            closeModalButton.addEventListener('click', closeModal);
+        }
+
+        // Optional: Close modal if user clicks outside the modal box
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                // Check if the click is on the overlay itself and not on the modal-box content
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+        
+        {% comment %} // Placeholder function for login button action
+        function handleLogin() {
+            alert("Login button clicked! Implement your login logic here.");
+            // Example: window.location.href = '/login';
+            closeModal(); // Optionally close the modal after clicking login
+        } {% endcomment %}
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sticky Navbar with background change
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
+                    mobileMenu.classList.toggle('animate__animated');
+                    mobileMenu.classList.toggle('animate__fadeInDown');
+                });
+            }
+            // Close mobile menu on link click
+            const mobileNavLinks = mobileMenu.querySelectorAll('a.nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                     mobileMenu.classList.remove('animate__animated', 'animate__fadeInDown');
+                });
+            });
+
+            // Scroll-triggered animations
+            const revealElements = document.querySelectorAll('.reveal-on-scroll');
+            const revealObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const delay = parseInt(entry.target.dataset.delay) || 0;
+                        const animationClass = entry.target.dataset.animation || 'fade-in-up'; // Default to fade-in-up
+
+                        // Determine if it's a stagger parent
+                        if (entry.target.classList.contains('stagger-children')) {
+                            const children = entry.target.children;
+                            for (let i = 0; i < children.length; i++) {
+                                setTimeout(() => {
+                                    children[i].style.opacity = '1';
+                                    children[i].classList.add('animate__animated', animationClass);
+                                }, delay + (i * 150)); // Stagger delay
+                            }
+                        } else {
+                             setTimeout(() => {
+                                entry.target.style.opacity = '1';
+                                entry.target.classList.add('animate__animated', animationClass);
+                            }, delay);
+                        }
+                        observer.unobserve(entry.target); // Unobserve after animation
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => {
+                el.style.opacity = '0'; // Initially hide elements to be revealed
+                revealObserver.observe(el);
+            });
+            
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // Smooth scroll for navigation links & active state
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        // Update active nav link
+                        document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                        // Add active to clicked link (desktop and mobile if exists)
+                        this.classList.add('active');
+                        const correspondingDesktopLink = document.querySelector(`#navbar .hidden.lg\\:flex a[href="${targetId}"]`);
+                        if(correspondingDesktopLink) correspondingDesktopLink.classList.add('active');
+                        
+                        const offset = navbar.offsetHeight;
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = targetElement.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+                        
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Update active nav link on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navLinksDesktop = document.querySelectorAll('#navbar .hidden.lg\\:flex .nav-link');
+            const navLinksMobile = document.querySelectorAll('#mobile-menu .nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                const navbarHeight = navbar.offsetHeight;
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - navbarHeight - 100; // Add a 100px buffer
+                    if (pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinksDesktop.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+                 navLinksMobile.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+                // Ensure Home is active if at the very top
+                if (window.pageYOffset < sections[0].offsetTop - navbarHeight - 100 && current === sections[0].id || window.pageYOffset < 200 ) {
+                     document.querySelector('#navbar .hidden.lg\\:flex .nav-link[href="#hero"]').classList.add('active');
+                     document.querySelector('#mobile-menu .nav-link[href="#hero"]').classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+          

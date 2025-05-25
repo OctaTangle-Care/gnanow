@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Gnanow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a; /* Very dark base for futuristic feel */
+            color: #ffffff;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        /* Custom scrollbar for a more futuristic look (Webkit browsers) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #facc15; /* Yellow */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #eab308; /* Darker yellow */
+        }
+
+        .brand-yellow { color: #facc15; }
+        .bg-brand-yellow { background-color: #facc15; }
+        .border-brand-yellow { border-color: #facc15; }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 8px #facc15, 0 0 12px #facc15aa, 0 0 18px #facc1555; }
+            50% { box-shadow: 0 0 12px #fde047, 0 0 20px #fde047aa, 0 0 30px #fde04755; }
+        }
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .animate-fadeIn { animation: fadeIn 1s ease-out forwards; }
+        .animate-fadeInUp { animation: fadeInUp 0.8s ease-out forwards; }
+        .animate-slideInLeft { animation: slideInLeft 0.8s ease-out forwards; }
+        .animate-slideInRight { animation: slideInRight 0.8s ease-out forwards; }
+        .animate-delay-200 { animation-delay: 0.2s; }
+        .animate-delay-400 { animation-delay: 0.4s; }
+        .animate-delay-600 { animation-delay: 0.6s; }
+        .animate-delay-800 { animation-delay: 0.8s; }
+
+        .futuristic-bg {
+            background-image:
+                linear-gradient(45deg, rgba(250, 204, 21, 0.05) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(250, 204, 21, 0.05) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(250, 204, 21, 0.05) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(250, 204, 21, 0.05) 75%);
+            background-size: 60px 60px;
+            background-position: 0 0, 0 30px, 30px -30px, -30px 0px;
+        }
+
+        .glassmorphic-card {
+            background: rgba(20, 20, 20, 0.6); /* Darker, less transparent */
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(250, 204, 21, 0.2); /* Subtle yellow border */
+            border-radius: 1rem; /* 16px */
+            box-shadow: 0 8px 32px 0 rgba(250, 204, 21, 0.1); /* Softer glow */
+        }
+
+        .form-input {
+            background-color: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(250, 204, 21, 0.3);
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            background-color: rgba(40, 40, 40, 1);
+            border-color: #facc15;
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.4);
+            outline: none;
+        }
+        .submit-button {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
+        }
+        .submit-button:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 6px 20px rgba(250, 204, 21, 0.5);
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        .contact-icon {
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .contact-icon:hover {
+            transform: scale(1.2);
+            color: #fde047; /* Brighter yellow on hover */
+        }
+.logo{
+    width:100px;
+    height:100px;
+}
+    </style>
+</head>
+<body class="futuristic-bg min-h-screen flex flex-col">
+
+    <header class="fixed top-0 left-0 right-0 z-50 p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="javascript:history.back()" class="flex items-center text-gray-300 hover:text-brand-yellow transition-colors duration-300 group">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span class="text-sm sm:text-base">Back</span>
+            </a>
+
+            <div class="logo-container">
+                 <img src="{% static 'images/logo.jpg' %}" alt="Gnanow Logo" class="h-10 sm:h-12" style="border-radius: 15px; border: 1px solid #facc1533;" class="logo">
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 pt-24 pb-12 flex-grow">
+        <div class="text-center mb-12 md:mb-16 animate-fadeInUp">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold brand-yellow tracking-tight">
+                <span class="text-white">Connect With</span> Gnanow
+            </h1>
+            <p class="mt-4 text-lg text-gray-300 max-w-2xl mx-auto animate-fadeInUp animate-delay-200">
+                We're pioneering the future of apparel. Reach out with your inquiries, ideas, or just to say hello.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
+            <div class="glassmorphic-card p-6 sm:p-8 animate-slideInLeft animate-delay-400">
+                <h2 class="text-2xl sm:text-3xl font-semibold mb-6 brand-yellow">Send Us a Message</h2>
+                <form id="contactForm" class="space-y-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-200 mb-1">Full Name</label>
+                        <input type="text" name="name" id="name" required class="form-input w-full p-3 rounded-md text-sm" placeholder="Nova Quantum">
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-200 mb-1">Email Address</label>
+                        <input type="email" name="email" id="email" required class="form-input w-full p-3 rounded-md text-sm" placeholder="nova@example.com">
+                    </div>
+                    <div>
+                        <label for="subject" class="block text-sm font-medium text-gray-200 mb-1">Subject</label>
+                        <input type="text" name="subject" id="subject" class="form-input w-full p-3 rounded-md text-sm" placeholder="Inquiry about Nanotech Fabric">
+                    </div>
+                    <div>
+                        <label for="message" class="block text-sm font-medium text-gray-200 mb-1">Message</label>
+                        <textarea name="message" id="message" rows="5" required class="form-input w-full p-3 rounded-md text-sm" placeholder="Your message..."></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="submit-button w-full bg-brand-yellow text-black font-bold py-3 px-6 rounded-md hover:bg-yellow-300 text-base">
+                            Transmit Message
+                        </button>
+                    </div>
+                </form>
+                <div id="formMessage" class="mt-4 text-center"></div>
+            </div>
+
+            <div class="space-y-8 animate-slideInRight animate-delay-600">
+                <div class="glassmorphic-card p-6 sm:p-8">
+                    <h2 class="text-2xl sm:text-3xl font-semibold mb-6 brand-yellow">Direct Lines</h2>
+                    <div class="space-y-5">
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 brand-yellow mr-4 mt-1 contact-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            <div>
+                                <h3 class="text-lg font-medium text-white">Our Headquarters</h3>
+                                <p class="text-gray-300">Telangana, India</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 brand-yellow mr-4 mt-1 contact-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                            </svg>
+                            <div>
+                                <h3 class="text-lg font-medium text-white">Comms Channel</h3>
+                                <p class="text-gray-300 hover:text-brand-yellow transition-colors"><a href="tel:+1234567890">+91 8367216579</a></p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 brand-yellow mr-4 mt-1 contact-icon" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                            </svg>
+                            <div>
+                                <h3 class="text-lg font-medium text-white">Data Stream</h3>
+                                <p class="text-gray-300 hover:text-brand-yellow transition-colors"><a href="mailto:connect@gnanow.tech">gnanowindustries@gmail.com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="relative overflow-hidden rounded-lg shadow-2xl border-2 border-yellow-500/30 animate-subtleFloat" style="animation-duration: 5s;">
+                     <img src="{% static 'images/download.jpeg' %}" alt="Futuristic Contact Interface" class="w-full h-auto object-cover">
+                     <div class="absolute inset-0 bg-black/30 hover:bg-black/10 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center p-6 mt-12 border-t border-gray-800/50 animate-fadeIn animate-delay-800">
+        <p class="text-sm text-gray-400">&copy; <span id="currentYear"></span> Gnanow Industries. All rights reserved. Engineering the Future of Fashion.</p>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Basic form submission handling (prevents default and shows a message)
+        const contactForm = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real application, you would send this data to a server.
+                // For this demo, we'll just show a success message.
+                formMessage.innerHTML = '<p class="text-green-400">Message transmitted successfully! We will connect shortly.</p>';
+                contactForm.reset(); // Optionally reset the form
+
+                setTimeout(() => {
+                    formMessage.innerHTML = '';
+                }, 5000); // Clear message after 5 seconds
+            });
+        }
+
+        // Intersection Observer for scroll animations (optional, elements already have load animations)
+        // This is a more advanced way to trigger animations as elements scroll into view.
+        // For this page, the initial load animations might be sufficient.
+        const animatedElements = document.querySelectorAll('.animate-fadeInUp, .animate-slideInLeft, .animate-slideInRight');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // The classes for animation are already applied for load animation.
+                    // If you want them to trigger *only* on scroll, remove them initially
+                    // and add them here.
+                    // entry.target.classList.add('visible-animation-class');
+                    // For this example, we'll just log to console.
+                    // console.log(entry.target, 'is visible');
+                }
+            });
+        }, { threshold: 0.1 }); // Trigger when 10% of the element is visible
+
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+
+    </script>
+</body>
+</html>

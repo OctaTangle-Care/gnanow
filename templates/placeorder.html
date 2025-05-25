@@ -1,0 +1,719 @@
+{% comment %} <form method="POST" action="{% url 'create_order' %}">
+    {% csrf_token %}
+    <label for="address">Select Delivery Address:</label>
+    <select name="address_id" required>
+        {% for address in addresses %}
+            <option value="{{ address.id }}">{{ address.full_address }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Place Order</button>
+</form> {% endcomment %}
+{% comment %} <form method="POST" action="{% url 'create_order' %}">
+    {% csrf_token %}
+    <label for="address">Select Delivery Address:</label>
+    <select name="address_id" required>
+        {% for address in addresses %}
+            <option value="{{ address.id }}">
+                {{ address.house_no }}, {{ address.street }}, {{ address.city }},
+                {{ address.state }} - {{ address.pincode }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Place Order</button>
+</form> {% endcomment %}
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place Order - GNANOW</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #F0F0F0; } /* Light track */
+        ::-webkit-scrollbar-thumb { background: #F39C12; border-radius: 10px; } /* Accent Amber */
+        ::-webkit-scrollbar-thumb:hover { background: #E67E22; } /* Darker Amber on hover */
+
+        /* Gnanow Official Brand Colors */
+        :root {
+            --color-primary-blue: #2C3E50; /* Deep Midnight Blue */
+            --color-primary-blue-dark: #1A2C3D; /* Even darker blue for hover */
+            --color-accent-amber: #F39C12; /* Muted Amber/Gold */
+            --color-accent-amber-dark: #E67E22; /* Slightly more orange/darker amber for hover */
+            --color-light-background: #FDFDFD; /* Almost white, very subtle warmth */
+            --color-card-background: #FFFFFF; /* Pure white for crispness */
+            --color-neutral-text: #34495E; /* Dark Slate Gray for main text */
+            --color-light-border: #EAECEE; /* Very light gray for borders */
+            --color-footer-background: #222222; /* Dark charcoal for a solid footer */
+            --color-footer-text: #BDC3C7; /* Light gray for readability on dark footer */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-light-background);
+            color: var(--color-neutral-text);
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .font-bebas { font-family: 'Bebas Neue', cursive; }
+
+        /* Color Utility Classes */
+        .bg-primary-blue { background-color: var(--color-primary-blue); }
+        .text-primary-blue { color: var(--color-primary-blue); }
+        .border-primary-blue { border-color: var(--color-primary-blue); }
+        .hover\:bg-primary-blue-dark:hover { background-color: var(--color-primary-blue-dark); }
+        .hover\:text-primary-blue-dark:hover { color: var(--color-primary-blue-dark); }
+
+        .bg-accent-amber { background-color: var(--color-accent-amber); }
+        .text-accent-amber { color: var(--color-accent-amber); }
+        .border-accent-amber { border-color: var(--color-accent-amber); }
+        .hover\:bg-accent-amber-dark:hover { background-color: var(--color-accent-amber-dark); }
+        .hover\:text-accent-amber-dark:hover { color: var(--color-accent-amber-dark); }
+
+        /* Header & Nav Styling */
+        .main-header {
+            background-color: var(--color-card-background);
+            border-bottom: 1px solid var(--color-light-border);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .nav-link {
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+            font-size: 1rem;
+            color: #4B5563;
+            transition: color 0.3s ease-in-out;
+            position: relative;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: var(--color-accent-amber);
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background-color: var(--color-accent-amber);
+            transition: width 0.3s ease-in-out;
+        }
+        .nav-link:hover::after, .nav-link-active::after {
+            width: calc(100% - 2.5rem);
+        }
+        .nav-link-active {
+            color: var(--color-accent-amber);
+            font-weight: 600;
+        }
+        .header-icon {
+            color: #6B7280;
+            transition: color 0.3s ease-in-out;
+            font-size: 1.25rem;
+        }
+        .header-icon:hover {
+            color: var(--color-accent-amber);
+        }
+
+        /* CTA Button Styles */
+        .cta-button {
+            display: inline-block;
+            transition: all 0.3s ease-in-out;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.025em;
+            padding: 0.875rem 1.75rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .cta-button-primary {
+            background-color: var(--color-primary-blue);
+            color: white;
+            border: 2px solid var(--color-primary-blue);
+        }
+        .cta-button-primary:hover {
+            background-color: var(--color-primary-blue-dark);
+            border-color: var(--color-primary-blue-dark);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(30, 58, 138, 0.2);
+            transform: translateY(-2px);
+        }
+        .cta-button-outline {
+            background-color: transparent;
+            color: var(--color-primary-blue);
+            border: 2px solid var(--color-primary-blue);
+        }
+        .cta-button-outline:hover {
+            background-color: var(--color-primary-blue);
+            color: white;
+            border-color: var(--color-primary-blue);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(30, 58, 138, 0.2);
+            transform: translateY(-2px);
+        }
+        .cta-button-red-outline {
+            background-color: transparent;
+            color: #EF4444;
+            border: 2px solid #EF4444;
+        }
+        .cta-button-red-outline:hover {
+            background-color: #DC2626;
+            color: white;
+            border-color: #DC2626;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2), 0 0 0 3px rgba(220, 38, 38, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Form Container Styling */
+        .form-container {
+            background-color: var(--color-card-background);
+            padding: 2.5rem; /* p-10 */
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* shadow-xl */
+            max-width: 500px;
+            width: 100%;
+            margin: 2rem auto; /* Center the form with some top/bottom margin */
+            border: 1px solid var(--color-light-border);
+        }
+
+        .form-container h2 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 2.25rem; /* text-4xl */
+            color: var(--color-primary-blue);
+            text-align: center;
+            margin-bottom: 2rem; /* mb-8 */
+            letter-spacing: 0.05em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.95rem; /* text-lg */
+            font-weight: 500; /* font-medium */
+            color: var(--color-neutral-text);
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+
+       
+
+        .form-group button {
+            width: 100%;
+            padding: 0.875rem 1.5rem; /* py-3.5 px-6 */
+            font-size: 1.125rem; /* text-lg */
+            margin-top: 1rem; /* mt-4 */
+            /* Inherits cta-button-primary styles */
+        }
+
+        /* Add New Address Button */
+        .add-address-button {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+            background-color: transparent;
+            color: var(--color-primary-blue);
+            border: 1px solid var(--color-primary-blue);
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .add-address-button:hover {
+            background-color: var(--color-primary-blue);
+            color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        /* Add/Modify this within your existing <style> block */
+
+/* Form group and select styling */
+.form-group select {
+    /* Existing styles */
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-light-border);
+    border-radius: 0.375rem;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.07);
+    font-size: 1rem;
+    color: var(--color-neutral-text);
+    background-color: var(--color-light-background);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2334495E' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem; /* Space for the custom arrow */
+
+    /* New or modified properties for full address visibility */
+    white-space: normal; /* Allow text to wrap if it could, though browsers typically ignore this for <option> */
+    min-width: 250px; /* Ensure a minimum width for the select box itself */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    text-overflow: ellipsis; /* Add ellipsis if text still overflows (though usually handled by browser for select) */
+    overflow: hidden; /* Hide overflow */
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-primary-blue);
+    box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.2);
+}
+
+/* Specific styling for the dropdown menu when it's open (less reliable across browsers) */
+/* This part is tricky because browser rendering of <option> elements in a dropdown
+   is largely outside of CSS control. However, we can try to influence the overall width
+   of the select element itself. */
+.form-group select:active,
+.form-group select:focus {
+    /* When the select is active/focused, the dropdown menu itself should try to expand */
+    /* This depends heavily on browser implementation, but `min-width` helps. */
+    min-width: fit-content; /* Attempt to make the dropdown menu as wide as its widest option */
+    /* You might need to set a hardcoded max-width to prevent it from getting too wide on large screens */
+    max-width: 100%; /* Ensure it doesn't overflow its parent on smaller screens */
+}
+
+/* Optional: If you want to explicitly ensure the select box's width */
+@media (min-width: 640px) { /* Adjust breakpoint as needed */
+    .form-container select {
+        width: auto; /* Allow it to be wider than 100% of parent if content needs */
+        min-width: 350px; /* Example wider minimum width for desktop */
+        max-width: 100%; /* Still limit it to parent width */
+    }
+}
+
+/* If the above still doesn't work perfectly (which is common for <select> options),
+   a more robust solution for displaying full addresses would be to:
+   1. Use a custom dropdown component (e.g., a div with custom JavaScript and styling)
+      instead of a native <select> element. This gives you full control over styling.
+   2. Display the selected address text in a separate <div> below the <select>
+      once an option is chosen, allowing it to wrap and display fully.
+   3. Use a library like Select2 or Choices.js that replaces native selects with
+      custom, stylable versions.
+*/
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--color-card-background);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+            max-width: 550px;
+            width: 90%;
+            position: relative;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #6B7280;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        .modal-close-button:hover {
+            color: #EF4444;
+        }
+
+        .modal-content h3 {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.8rem;
+            color: var(--color-primary-blue);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 1rem; /* Slightly less margin for modal form */
+        }
+        .modal-content .form-group label {
+            font-size: 0.9rem;
+        }
+        .modal-content .form-group input {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.95rem;
+        }
+        .modal-content button {
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: var(--color-footer-background);
+            border-top: 1px solid #333333;
+            color: var(--color-footer-text);
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        @media (min-width: 768px) {
+            .footer {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+        }
+        .footer-link {
+            color: #9CA3AF;
+            transition: color 0.3s ease-in-out;
+            font-size: 0.875rem;
+        }
+        .footer-link:hover {
+            color: var(--color-accent-amber);
+        }
+        .footer-title {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-header .container {
+                flex-wrap: wrap;
+            }
+            .main-header nav {
+                display: none; /* Hidden by default for mobile */
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            .main-header .header-icons-group {
+                order: 2; /* Move icons next to logo on mobile */
+            }
+            .main-header .flex.items-center { /* Contains logo and brand name */
+                order: 1;
+                flex-grow: 1; /* Allow logo to take available space */
+            }
+            #mobileMenuButton {
+                display: block; /* Show mobile menu button */
+            }
+            #mobileMenu.hidden {
+                display: none;
+            }
+            #mobileMenu.show {
+                display: block;
+            }
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-form select, .filter-form .btn-filter {
+                width: 100%;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+            .form-container h2 {
+                font-size: 1.8rem;
+            }
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+        @media (min-width: 768px) {
+            .main-header nav {
+                display: flex; /* Show nav on desktop */
+            }
+            #mobileMenuButton {
+                display: none; /* Hide mobile menu button on desktop */
+            }
+        }
+        .modal-content {
+    /* ... (your existing styles for modal-content) ... */
+    max-height: 90vh; /* Limit height to 90% of viewport height */
+    overflow-y: auto; /* Add vertical scrollbar when content overflows */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+
+    /* Ensure padding is inside scrollable area */
+    box-sizing: border-box; /* This is typically default, but good to be explicit */
+}
+
+/* You already have custom scrollbar styles at the top of your CSS,
+   which will automatically apply to this overflow-y: auto.
+   If you want *specific* scrollbar styles for this modal, you could target:
+   .modal-content::-webkit-scrollbar { ... }
+   .modal-content::-webkit-scrollbar-track { ... }
+   .modal-content::-webkit-scrollbar-thumb { ... }
+*/
+
+/* Minor adjustments for the checkbox group for better alignment */
+.form-group.flex input[type="checkbox"] {
+    /* Basic reset for checkbox */
+    -webkit-appearance: checkbox;
+    -moz-appearance: checkbox;
+    appearance: checkbox;
+    display: inline-block; /* Ensure it respects width/height */
+}
+    </style>
+</head>
+<body>
+
+<header class="main-header sticky top-0 z-50 py-3 animate__animated animate__fadeInDown">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between">
+        <div class="flex items-center">
+            <a href="{% url 'dashboard' %}" class="flex items-center space-x-2 mr-6">
+                <svg class="h-10 w-10 text-primary-blue" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="font-bebas text-3xl text-primary-blue tracking-wider">GNANOW</span>
+            </a>
+        </div>
+
+        <nav class="hidden md:flex space-x-8 items-center order-3 md:order-2 w-full md:w-auto mt-2 md:mt-0">
+            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'product_list' %}" class="nav-link">Products</a>
+            <a href="#" class="nav-link">Categories</a>
+            <a href="{% url 'my_orders' %}" class="nav-link nav-link-active">My Orders</a>
+            <a href="{% url 'my_addresses' %}" class="nav-link">My Addresses</a>
+            <a href="#" class="nav-link">Feedback</a>
+        </nav>
+
+        <div class="header-icons-group flex items-center space-x-5 order-2 md:order-3">
+            <a href="{% url 'view_cart' %}" class="header-icon" title="Cart"><i class="fas fa-shopping-cart fa-fw"></i></a>
+            <a href="{% url 'profile' %}" class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></a>
+            <a href="{% url 'wishlist' %}" class="header-icon" title="Wishlist"><i class="fas fa-heart fa-fw"></i></a>
+            <button id="mobileMenuButton" class="md:hidden header-icon">
+                <i class="fas fa-bars fa-fw"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white/95 py-2 animate__animated animate__fadeIn border-t border-light-border">
+        <a href="{% url 'dashboard' %}" class="block nav-link px-4">Dashboard</a>
+        <a href="{% url 'product_list' %}" class="block nav-link px-4">Products</a>
+        <a href="#" class="block nav-link px-4">Categories</a>
+        <a href="{% url 'my_orders' %}" class="block nav-link nav-link-active px-4">My Orders</a>
+        <a href="{% url 'my_addresses' %}" class="block nav-link px-4">My Addresses</a>
+        <a href="#" class="block nav-link px-4">Feedback</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex-grow">
+    <div class="form-container animate__animated animate__fadeInUp">
+        <h2>Place Your Order</h2>
+        <form method="POST" action="{% url 'create_order' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="address">Select Delivery Address:</label>
+                <select name="address_id" id="addressSelect" required>
+                    {% for address in addresses %}
+                        <option value="{{ address.id }}">
+                            {{ address.house_no }}, {{ address.street }}, {{ address.city }},
+                            {{ address.state }} - {{ address.pincode }}
+                        </option>
+                    {% empty %}
+                        <option value="" disabled selected>No addresses found. Add one below!</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="button" id="addNewAddressBtn" class="add-address-button">
+                <i class="fas fa-plus-circle mr-2"></i> Add New Address
+            </button>
+
+            <button type="submit" class="cta-button cta-button-primary mt-6">
+                <i class="fas fa-truck mr-2"></i> Place Order
+            </button>
+        </form>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-12 md:py-16 animate__animated animate__fadeInUp animate__delay-0.5s">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+            <div>
+                <h3 class="footer-title font-bebas text-2xl text-accent-amber">GNANOW</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Unleash Your Style. Future of Fashion.</p>
+            </div>
+            <div>
+                <h3 class="footer-title">Shop</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'product_list' %}" class="footer-link">All Products</a></li>
+                    <li><a href="#" class="footer-link">New Arrivals</a></li>
+                    <li><a href="#" class="footer-link">Collections</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">My Account</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'profile' %}" class="footer-link">Profile</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
+                    <li><a href="{% url 'my_addresses' %}" class="footer-link">My Addresses</a></li>
+                    <li><a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                    <li><a href="#" class="footer-link">FAQs</a></li>
+                    <li><a href="#" class="footer-link">Shipping</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                <h3 class="footer-title">Connect</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-8 text-center text-sm">
+            <p class="text-gray-500">&copy; {% now "Y" %} GNANOW. All rights reserved. Future of Fashion.</p>
+        </div>
+    </div>
+</footer>
+
+<div id="addressModal" class="modal-overlay">
+    <div class="modal-content animate__animated animate__zoomIn">
+        <button class="modal-close-button" id="closeModalBtn">&times;</button>
+        <h3>Add New Delivery Address</h3>
+        <form method="POST" action="{% url 'add_address_order' %}" id="newAddressForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="house_no">Address Line 1:</label>
+                <input type="text"  name="address_line1" id="house_no" required>
+            </div>
+            <div class="form-group">
+                <label for="street">Address Line 2:</label>
+                <input type="text" name="address_line2" id="street" required>
+            </div>
+            <div class="form-group">
+                <label for="city">City:</label>
+                <input type="text" name="city" id="city" required>
+            </div>
+            <div class="form-group">
+                <label for="state">State:</label>
+                <input type="text" name="state" id="state" required>
+            </div>
+            <div class="form-group">
+                <label for="pincode">Pincode:</label>
+                <input type="text"name="postal_code" id="pincode" required pattern="[0-9]{6}" title="Pincode must be 6 digits">
+            </div>
+             <div class="form-group">
+                <label for="pincode">Country:</label>
+                <input type="text"name="country" id="pincode" required title="Country">
+            </div>
+            <div class="form-group">
+                <label for="state">Alternate Phone Number:</label>
+                <input type="text" name="phone" id="state" required>
+            </div>
+            <div class="form-group">
+               <label>Set as default address:</label>
+            <input type="checkbox" name="is_default">
+
+          
+            </div>
+            <button type="submit" class="cta-button cta-button-primary">
+                <i class="fas fa-map-marker-alt mr-2"></i> Save Address
+            </button>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                mobileMenu.classList.toggle('show'); // For animation
+            });
+        }
+
+        // Add New Address Modal Logic (Open/Close only)
+        const addNewAddressBtn = document.getElementById('addNewAddressBtn');
+        const addressModal = document.getElementById('addressModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        // Removed newAddressForm constant as we're not handling its submission here
+        const addressSelect = document.getElementById('addressSelect');
+
+        if (addNewAddressBtn && addressModal && closeModalBtn) { // Check only for modal related elements
+            addNewAddressBtn.addEventListener('click', () => {
+                addressModal.classList.add('show');
+            });
+
+            closeModalBtn.addEventListener('click', () => {
+                addressModal.classList.remove('show');
+            });
+
+            // Close modal if clicked outside content
+            addressModal.addEventListener('click', (event) => {
+                if (event.target === addressModal) {
+                    addressModal.classList.remove('show');
+                }
+            });
+            // Removed newAddressForm.addEventListener('submit') block
+        }
+
+        // Initial check for addresses on page load
+        if (addressSelect && (addressSelect.options.length === 0 || (addressSelect.options.length === 1 && addressSelect.options[0].disabled))) {
+            // If no addresses or only the disabled placeholder, ensure the placeholder is selected.
+            if (addressSelect.options.length === 0) {
+                const option = document.createElement('option');
+                option.value = "";
+                option.disabled = true;
+                option.selected = true;
+                option.textContent = "No addresses found. Add one below!";
+                addressSelect.appendChild(option);
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

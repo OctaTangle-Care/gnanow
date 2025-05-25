@@ -1,0 +1,636 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - GNANOW</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Orbitron:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Brand Colors */
+      :root {
+        --color-yellow: #ffd700; /* Gold/Yellow */
+        --color-black: #000000;
+        --color-white: #ffffff;
+        --color-grey-light: #f0f0f0;
+        --color-grey-dark: #333333;
+      }
+
+      /* Basic Reset & Body Styling */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Montserrat", sans-serif;
+        line-height: 1.6;
+        color: var(--color-grey-dark);
+        background-color: var(--color-grey-light);
+        min-height: 100vh; /* Ensure body takes full height */
+        display: flex;
+        flex-direction: column; /* Allow content to stack and enable scrolling */
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: "Orbitron", sans-serif; /* Futuristic heading font */
+        color: var(--color-black);
+        margin-bottom: 20px;
+      }
+
+      h1 {
+        font-size: 3em;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        color: var(--color-yellow);
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+      }
+
+      h2 {
+        font-size: 2.2em;
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      h2::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 3px;
+        background-color: var(--color-yellow);
+        border-radius: 5px;
+      }
+
+      p {
+        margin-bottom: 15px;
+      }
+
+      a {
+        color: var(--color-yellow);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: var(--color-black);
+      }
+
+      /* Header Section */
+      .header {
+        background-color: var(--color-black);
+        color: var(--color-white);
+        padding: 20px 0;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 1s ease-out;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 25px;
+        left: 25px;
+        background: none;
+        border: none;
+        font-size: 1.1em;
+        color: var(--color-white);
+        cursor: pointer;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .back-button:hover {
+        color: var(--color-yellow);
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateX(-5px);
+      }
+
+      .back-button svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+        margin-right: 8px;
+      }
+
+      /* Logo Styling */
+      .header .brand-logo {
+        max-width: 200px; /* Big logo */
+        height: auto;
+        margin: 0 auto 10px auto;
+        display: block;
+        animation: zoomIn 1s ease-out 0.5s forwards;
+        opacity: 0;
+        border-radius:10px;
+      }
+
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Main Content Area */
+      .main-content {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 60px; /* Space between sections */
+      }
+
+      /* Section Styling */
+      .about-section {
+        background-color: var(--color-white);
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        opacity: 0; /* Initial state for animation */
+        transform: translateY(30px); /* Initial state for animation */
+        transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      }
+
+      /* Animation for sections on scroll */
+      .about-section.animate {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .about-section:nth-child(even) {
+        flex-direction: column-reverse; /* Alternate layout for some sections */
+      }
+
+      .section-content {
+        max-width: 800px;
+        margin-bottom: 30px;
+      }
+
+      .section-media {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .media-item {
+        background-color: var(--color-grey-light);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .media-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .media-item img,
+      .media-item video {
+        width: 100%;
+        height: 200px; /* Fixed height for consistency */
+        object-fit: cover; /* Ensure images/videos fill the space */
+        display: block;
+        border-radius: 10px;
+      }
+
+      .media-caption {
+        padding: 15px;
+        font-size: 0.9em;
+        color: var(--color-grey-dark);
+      }
+
+      /* Specific Section Styling */
+      #our-work .section-content,
+      #vision-goals .section-content,
+      #customer-support .section-content,
+      #privacy-security .section-content {
+        text-align: left; /* Align text left within content block */
+      }
+
+      /* Call to Action */
+      .cta-section {
+        text-align: center;
+        padding: 60px 20px;
+        background-color: var(--color-black);
+        color: var(--color-white);
+        border-radius: 15px;
+        margin-top: 60px;
+        animation: fadeIn 1s ease-out 1s forwards;
+        opacity: 0;
+      }
+
+      .cta-section h2 {
+        color: var(--color-yellow);
+      }
+
+      .cta-button {
+        display: inline-block;
+        background-color: var(--color-yellow);
+        color: var(--color-black);
+        padding: 15px 30px;
+        border-radius: 50px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease, transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .cta-button:hover {
+        background-color: var(--color-white);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+      }
+
+      /* Footer */
+      .footer {
+        background-color: var(--color-black);
+        color: var(--color-grey-light);
+        text-align: center;
+        padding: 30px 20px;
+        margin-top: 40px;
+        font-size: 0.9em;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2.2em;
+        }
+
+        h2 {
+          font-size: 1.8em;
+        }
+
+        .header {
+          padding: 15px 0;
+        }
+
+        .back-button {
+          top: 15px;
+          left: 15px;
+          font-size: 0.9em;
+          padding: 8px 12px;
+        }
+
+        .back-button svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .header .brand-logo {
+          max-width: 150px;
+        }
+
+        .main-content {
+          margin: 20px auto;
+          padding: 15px;
+          gap: 40px;
+        }
+
+        .about-section {
+          padding: 30px;
+        }
+
+        .section-media {
+          grid-template-columns: 1fr; /* Stack images on small screens */
+        }
+
+        .media-item img,
+        .media-item video {
+          height: 180px;
+        }
+
+        .cta-section {
+          padding: 40px 15px;
+        }
+
+        .cta-button {
+          padding: 12px 25px;
+          font-size: 0.9em;
+        }
+      }
+
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 1.8em;
+        }
+
+        h2 {
+          font-size: 1.5em;
+        }
+
+        .header .brand-logo {
+          max-width: 120px;
+        }
+
+        .about-section {
+          padding: 25px;
+        }
+
+        .media-item img,
+        .media-item video {
+          height: 150px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <a
+        href="javascript:history.back()"
+        class="back-button"
+        aria-label="Go back"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+        </svg>
+        <span>Back</span>
+      </a>
+      <img
+        src="{% static "images/logo.jpg" %}"
+        alt="GNANOW Logo"
+        class="brand-logo"
+      />
+      <h1>About GNANOW</h1>
+    </header>
+
+    <main class="main-content">
+      <section id="our-work" class="about-section">
+        <h2>Our Work: Crafting Tomorrow's Wardrobe Today</h2>
+        <div class="section-content">
+          <p>
+            At GNANOW, we are more than just a clothing e-commerce platform; we
+            are architects of future fashion. Our mission is to seamlessly
+            connect you with cutting-edge apparel that defines your style in the
+            digital age. We leverage advanced AI and data analytics to curate
+            collections that are not just trendy, but timeless and sustainable.
+          </p>
+          <p>
+            From conceptual design to your doorstep, our process is optimized
+            for speed and simplicity. We collaborate with visionary designers
+            and ethical manufacturers to ensure every piece meets the highest
+            standards of quality and innovation. Experience fashion that's
+            always a step ahead.
+          </p>
+        </div>
+        <div class="section-media">
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/000/FFF?text=Design+Innovation"
+              alt="Design Innovation"
+            />
+            <div class="media-caption">
+              Our designers pushing creative boundaries.
+            </div>
+          </div>
+          <div class="media-item">
+            <video
+              autoplay
+              loop
+              muted
+              playsinline
+              src="https://placehold.co/400x200/FFD700/000?text=Fast+Fulfillment+GIF"
+              alt="Fast Fulfillment"
+            ></video>
+            <div class="media-caption">
+              Automated fulfillment for lightning-fast delivery.
+            </div>
+          </div>
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/000/FFF?text=Quality+Control"
+              alt="Quality Control"
+            />
+            <div class="media-caption">
+              Rigorous checks ensure perfection in every stitch.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="vision-goals" class="about-section">
+        <h2>Vision & Goals: Shaping the Future of Fashion</h2>
+        <div class="section-content">
+          <p>
+            Our vision is a world where personalized, high-quality fashion is
+            accessible to everyone, instantly. We aim to be the leading global
+            platform for innovative apparel, setting new benchmarks for
+            efficiency, sustainability, and customer satisfaction.
+          </p>
+          <p>
+            Our goals include expanding our global reach, integrating more
+            eco-friendly materials and production methods, and continuously
+            enhancing our AI-driven personalization engine to provide you with
+            an unparalleled shopping experience. We are committed to a future
+            where fashion empowers and inspires.
+          </p>
+        </div>
+        <div class="section-media">
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/FFD700/000?text=Global+Reach"
+              alt="Global Reach"
+            />
+            <div class="media-caption">Connecting fashion globally.</div>
+          </div>
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/000/FFF?text=Sustainable+Fashion"
+              alt="Sustainable Fashion"
+            />
+            <div class="media-caption">Pioneering eco-conscious apparel.</div>
+          </div>
+          <div class="media-item">
+            <video
+              autoplay
+              loop
+              muted
+              playsinline
+              src="https://placehold.co/400x200/FFD700/000?text=AI+Personalization+GIF"
+              alt="AI Personalization"
+            ></video>
+            <div class="media-caption">
+              AI-powered style recommendations just for you.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="customer-support" class="about-section">
+        <h2>Customer Support: Your Seamless Experience, Our Priority</h2>
+        <div class="section-content">
+          <p>
+            At GNANOW, exceptional customer support is at the heart of our
+            service. Our dedicated team is available 24/7 through multiple
+            channels – live chat, email, and virtual assistants – to ensure your
+            shopping journey is smooth and hassle-free.
+          </p>
+          <p>
+            From order inquiries to style advice, we are here to assist you with
+            speed and expertise. Your satisfaction is our driving force, and we
+            are constantly evolving our support systems to anticipate and meet
+            your needs.
+          </p>
+        </div>
+        <div class="section-media">
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/000/FFF?text=24/7+Support"
+              alt="24/7 Support"
+            />
+            <div class="media-caption">Always here to help, day or night.</div>
+          </div>
+          <div class="media-item">
+            <video
+              autoplay
+              loop
+              muted
+              playsinline
+              src="https://placehold.co/400x200/FFD700/000?text=Live+Chat+GIF"
+              alt="Live Chat"
+            ></video>
+            <div class="media-caption">Instant assistance via live chat.</div>
+          </div>
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/000/FFF?text=Happy+Customer"
+              alt="Happy Customer"
+            />
+            <div class="media-caption">Ensuring every customer is delighted.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="privacy-security" class="about-section">
+        <h2>Privacy & Security: Your Data, Our Fortress</h2>
+        <div class="section-content">
+          <p>
+            Your trust is paramount. At GNANOW, we employ state-of-the-art
+            encryption and security protocols to protect your personal
+            information and transaction data. We adhere to the strictest global
+            privacy regulations, ensuring your data is handled with the utmost
+            care and transparency.
+          </p>
+          <p>
+            We believe in empowering you with control over your data. Our
+            privacy policy is clear, concise, and accessible, detailing how your
+            information is used to enhance your shopping experience, never to be
+            compromised. Shop with confidence, knowing your privacy is our top
+            priority.
+          </p>
+        </div>
+        <div class="section-media">
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/FFD700/000?text=Data+Encryption"
+              alt="Data Encryption"
+            />
+            <div class="media-caption">Advanced encryption protects your data.</div>
+          </div>
+          <div class="media-item">
+            <img
+              src="https://placehold.co/400x200/000/FFF?text=Secure+Transactions"
+              alt="Secure Transactions"
+            />
+            <div class="media-caption">Every transaction is fully secured.</div>
+          </div>
+          <div class="media-item">
+            <video
+              autoplay
+              loop
+              muted
+              playsinline
+              src="https://placehold.co/400x200/FFD700/000?text=Privacy+Shield+GIF"
+              alt="Privacy Shield"
+            ></video>
+            <div class="media-caption">Committed to your digital privacy.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <h2>Ready to Experience the Future of Fashion?</h2>
+        <p>
+          Join the GNANOW community and redefine your style with unparalleled
+          speed and simplicity.
+        </p>
+        <a href="#" class="cta-button">Shop Now</a>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2025 GNANOW. All rights reserved. Fashion, Evolved.</p>
+    </footer>
+
+    <script>
+      // JavaScript for scroll-triggered animations
+      document.addEventListener("DOMContentLoaded", () => {
+        const sections = document.querySelectorAll(".about-section");
+
+        const observerOptions = {
+          root: null, // relative to the viewport
+          rootMargin: "0px",
+          threshold: 0.2, // Trigger when 20% of the item is visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("animate");
+              observer.unobserve(entry.target); // Stop observing once animated
+            }
+          });
+        }, observerOptions);
+
+        sections.forEach((section) => {
+          observer.observe(section);
+        });
+      });
+    </script>
+  </body>
+</html>

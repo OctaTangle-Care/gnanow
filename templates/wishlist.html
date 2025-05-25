@@ -1,0 +1,508 @@
+{% comment %} 
+<section class="container mx-auto py-10 px-4">
+    <h2 class="text-2xl font-bold text-white mb-6">My Wishlist</h2>
+
+    {% if wishlist_items %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for item in wishlist_items %}
+        {% with product=item.variant.product %}
+        <div class="bg-gray-800 rounded-lg overflow-hidden shadow-lg group relative">
+            <div class="relative">
+                {% if item.variant.images.first %}
+                    <img src="{{ item.variant.images.first.image.url }}" alt="{{ product.name }}" class="w-full h-64 object-cover">
+                {% else %}
+                    <img src="https://placehold.co/300x400/999/fff?text=No+Image" alt="{{ product.name }}" class="w-full h-64 object-cover">
+                {% endif %}
+
+                <form method="post" action="{% url 'toggle_wishlist' item.variant.id %}" class="absolute top-3 right-3 z-10">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-gray-800 bg-opacity-50 rounded-full p-2">
+                        <i class="fas fa-heart text-brand-yellow"></i>
+                    </button>
+                </form>
+            </div>
+
+            <div class="p-4">
+                <h3 class="text-lg font-semibold text-white">{{ product.name }}</h3>
+                <p class="text-brand-yellow font-bold text-xl mt-1">${{ product.base_price }}</p>
+                <div class="flex items-center mt-1 text-yellow-400 text-sm">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <span class="text-gray-400 text-xs ml-2">(123)</span>
+                </div>
+                <button class="btn btn-primary mt-4 w-full text-sm">Add to Cart</button>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-20 text-white">
+        <h3 class="text-2xl font-semibold">No items in your wishlist</h3>
+        <p class="text-gray-400 mt-2">Browse products and add your favorites here.</p>
+        <a href="{% url 'dashboard' %}" class="mt-4 inline-block btn btn-secondary">Shop Now</a>
+    </div>
+    {% endif %}
+</section> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNANOW - My Wishlist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Styles (largely reused from dashboard for consistency) */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark background */
+            color: #F3F4F6; /* Light gray text */
+        }
+
+
+        .custom-alert {
+      position: fixed;
+      top: 20px;
+      right: -400px;
+      background-color: #f0f0f0;
+      color: #333;
+      padding: 16px 50px 16px 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
+      z-index: 1000;
+      transition: right 0.6s ease, opacity 0.5s ease;
+      opacity: 0;
+      min-width: 250px;
+      max-width: 300px;
+    }
+
+    .custom-alert.show {
+      right: 20px;
+      opacity: 1;
+    }
+
+    .custom-alert .close-btn {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: red;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .custom-alert .close-btn:hover {
+      color: darkred;
+    } 
+         /* Custom styles for Quantity Selector */
+    .quantity-btn {
+        @apply p-2 rounded-md transition-colors duration-200 hover:bg-gray-700;
+    }
+    .quantity-input::-webkit-outer-spin-button,
+    .quantity-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .quantity-input {
+        -moz-appearance: textfield; /* Firefox */
+    }
+
+
+
+
+
+
+
+        /* Brand Colors */
+        .bg-brand-yellow { background-color: #FBBF24; /* Amber 400 */ }
+        .text-brand-yellow { color: #FBBF24; }
+        .border-brand-yellow { border-color: #FBBF24; }
+
+        .bg-brand-black { background-color: #000000; }
+        .text-brand-black { color: #000000; }
+
+        .bg-brand-white { background-color: #FFFFFF; }
+        .text-brand-white { color: #FFFFFF; }
+
+        /* Navbar styling */
+        .navbar {
+            transition: background-color 0.3s ease-in-out;
+        }
+        .navbar-sticky {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(17, 24, 39, 0.9); /* Dark bg with opacity */
+            backdrop-filter: blur(10px);
+        }
+
+        /* Card styles for wishlist items */
+        .wishlist-card {
+            background-color: #1F2937; /* Gray 800 */
+            border-radius: 0.75rem; /* More rounded */
+            overflow: hidden;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure cards in a row have same height */
+        }
+        .wishlist-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(251, 191, 36, 0.2); /* Yellowish shadow */
+        }
+        .wishlist-card-image {
+            width: 100%;
+            height: 280px; /* Adjusted height for wishlist items */
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .wishlist-card:hover .wishlist-card-image {
+            transform: scale(1.05);
+        }
+        .wishlist-card-content {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Button styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer; /* Ensure pointer cursor for all buttons */
+        }
+        .btn-primary {
+            background-color: #FBBF24; /* Brand yellow */
+            color: #111827; /* Dark text for yellow bg */
+            border: 2px solid #FBBF24;
+        }
+        .btn-primary:hover {
+            background-color: #F59E0B; /* Amber 500 */
+            border-color: #F59E0B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(251, 191, 36, 0.4);
+        }
+        .btn-secondary {
+            background-color: transparent;
+            color: #FBBF24;
+            border: 2px solid #FBBF24;
+        }
+        .btn-secondary:hover {
+            background-color: #FBBF24;
+            color: #111827;
+            transform: translateY(-2px);
+        }
+        .remove-wishlist-btn button {
+            background-color: rgba(31, 41, 55, 0.7); /* Darker, semi-transparent bg */
+            color: #FBBF24; /* Yellow heart */
+            border-radius: 50%;
+            padding: 0.6rem; /* Slightly adjusted padding */
+            transition: all 0.3s ease;
+            line-height: 1; /* Ensures icon is centered */
+        }
+        .remove-wishlist-btn button:hover {
+            background-color: rgba(251, 191, 36, 0.8); /* Yellowish bg on hover */
+            color: #111827; /* Dark heart on hover */
+            transform: scale(1.1);
+        }
+        .remove-wishlist-btn i {
+            font-size: 1rem; /* Ensure icon size is consistent */
+        }
+
+
+        /* Section Heading */
+        .section-heading {
+            font-size: 2rem; /* Slightly smaller than main dashboard heading */
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #FBBF24; /* Yellow heading */
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* Empty Wishlist State */
+        .empty-wishlist-container {
+            background-color: #1F2937; /* Gray 800 */
+            padding: 3rem 2rem;
+            border-radius: 0.75rem;
+            text-align: center;
+            animation: fadeInEmpty 0.8s ease-out;
+        }
+        .empty-wishlist-icon {
+            font-size: 4rem;
+            color: #FBBF24;
+            margin-bottom: 1.5rem;
+            animation: pulseIcon 2s infinite ease-in-out;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #000000; /* Black footer */
+            color: #9CA3AF; /* Gray 400 */
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .wishlist-item-animation {
+            opacity: 0; /* Start hidden, animation will make it visible */
+            animation-name: fadeIn;
+            animation-duration: 0.5s;
+            animation-timing-function: ease-out;
+            animation-fill-mode: forwards; /* Keep final state of animation */
+        }
+
+        @keyframes fadeInEmpty {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive adjustments */
+        /* Grid for wishlist: 3 cols on lg, 2 on md, 1 on sm */
+        .wishlist-grid {
+            display: grid;
+            gap: 1.5rem; /* Default gap */
+            grid-template-columns: repeat(1, minmax(0, 1fr)); /* Mobile: 1 column */
+        }
+        @media (min-width: 640px) { /* sm */
+            .wishlist-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)); /* Tablet: 2 columns */
+            }
+        }
+        @media (min-width: 1024px) { /* lg */
+            .wishlist-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr)); /* Desktop: 3 columns */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar .hidden { display: none; }
+            .navbar .flex-col { display: flex; }
+            .section-heading { font-size: 1.75rem; }
+        }
+
+    </style>
+</head>
+<body>
+      {% if status == "1" or status == "0" %}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const alert = document.createElement('div');
+        alert.className = 'custom-alert';
+
+        {% if status == "1" %}
+          alert.innerHTML = `Item added to wishlist! <span class="close-btn" onclick="this.parentElement.remove()">×</span>`;
+          alert.style.backgroundColor = '#d4edda';
+          alert.style.color = 'green';
+        {% elif status == "0" %}
+          alert.innerHTML = `Item removed from wishlist. <span class="close-btn" onclick="this.parentElement.remove()">×</span>`;
+          alert.style.backgroundColor = '#f8d7da';
+          alert.style.color = 'red';
+                {% endif %}
+
+        document.body.appendChild(alert);
+
+        setTimeout(() => {
+          alert.classList.add('show');
+        }, 100);
+
+        setTimeout(() => {
+          alert.classList.remove('show');
+          setTimeout(() => alert.remove(), 500);
+        }, 30000);
+      });
+    </script>
+  {% endif %}
+
+    <nav class="navbar navbar-sticky p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <span class="text-3xl font-extrabold text-brand-yellow">G</span>
+                <h1 class="text-2xl font-bold text-brand-white">GNANOW</h1>
+            </a>
+            <div class="hidden md:flex space-x-6 items-center">
+                <a href="/dashboard" class="text-gray-300 hover:text-brand-yellow transition duration-300">Home</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">Products</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">Categories</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">My Orders</a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300">My Address</a>
+            </div>
+            <div class="flex items-center space-x-5">
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300"><i class="fas fa-user text-xl"></i></a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300 relative">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                    {% comment %} <span class="absolute -top-2 -right-2 bg-brand-yellow text-brand-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"></span> {% endcomment %}
+                </a>
+                <a href="#" class="text-gray-300 hover:text-brand-yellow transition duration-300"><i class="fas fa-heart text-xl"></i></a>
+                <button id="mobileMenuButton" class="md:hidden text-gray-300 hover:text-brand-yellow transition duration-300"><i class="fas fa-bars text-xl"></i></button>
+            </div>
+        </div>
+        <div id="mobileMenu" class="hidden md:hidden mt-3 space-y-2 px-4">
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Home</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Products</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">Categories</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">My Orders</a>
+            <a href="#" class="block text-gray-300 hover:text-brand-yellow transition duration-300 py-2">My Address</a>
+        </div>
+    </nav>
+  
+
+
+    <main class="container mx-auto py-10 px-4">
+        <h2 class="section-heading">My Wishlist</h2>
+
+        {% if wishlist_items %}
+        <div class="wishlist-grid">
+            {% for item in wishlist_items %}
+            {% with product=item.variant.product %}
+            <div class="wishlist-card group relative wishlist-item-animation">
+                <div class="relative">
+                    {% if item.variant.images.first %}
+                        <img src="{{ item.variant.images.first.image.url }}" alt="{{ product.name }}" class="wishlist-card-image">
+                    {% else %}
+                        <img src="https://placehold.co/300x400/4B5563/FFFFFF?text=No+Image" alt="{{ product.name }}" class="wishlist-card-image">
+                    {% endif %}
+
+                    <form method="post" action="{% url 'toggle_wishlist' item.variant.id %}" class="remove-wishlist-btn absolute top-3 right-3 z-10">
+                        {% csrf_token %}
+                        <button type="submit" title="Remove from Wishlist">
+                            <i class="fas fa-heart"></i> </button>
+                    </form>
+                </div>
+
+                <div class="wishlist-card-content">
+                    <div>
+                        <h3 class="text-lg font-semibold text-brand-white group-hover:text-brand-yellow transition duration-300">{{ product.name }}</h3>
+                        <p class="text-brand-yellow font-bold text-xl mt-1">{{ product.base_price }}</p>
+                        <div class="flex items-center mt-2 text-yellow-400 text-sm">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span class="text-gray-400 text-xs ml-2">(123 Reviews)</span>
+                        </div>
+                    </div>
+                     {% comment %} <div class="flex items-center justify-center mt-4 mb-4 border border-gray-700 rounded-lg p-1 bg-gray-900">
+                    <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                        <i class="fas fa-minus text-gray-300 group-hover:text-brand-yellow"></i>
+                    </button>
+                    <input type="number" name="quantity" value="1" min="1" max="99" 
+                           class="quantity-input w-16 text-center bg-transparent border-none focus:ring-0 text-white font-semibold"
+                           aria-label="Product quantity">
+                    <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                        <i class="fas fa-plus text-gray-300 group-hover:text-brand-yellow"></i>
+                    </button>
+                </div>
+                    <button class="btn btn-primary mt-4 w-full text-sm">
+                        <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+                    </button>
+                </div> {% endcomment %}
+                <form method="post" action="{% url 'add_to_cart' item.variant.id %}">
+    {% csrf_token %}
+    <div class="flex items-center justify-center mt-4 mb-4 border border-gray-700 rounded-lg p-1 bg-gray-900">
+        <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+            <i class="fas fa-minus text-gray-300 group-hover:text-brand-yellow"></i>
+        </button>
+        <input type="number" name="quantity" value="1" min="1" max="99"
+               class="quantity-input w-16 text-center bg-transparent border-none focus:ring-0 text-white font-semibold"
+               aria-label="Product quantity">
+        <button type="button" class="quantity-btn" onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+            <i class="fas fa-plus text-gray-300 group-hover:text-brand-yellow"></i>
+        </button>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4 w-full text-sm">
+        <i class="fas fa-cart-plus mr-2"></i>Add to Cart
+    </button>
+</form>
+
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-wishlist-container">
+            <div class="empty-wishlist-icon">
+                <i class="fas fa-heart-broken"></i>
+            </div>
+            <h3 class="text-2xl font-semibold text-brand-white">Your Wishlist is Empty</h3>
+            <p class="text-gray-400 mt-2 mb-6">Looks like you haven't added anything to your wishlist yet. <br>Start exploring and find something you love!</p>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-store mr-2"></i>Shop Now
+            </a>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer class="footer">
+        <div class="container mx-auto text-center">
+            <div class="mb-4">
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">About Us</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Contact</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Privacy Policy</a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow mx-3">Terms of Service</a>
+            </div>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-facebook-f text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-instagram text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="text-gray-400 hover:text-brand-yellow"><i class="fab fa-pinterest text-xl"></i></a>
+            </div>
+            <p>&copy; <span id="currentYear"></span> GNANOW. All Rights Reserved.</p>
+            <p class="text-sm mt-1">Designed with <i class="fas fa-heart text-brand-yellow"></i> for Fashion Lovers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Set current year in footer
+        const currentYearElement = document.getElementById('currentYear');
+        if (currentYearElement) {
+            currentYearElement.textContent = new Date().getFullYear();
+        }
+
+        // Staggered animation for wishlist items
+        document.addEventListener('DOMContentLoaded', () => {
+            const wishlistItems = document.querySelectorAll('.wishlist-item-animation');
+            wishlistItems.forEach((item, index) => {
+                // Apply animation delay dynamically using JavaScript
+                item.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+    </script>
+</body>
+</html>

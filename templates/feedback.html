@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - gnanow clothing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            /* === Gnanow Brand Colors - CUSTOMIZE THESE === */
+            --gnanow-primary: #4A90E2; /* Example: Stylish Blue */
+            --gnanow-secondary: #50E3C2; /* Example: Vibrant Teal/Mint */
+            --gnanow-accent: #F5A623;   /* Example: Warm Orange for stars/highlights */
+            --gnanow-text-dark: #2D3748; /* Darker text for headings */
+            --gnanow-text-light: #4A5568; /* Lighter text for paragraphs */
+            --gnanow-background: #F7FAFC;
+            --gnanow-surface: #FFFFFF;
+            --gnanow-border: #E2E8F0;
+            --animation-duration: 0.3s;
+            --animation-duration-medium: 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font from Tailwind's default stack */
+            background-color: var(--gnanow-background);
+            color: var(--gnanow-text-light);
+            animation: fadeIn var(--animation-duration-medium) ease-out;
+        }
+
+        .gnanow-header {
+            background-color: var(--gnanow-surface);
+            border-bottom: 1px solid var(--gnanow-border);
+            animation: fadeInUp var(--animation-duration-medium) ease-out;
+        }
+
+        .gnanow-logo {
+            color: var(--gnanow-primary); /* Or use an <img> tag */
+            font-weight: 700;
+            font-size: 1.75rem; /* Equivalent to text-2xl or text-3xl */
+        }
+        
+        .gnanow-logo-placeholder img {
+            max-height: 50px; /* Adjust as needed */
+        }
+
+        .feedback-container {
+            background-color: var(--gnanow-surface);
+            animation: fadeInUp var(--animation-duration-medium) ease-out 0.2s; /* Delayed animation */
+            animation-fill-mode: backwards; /* Element is not visible before animation starts */
+        }
+
+        .form-label {
+            color: var(--gnanow-text-dark);
+            font-weight: 600; /* semibold */
+        }
+
+        .form-input, .form-textarea {
+            border-color: var(--gnanow-border);
+            transition: border-color var(--animation-duration) ease, box-shadow var(--animation-duration) ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--gnanow-primary);
+            box-shadow: 0 0 0 3px rgba(var(--gnanow-primary-rgb, 74, 144, 226), 0.3); /* Ensure --gnanow-primary-rgb is defined or use a static color */
+            outline: none;
+        }
+        
+        /* Star Rating Styles */
+        .star-rating-group {
+            animation: fadeInUp var(--animation-duration-medium) ease-out;
+            animation-fill-mode: backwards;
+        }
+
+        .star-rating .star {
+            color: var(--gnanow-border); /* Default star color */
+            cursor: pointer;
+            transition: color var(--animation-duration) ease, transform 0.1s ease-out;
+            font-size: 2rem; /* Larger stars */
+        }
+
+        .star-rating .star:hover,
+        .star-rating .star.selected {
+            color: var(--gnanow-accent);
+        }
+        .star-rating .star:hover {
+            transform: scale(1.2);
+        }
+
+        .gnanow-button {
+            background-color: var(--gnanow-primary);
+            transition: background-color var(--animation-duration) ease, transform var(--animation-duration) ease;
+        }
+
+        .gnanow-button:hover {
+            background-color: #357ABD; /* Darker shade of primary */
+            transform: translateY(-2px);
+        }
+        
+        .gnanow-button:active {
+            transform: translateY(0px);
+        }
+
+        /* For staggered animation of form groups */
+        .form-group {
+            opacity: 0;
+            animation: fadeInUp var(--animation-duration-medium) ease-out forwards;
+        }
+
+        /* Thank you message */
+        #thankYouMessage {
+            background-color: var(--gnanow-secondary);
+            color: var(--gnanow-text-dark); /* Or white if secondary is dark */
+            animation: fadeIn var(--animation-duration-medium) ease-out;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+
+    <header class="gnanow-header py-4 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+            <div class="gnanow-logo-placeholder">
+                <img src="https://placehold.co/150x50/4A90E2/FFFFFF?text=gnanow&font=raleway" alt="gnanow clothing logo" class="h-10">
+            </div>
+            <h1 class="text-xl sm:text-2xl font-semibold text-gray-700">Share Your Feedback</h1>
+        </div>
+    </header>
+
+    <main class="py-8 sm:py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div id="feedbackFormContainer" class="feedback-container max-w-2xl mx-auto p-6 sm:p-8 rounded-xl shadow-xl">
+                <p class="text-center text-gray-600 mb-6 sm:mb-8" style="animation-delay: 0.1s;">We value your opinion! Help us improve your gnanow clothing experience.</p>
+
+                <form id="gnanowFeedbackForm">
+                    <div class="form-group mb-6 sm:mb-8" style="animation-delay: 0.2s;">
+                        <label class="form-label block mb-2 text-sm sm:text-base">1. Overall Experience with gnanow clothing:</label>
+                        <div class="star-rating flex space-x-1" data-rating-name="overall_experience">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" name="overall_experience_rating" id="overall_experience_rating">
+                    </div>
+
+                    <div class="form-group mb-6 sm:mb-8" style="animation-delay: 0.3s;">
+                        <label class="form-label block mb-2 text-sm sm:text-base">2. How would you rate our Product Quality?</label>
+                        <div class="star-rating flex space-x-1" data-rating-name="product_quality">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" name="product_quality_rating" id="product_quality_rating">
+                    </div>
+
+                    <div class="form-group mb-6 sm:mb-8" style="animation-delay: 0.4s;">
+                        <label class="form-label block mb-2 text-sm sm:text-base">3. How easy was it to use our Website?</label>
+                        <div class="star-rating flex space-x-1" data-rating-name="website_usability">
+                            <span class="star" data-value="1">★</span>
+                            <span class="star" data-value="2">★</span>
+                            <span class="star" data-value="3">★</span>
+                            <span class="star" data-value="4">★</span>
+                            <span class="star" data-value="5">★</span>
+                        </div>
+                        <input type="hidden" name="website_usability_rating" id="website_usability_rating">
+                    </div>
+                    
+                    <div class="form-group mb-6 sm:mb-8" style="animation-delay: 0.5s;">
+                        <label for="comments" class="form-label block mb-2 text-sm sm:text-base">4. Any specific comments or suggestions?</label>
+                        <textarea id="comments" name="comments" rows="5" class="form-textarea w-full p-3 border rounded-lg focus:ring-2 focus:ring-opacity-50" placeholder="Tell us more about your experience or any ideas for improvement..."></textarea>
+                    </div>
+
+                    <div class="form-group mb-6 sm:mb-8 border-t border-dashed pt-6" style="animation-delay: 0.6s;">
+                        <p class="text-sm text-gray-600 mb-3">Optional: If you'd like us to follow up, please provide your details.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="name" class="form-label block mb-1 text-sm">Name</label>
+                                <input type="text" id="name" name="name" class="form-input w-full p-3 border rounded-lg focus:ring-2 focus:ring-opacity-50" placeholder="Your Name">
+                            </div>
+                            <div>
+                                <label for="email" class="form-label block mb-1 text-sm">Email</label>
+                                <input type="email" id="email" name="email" class="form-input w-full p-3 border rounded-lg focus:ring-2 focus:ring-opacity-50" placeholder="your.email@example.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group text-center mt-8" style="animation-delay: 0.7s;">
+                        <button type="submit" class="gnanow-button text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2" style="--tw-ring-color: var(--gnanow-primary);">
+                            Submit Feedback
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="thankYouMessage" class="hidden max-w-lg mx-auto p-6 sm:p-8 rounded-xl shadow-xl text-center mt-10">
+                <h2 class="text-2xl font-semibold mb-3">Thank You!</h2>
+                <p class="text-lg">Your feedback has been submitted successfully. We appreciate you taking the time to help us improve!</p>
+                 <button id="submitAnotherFeedback" class="mt-6 gnanow-button text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2" style="--tw-ring-color: var(--gnanow-primary); background-color: var(--gnanow-primary)">
+                    Submit Another Feedback
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="text-center py-6 mt-auto border-t border-[var(--gnanow-border)]">
+        <p class="text-sm text-gray-500">&copy; <span id="currentYear"></span> gnanow clothing. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set current year in footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            // Star Rating Logic
+            const starRatingGroups = document.querySelectorAll('.star-rating');
+            starRatingGroups.forEach(group => {
+                const stars = group.querySelectorAll('.star');
+                const hiddenInputId = group.dataset.ratingName + '_rating'; // e.g. overall_experience_rating
+                const hiddenInput = document.getElementById(hiddenInputId);
+
+                stars.forEach(star => {
+                    star.addEventListener('click', function () {
+                        const value = this.dataset.value;
+                        hiddenInput.value = value; // Store rating value
+
+                        // Update star visual state
+                        stars.forEach(s => {
+                            s.classList.remove('selected');
+                            if (parseInt(s.dataset.value) <= parseInt(value)) {
+                                s.classList.add('selected');
+                            }
+                        });
+                    });
+
+                    // Hover effects (optional, can be pure CSS but JS allows more control if needed)
+                    star.addEventListener('mouseover', function () {
+                        const hoverValue = this.dataset.value;
+                        stars.forEach(s => {
+                            if (parseInt(s.dataset.value) <= parseInt(hoverValue)) {
+                                s.classList.add('hover-temp'); // Temporary class for hover
+                            } else {
+                                 s.classList.remove('hover-temp');
+                            }
+                        });
+                    });
+                     star.addEventListener('mouseout', function () {
+                        stars.forEach(s => s.classList.remove('hover-temp'));
+                    });
+                });
+            });
+
+            // Form Submission
+            const feedbackForm = document.getElementById('gnanowFeedbackForm');
+            const formContainer = document.getElementById('feedbackFormContainer');
+            const thankYouMessage = document.getElementById('thankYouMessage');
+            const submitAnotherButton = document.getElementById('submitAnotherFeedback');
+
+
+            feedbackForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent actual form submission for this demo
+
+                // Basic validation example: Check if at least one star rating is given
+                let ratingGiven = false;
+                document.querySelectorAll('input[type="hidden"][name$="_rating"]').forEach(input => {
+                    if (input.value && parseInt(input.value) > 0) {
+                        ratingGiven = true;
+                    }
+                });
+
+                if (!ratingGiven && !document.getElementById('comments').value.trim()) {
+                     // You can add a more sophisticated error message display here
+                    alert('Please provide a rating or leave a comment.');
+                    return;
+                }
+                
+                // Collect form data (example)
+                const formData = new FormData(feedbackForm);
+                console.log("Feedback Submitted:");
+                for (let [key, value] of formData.entries()) {
+                    console.log(key + ": " + value);
+                }
+
+                // Hide form, show thank you message
+                formContainer.classList.add('hidden');
+                thankYouMessage.classList.remove('hidden');
+                window.scrollTo(0, thankYouMessage.offsetTop - 100); // Scroll to thank you message
+            });
+
+            submitAnotherButton.addEventListener('click', function() {
+                thankYouMessage.classList.add('hidden');
+                formContainer.classList.remove('hidden');
+                feedbackForm.reset(); // Reset form fields
+                // Reset star ratings visually
+                starRatingGroups.forEach(group => {
+                    group.querySelectorAll('.star').forEach(s => s.classList.remove('selected'));
+                });
+                 window.scrollTo(0, formContainer.offsetTop - 100);
+            });
+
+            // For CSS variable --gnanow-primary-rgb (used in focus box-shadow)
+            // This extracts RGB from the hex color.
+            const primaryColorHex = getComputedStyle(document.documentElement).getPropertyValue('--gnanow-primary').trim();
+            if (primaryColorHex.startsWith('#')) {
+                const r = parseInt(primaryColorHex.slice(1, 3), 16);
+                const g = parseInt(primaryColorHex.slice(3, 5), 16);
+                const b = parseInt(primaryColorHex.slice(5, 7), 16);
+                document.documentElement.style.setProperty('--gnanow-primary-rgb', `${r}, ${g}, ${b}`);
+            }
+        });
+    </script>
+
+</body>
+</html>

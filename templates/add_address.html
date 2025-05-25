@@ -1,0 +1,522 @@
+{% comment %} <!-- templates/add_address.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Address</title>
+</head>
+<body>
+    <h2>Add New Address</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <label>Address Line 1:</label><br>
+        <input type="text" name="address_line1" required><br><br>
+
+        <label>Address Line 2:</label><br>
+        <input type="text" name="address_line2"><br><br>
+
+        <label>City:</label><br>
+        <input type="text" name="city" required><br><br>
+
+        <label>State:</label><br>
+        <input type="text" name="state" required><br><br>
+
+        <label>Postal Code:</label><br>
+        <input type="text" name="postal_code" required><br><br>
+
+        <label>Country:</label><br>
+        <input type="text" name="country" required><br><br>
+
+        
+        <label>Alternate Phone Number:</label><br>
+        <input type="Number" name="phone" required><br><br>
+
+
+        <label>Set as default address:</label>
+        <input type="checkbox" name="is_default"><br><br>
+
+        <button type="submit">Save Address</button>
+    </form>
+</body>
+</html> {% endcomment %}
+{% comment %} 
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Address - GNANOW</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <style>
+         /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #F0F0F0; } /* Light track */
+    ::-webkit-scrollbar-thumb { background: #F39C12; border-radius: 10px; } /* Accent Amber */
+    ::-webkit-scrollbar-thumb:hover { background: #E67E22; } /* Darker Amber on hover */
+
+    /* Gnanow Official Brand Colors */
+    :root {
+        --color-primary-blue: #2C3E50; /* Deep Midnight Blue */
+        --color-primary-blue-dark: #1A2C3D; /* Even darker blue for hover */
+        --color-accent-amber: #F39C12; /* Muted Amber/Gold */
+        --color-accent-amber-dark: #E67E22; /* Slightly more orange/darker amber for hover */
+        --color-light-background: #FDFDFD; /* Almost white, very subtle warmth */
+        --color-card-background: #FFFFFF; /* Pure white for crispness */
+        --color-neutral-text: #34495E; /* Dark Slate Gray for main text */
+        --color-light-border: #EAECEE; /* Very light gray for borders */
+        --color-footer-background: #222222; /* Dark charcoal for a solid footer */
+        --color-footer-text: #BDC3C7; /* Light gray for readability on dark footer */
+
+        /* Message colors */
+        --color-success-bg: rgba(46, 204, 113, 0.15); /* Green with transparency */
+        --color-success-text: #27AE60; /* Darker green */
+        --color-error-bg: rgba(231, 76, 60, 0.15); /* Red with transparency */
+        --color-error-text: #C0392B; /* Darker red */
+        --color-info-bg: rgba(52, 152, 219, 0.15); /* Blue with transparency */
+        --color-info-text: #2980B9; /* Darker blue */
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--color-light-background);
+        color: var(--color-neutral-text);
+        overflow-x: hidden;
+    }
+
+    .font-bebas { font-family: 'Bebas Neue', cursive; }
+
+    /* Color Utility Classes */
+    .bg-primary-blue { background-color: var(--color-primary-blue); }
+    .text-primary-blue { color: var(--color-primary-blue); }
+    .border-primary-blue { border-color: var(--color-primary-blue); }
+    .hover\:bg-primary-blue-dark:hover { background-color: var(--color-primary-blue-dark); }
+    .hover\:text-primary-blue-dark:hover { color: var(--color-primary-blue-dark); }
+
+    .bg-accent-amber { background-color: var(--color-accent-amber); }
+    .text-accent-amber { color: var(--color-accent-amber); }
+    .border-accent-amber { border-color: var(--color-accent-amber); }
+    .hover\:bg-accent-amber-dark:hover { background-color: var(--color-accent-amber-dark); }
+    .hover\:text-accent-amber-dark:hover { color: var(--color-accent-amber-dark); }
+
+    /* Header & Nav Styling */
+    .main-header {
+        background-color: var(--color-card-background); /* Pure white header */
+        border-bottom: 1px solid var(--color-light-border);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* More pronounced shadow */
+    }
+    .nav-link {
+        @apply px-5 py-3 text-base text-gray-600 hover:text-accent-amber transition-colors duration-300 relative font-medium; /* Text color adjusted for light background */
+    }
+    .nav-link::after {
+        content: ''; position: absolute; bottom: 0; left: 50%;
+        transform: translateX(-50%); width: 0; height: 2px;
+        background-color: var(--color-accent-amber); transition: width 0.3s ease-in-out;
+    }
+    .nav-link:hover::after, .nav-link-active::after { width: calc(100% - 2.5rem); } /* Adjusted width for new padding */
+    .nav-link-active { @apply text-accent-amber font-semibold; } /* Active link in accent amber */
+    .header-icon { @apply text-gray-500 hover:text-accent-amber transition-colors duration-300 text-xl; } /* Icons in subtle gray, amber on hover */
+
+    /* CTA Button Styles */
+    .cta-button {
+        @apply inline-block transition-all duration-300 ease-in-out rounded-lg font-semibold text-base tracking-wide; /* Rounded-lg for softer look */
+        padding: 0.875rem 1.75rem; /* py-3.5 px-7 */
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Soft shadow */
+    }
+    .cta-button-primary { /* Main action button */
+        @apply bg-primary-blue text-white border-2 border-primary-blue;
+    }
+    .cta-button-primary:hover {
+        @apply bg-primary-blue-dark border-primary-blue-dark shadow-lg shadow-blue-800/20 transform scale-105;
+    }
+    .cta-button-outline { /* Secondary action button (e.g., Edit) */
+        @apply bg-transparent text-primary-blue border-2 border-primary-blue;
+    }
+    .cta-button-outline:hover {
+        @apply bg-primary-blue text-white border-primary-blue shadow-lg shadow-blue-800/20 transform scale-105; /* Blue hover for outline buttons */
+    }
+    .cta-button-red-outline { /* Destructive action button (e.g., Remove) */
+        @apply bg-transparent text-red-500 border-2 border-red-500 hover:bg-red-600 hover:text-white hover:border-red-600;
+    }
+
+    /* Address Card Styling (reused for form container) */
+    .form-container-card {
+        background-color: var(--color-card-background);
+        border: 1px solid var(--color-light-border);
+        color: var(--color-neutral-text);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Deeper shadow for form card */
+    }
+
+    /* Form specific styling */
+    .form-label {
+        @apply block text-sm font-medium text-gray-700 mb-1;
+    }
+    .form-input {
+        @apply w-full px-4 py-2 border border-light-border rounded-md shadow-sm focus:ring-primary-blue focus:border-primary-blue sm:text-sm;
+        background-color: var(--color-card-background); /* Ensure input background is white */
+        color: var(--color-neutral-text);
+    }
+    .form-input:focus {
+        outline: none;
+        border-color: var(--color-primary-blue);
+        box-shadow: 0 0 0 1px var(--color-primary-blue);
+    }
+    .form-checkbox {
+        @apply h-4 w-4 text-primary-blue border-light-border rounded focus:ring-primary-blue;
+        background-color: var(--color-card-background); /* Ensure checkbox background is white */
+        border-color: var(--color-light-border);
+    }
+
+    /* Footer Styling */
+    .footer {
+        background-color: var(--color-footer-background); /* Dark charcoal background for footer */
+        border-top: 1px solid #333333; /* Slightly lighter border */
+        color: var(--color-footer-text); /* Light gray text for footer */
+    }
+    .footer-link { @apply text-gray-400 hover:text-accent-amber text-sm transition-colors duration-300; } /* Amber on footer link hover */
+    .footer-title { @apply font-semibold text-lg text-white mb-3; }
+
+    /* Message Box Styling */
+    .message-box {
+        border-radius: 0.5rem; /* Tailwind's rounded-lg */
+        padding: 1rem 1.5rem; /* py-4 px-6 */
+        font-size: 0.95rem;
+        line-height: 1.5;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .message-box.success {
+        background-color: var(--color-success-bg);
+        color: var(--color-success-text);
+        border: 1px solid var(--color-success-text);
+    }
+    .message-box.error {
+        background-color: var(--color-error-bg);
+        color: var(--color-error-text);
+        border: 1px solid var(--color-error-text);
+    }
+    .message-box.info {
+        background-color: var(--color-info-bg);
+        color: var(--color-info-text);
+        border: 1px solid var(--color-info-text);
+    }
+
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+   <header class="main-header sticky top-0 z-50 py-3 animate__animated animate__fadeInDown">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between">
+        <div class="flex items-center">
+            <a href="{% url 'dashboard' %}" class="flex items-center space-x-2 mr-6">
+                <svg class="h-10 w-10 text-primary-blue" fill="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                </svg>
+                <span class="font-bebas text-3xl text-primary-blue tracking-wider">GNANOW</span>
+            </a>
+        </div>
+
+        <nav class="hidden md:flex space-x-8 items-center order-3 md:order-2 w-full md:w-auto mt-2 md:mt-0">
+            <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'product_list' %}" class="nav-link">Products</a>
+            <a href="#" class="nav-link">Categories</a> 
+            <a href="{% url 'my_orders' %}" class="nav-link">My Orders</a>
+            <a href="{% url 'my_addresses' %}" class="nav-link nav-link-active">My Addresses</a>
+            <a href="#" class="nav-link">Feedback</a>
+        </nav>
+
+        <div class="header-icons-group flex items-center space-x-5 order-2 md:order-3">
+            <a href="{% url 'view_cart' %}" class="header-icon" title="Cart"><i class="fas fa-shopping-cart fa-fw"></i></a>
+            <a href="{% url 'profile' %}" class="header-icon" title="Profile"><i class="fas fa-user fa-fw"></i></a>
+            <a href="{% url 'wishlist' %}" class="header-icon" title="Wishlist"><i class="fas fa-heart fa-fw"></i></a>
+            <button id="mobileMenuButton" class="md:hidden header-icon">
+                <i class="fas fa-bars fa-fw"></i>
+            </button>
+        </div>
+    </div>
+    <div id="mobileMenu" class="md:hidden hidden bg-white/95 py-2 animate__animated animate__fadeIn border-t border-light-border">
+        <a href="{% url 'dashboard' %}" class="block nav-link px-4">Dashboard</a>
+        <a href="{% url 'product_list' %}" class="block nav-link px-4">Products</a>
+        <a href="#" class="block nav-link px-4">Categories</a>
+        <a href="{% url 'my_orders' %}" class="block nav-link px-4">My Orders</a>
+        <a href="{% url 'my_addresses' %}" class="block nav-link nav-link-active px-4">My Addresses</a>
+        <a href="#" class="block nav-link px-4">Feedback</a>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 flex-grow flex items-center justify-center">
+    <div class="form-container-card w-full max-w-2xl p-6 sm:p-8 md:p-10 rounded-xl animate__animated animate__fadeInUp">
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-8">
+            <h1 class="font-bebas text-3xl sm:text-4xl text-primary-blue tracking-wide mb-3 sm:mb-0">Add New Address</h1>
+            <a href="{% url 'my_addresses' %}" class="cta-button cta-button-outline text-sm">
+                <i class="fas fa-arrow-left mr-2"></i>Back to My Addresses
+            </a>
+        </div>
+
+        {% if messages %}
+            <div class="mb-8 space-y-4">
+                {% for message in messages %}
+                    <div class="message-box animate__animated animate__fadeInUp
+                        {% if message.tags == 'success' %} success
+                        {% elif message.tags == 'error' %} error
+                        {% else %} info {% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" class="space-y-5">
+            {% csrf_token %}
+            
+            <div>
+                <label for="address_line1" class="form-label">Address Line 1</label>
+                <input type="text" id="address_line1" name="address_line1" class="form-input" required>
+            </div>
+
+            <div>
+                <label for="address_line2" class="form-label">Address Line 2 (Optional)</label>
+                <input type="text" id="address_line2" name="address_line2" class="form-input">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" id="city" name="city" class="form-input" required>
+                </div>
+                <div>
+                    <label for="state" class="form-label">State / Province</label>
+                    <input type="text" id="state" name="state" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                    <label for="postal_code" class="form-label">Postal Code</label>
+                    <input type="text" id="postal_code" name="postal_code" class="form-input" required>
+                </div>
+                <div>
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" id="country" name="country" class="form-input" required>
+                </div>
+            </div>
+            
+            <div>
+                <label for="phone" class="form-label">Alternate Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-input" placeholder="e.g., +1234567890" required>
+            </div>
+
+            <div class="flex items-center pt-2">
+                <input type="checkbox" id="is_default" name="is_default" class="form-checkbox">
+                <label for="is_default" class="ml-2 text-sm text-gray-700 cursor-pointer">Set as default address</label>
+            </div>
+
+            <div class="pt-5">
+                <button type="submit" class="cta-button cta-button-primary w-full">
+                    <i class="fas fa-save mr-2"></i>Save Address
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer class="footer mt-auto py-12 md:py-16 animate__animated animate__fadeInUp animate__delay-0.2s">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-8">
+            <div>
+                <h3 class="footer-title font-bebas text-2xl text-accent-amber">GNANOW</h3>
+                <p class="text-sm text-gray-400 leading-relaxed">Unleash Your Style. Future of Fashion.</p>
+            </div>
+            <div>
+                <h3 class="footer-title">Shop</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'product_list' %}" class="footer-link">All Products</a></li>
+                    <li><a href="#" class="footer-link">New Arrivals</a></li>
+                    <li><a href="#" class="footer-link">Collections</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">My Account</h3>
+                <ul class="space-y-2">
+                    <li><a href="{% url 'profile' %}" class="footer-link">Profile</a></li>
+                    <li><a href="{% url 'my_orders' %}" class="footer-link">My Orders</a></li>
+                    <li><a href="{% url 'my_addresses' %}" class="footer-link">My Addresses</a></li>
+                    <li><a href="{% url 'wishlist' %}" class="footer-link">Wishlist</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-title">Support</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="footer-link">Contact Us</a></li>
+                    <li><a href="#" class="footer-link">FAQs</a></li>
+                    <li><a href="#" class="footer-link">Shipping</a></li>
+                </ul>
+            </div>
+            <div class="col-span-2 md:col-span-4 lg:col-span-1">
+                <h3 class="footer-title">Connect</h3>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Instagram"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Facebook"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-accent-amber transition-colors" aria-label="Twitter"><i class="fab fa-twitter fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-700 pt-8 text-center text-sm">
+            <p class="text-gray-500">&copy; {% now "Y" %} GNANOW. All rights reserved. Future of Fashion.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Mobile Menu
+        const mobileMenuButton = document.getElementById('mobileMenuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+</body>
+</html> {% endcomment %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        header .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #f39c12;
+        }
+        main {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            animation: fadeIn 0.6s ease-out;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+        }
+        label {
+            font-weight: 600;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #3498db;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            main {
+                margin: 1rem;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">OCTATANGLE-CARE</div>
+        <nav>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Add New Address</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Address Line 1:</label>
+            <input type="text" name="address_line1" required>
+
+            <label>Address Line 2:</label>
+            <input type="text" name="address_line2">
+
+            <label>City:</label>
+            <input type="text" name="city" required>
+
+            <label>State:</label>
+            <input type="text" name="state" required>
+
+            <label>Postal Code:</label>
+            <input type="text" name="postal_code" required>
+
+            <label>Country:</label>
+            <input type="text" name="country" required>
+
+            <label>Alternate Phone Number:</label>
+            <input type="number" name="phone" required>
+
+            <label>Set as default address:</label>
+            <input type="checkbox" name="is_default">
+
+            <button type="submit">Save Address</button>
+        </form>
+    </main>
+</body>
+</html>
