@@ -25,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-yr(ygunmx&0@426h9%&v1xg##61dgtvn85kq)2dx3e)ss2wmmc'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yashshiva.pythonanywhere.com']
 
 
 # Application definition
@@ -158,8 +158,11 @@ USE_TZ = True
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS = [BASE_DIR / "static"]
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 # Default primary key field type
@@ -215,3 +218,6 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"  # or 'file'
 RAZORPAY_ID = 'rzp_test_JtRCVwvuv0LD5v'
 RAZORPAY_ACCOUNT_ID = 'itNw7BFj17bBMXv456uI6OlI'
 
+
+# Secure settings
+CSRF_TRUSTED_ORIGINS = ['https://yourusername.pythonanywhere.com']
